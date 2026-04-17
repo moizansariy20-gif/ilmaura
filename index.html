@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- Mobile App Capable Tags (Forces aggressive caching & Fullscreen) -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ilmaura">
+    
+    <!-- PRELOAD CRITICAL ASSET: Forces browser to fetch logo immediately -->
+    <link rel="preload" as="image" href="/ilmaura-mascot.png">
+    <!-- NEW PRELOAD: School ID Screen Logo -->
+    <link rel="preload" as="image" href="/logo.svg">
+    <link rel="preload" as="image" href="/left-image.svg">
+    <link rel="preload" as="image" href="/request-submitted.svg">
+    
+    <!-- PRELOAD ONBOARDING HERO IMAGES -->
+    <link rel="preload" as="image" href="https://lngyxcbbsbqkooybipbj.supabase.co/storage/v1/object/public/ilmaura%20storage/ChatGPT%20Image%20Feb%203,%202026,%2001_55_31%20AM.png">
+    <link rel="preload" as="image" href="https://lngyxcbbsbqkooybipbj.supabase.co/storage/v1/object/public/ilmaura%20storage/d43a6ca7-a989-4a6f-8877-97ba32e213d8.png">
+    <link rel="preload" as="image" href="https://lngyxcbbsbqkooybipbj.supabase.co/storage/v1/object/public/ilmaura%20storage/79379791-b261-401c-9edf-82eb0847dbbf.png">
+
+    <link rel="icon" type="image/png" href="/ilmaura-mascot.png">
+    <link id="pwa-manifest" rel="manifest" href="/manifest.json">
+    <title>Ilmaura</title>
+    <script>
+      // Global Configuration Object
+      window.SCHOOL_CONFIG = {
+        APP_VERSION: "1.2.0-SUPABASE",
+        MODE: "ONLINE"
+      };
+      
+      // PWA Dynamic Manifest Helper
+      window.updatePWAManifest = (schoolName, logoUrl) => {
+        const manifest = {
+          "short_name": schoolName || "Ilmaura",
+          "name": schoolName ? `${schoolName} Portal` : "Ilmaura School Portal",
+          "icons": [
+            {
+              "src": logoUrl || "/ilmaura-mascot.png",
+              "sizes": "192x192",
+              "type": "image/png",
+              "purpose": "any maskable"
+            },
+            {
+              "src": logoUrl || "/ilmaura-mascot.png",
+              "sizes": "512x512",
+              "type": "image/png",
+              "purpose": "any maskable"
+            }
+          ],
+          "start_url": ".",
+          "display": "standalone",
+          "theme_color": "#1e3a8a",
+          "background_color": "#ffffff"
+        };
+        
+        const stringManifest = JSON.stringify(manifest);
+        const blob = new Blob([stringManifest], {type: 'application/json'});
+        const manifestURL = URL.createObjectURL(blob);
+        document.querySelector('#pwa-manifest').setAttribute('href', manifestURL);
+        
+        // Also update favicon to school logo
+        if (logoUrl) {
+          const favicon = document.querySelector('link[rel="icon"]');
+          if (favicon) favicon.setAttribute('href', logoUrl);
+        }
+      };
+
+      // Service Worker Registration
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').then(reg => {
+            console.log('SW Registered');
+          }).catch(err => {
+            console.log('SW Registration Failed', err);
+          });
+        });
+      }
+
+      // Track Install Prompt
+      window.deferredPrompt = null;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent Chrome 67 and earlier from automatically showing the prompt
+        e.preventDefault();
+        // Stash the event so it can be triggered later.
+        window.deferredPrompt = e;
+        console.log('PWA Install Prompt Stashed');
+      });
+
+      // Fallback for libraries expecting process.env
+      window.process = window.process || { 
+        env: { 
+          NODE_ENV: 'production'
+        } 
+      };
+    </script>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              heading: ['Plus Jakarta Sans', 'sans-serif'],
+            },
+            colors: {
+              'scholar-navy': '#1e3a8a',
+              'scholar-bg': '#f0f4f8',
+              'scholar-accent': {
+                100: '#dbeafe',
+                200: '#bfdbfe',
+                600: '#2563eb',
+                700: '#1d4ed8',
+              }
+            },
+            animation: {
+              'bounce-short': 'bounce-short 1s infinite',
+              'swing': 'swing 2s infinite',
+              'loading': 'loading 1.5s ease-in-out infinite',
+            },
+            keyframes: {
+              'bounce-short': {
+                '0%, 100%': { transform: 'translateY(-5%)', animationTimingFunction: 'cubic-bezier(0.8, 0, 1, 1)' },
+                '50%': { transform: 'translateY(0)', animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)' },
+              },
+              'swing': {
+                '0%, 100%': { transform: 'rotate(0deg)' },
+                '20%': { transform: 'rotate(15deg)' },
+                '40%': { transform: 'rotate(-10deg)' },
+                '60%': { transform: 'rotate(5deg)' },
+                '80%': { transform: 'rotate(-5deg)' },
+              },
+              'loading': {
+                '0%': { transform: 'translateX(-100%)' },
+                '50%': { transform: 'translateX(0%)' },
+                '100%': { transform: 'translateX(100%)' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=Roboto+Slab:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Cinzel:wght@400;600;700;900&family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Pacifico&family=Orbitron:wght@400;500;600;700;800;900&family=Bebas+Neue&family=Merriweather:ital,wght@0,400;0,700;0,900;1,400&family=Righteous&family=Kalam:wght@300;400;700&family=Caveat:wght@400..700&family=Nanum+Pen+Script&display=swap');
+      
+      body {
+        font-family: 'Inter', sans-serif;
+        -webkit-tap-highlight-color: transparent;
+        margin: 0;
+        background-color: white;
+      }
+      
+      .font-heading {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+
+      /* Custom Scrollbar */
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 3px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+      }
+      
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      
+      /* Mobile Safe Area */
+      .safe-top {
+        padding-top: env(safe-area-inset-top);
+      }
+      .safe-bottom {
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+
+      /* Pre-load Animation for HTML Shell */
+      @keyframes html-loading {
+        0% { transform: translateX(-100%); }
+        50% { transform: translateX(0%); }
+        100% { transform: translateX(100%); }
+      }
+    </style>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+</html>

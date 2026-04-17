@@ -1,0 +1,128 @@
+
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+  
+    // =================================
+    // Helper Functions
+    // =================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isMotherAdmin() {
+      return isAuthenticated() && request.auth.token.email == 'admin@ilmaura.com';
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function getUserProfileDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function isMemberOfSchool(schoolId) {
+      let userProfile = getUserProfileDoc();
+      return isAuthenticated()
+             && userProfile != null 
+             && userProfile.data.schoolId == schoolId;
+    }
+
+    function isPrincipalOfSchool(schoolId) {
+      let userProfile = getUserProfileDoc();
+      return isAuthenticated()
+             && userProfile != null 
+             && userProfile.data.schoolId == schoolId 
+             && userProfile.data.role == 'principal';
+    }
+    
+    function isTeacherOfSchool(schoolId) {
+      let userProfile = getUserProfileDoc();
+      return isAuthenticated()
+             && userProfile != null 
+             && userProfile.data.schoolId == schoolId 
+             && userProfile.data.role == 'teacher';
+    }
+    
+    function isStudentOfSchool(schoolId) {
+      let userProfile = getUserProfileDoc();
+      return isAuthenticated()
+             && userProfile != null 
+             && userProfile.data.schoolId == schoolId 
+             && userProfile.data.role == 'student';
+    }
+
+    // =================================
+    // Global Collections Rules
+    // =================================
+
+    match /users/{userId} {
+      allow get: if isMotherAdmin() || isOwner(userId);
+      allow list: if isMotherAdmin();
+
+      allow create: if isMotherAdmin() || (
+        (isPrincipalOfSchool(request.resource.data.schoolId) || isTeacherOfSchool(request.resource.data.schoolId)) && 
+        request.resource.data.role in ['teacher', 'student']
+      );
+      
+      allow update: if isMotherAdmin() || isOwner(userId) || (
+          (isPrincipalOfSchool(get(/databases/$(database)/documents/users/$(userId)).data.schoolId) || isTeacherOfSchool(get(/databases/$(database)/documents/users/$(userId)).data.schoolId)) &&
+          get(/databases/$(database)/documents/users/$(userId)).data.role in ['teacher', 'student']
+      );
+
+      allow delete: if isMotherAdmin();
+    }
+
+    match /schools/{schoolId} {
+      allow get: if true; // Public read for school login pages
+      allow list: if isMotherAdmin(); // Only Mother Admin can list all schools
+      allow create: if isMotherAdmin();
+      allow update: if isMotherAdmin() || isPrincipalOfSchool(schoolId);
+      allow delete: if isMotherAdmin(); // Explicitly allow delete for Mother Admin
+    }
+    
+    // NEW: Rules for platformSettings collection
+    match /platformSettings/{docId} {
+      allow read: if isAuthenticated(); // All authenticated users can read platform settings
+      allow write: if isMotherAdmin(); // Only Mother Admin can modify
+    }
+
+    // =================================
+    // School-Scoped Sub-Collection Rules
+    // =================================
+    
+    match /schools/{schoolId}/{collection}/{docId} {
+        allow read: if isMemberOfSchool(schoolId);
+        allow write: if (
+            (collection in ['teachers', 'classes', 'subjects'] && (isPrincipalOfSchool(schoolId) || isMotherAdmin()))
+            ||
+            (collection in ['students', 'attendance', 'announcements', 'assignments', 'exams', 'marks', 'resources', 'timetable', 'fee_ledger', 'whatsapp_logs', 'classLogs', 'quizzes'] && (isPrincipalOfSchool(schoolId) || isTeacherOfSchool(schoolId)))
+            ||
+            // Teachers can manage their own curriculums ONLY if the teacherId in the document matches their own.
+            (collection == 'curriculums' && isTeacherOfSchool(schoolId) && request.resource.data.teacherId == getUserProfileDoc().data.teacherId)
+            ||
+            // STUDENTS: Allow paying fees (Sandbox logic: create transaction + update student status)
+            // 1. Allow creating a fee transaction if it belongs to the student
+            (collection == 'fee_ledger' && isStudentOfSchool(schoolId) && request.resource.data.studentId == getUserProfileDoc().data.studentDocId)
+            ||
+            // 2. Allow updating their own student record (e.g. feeStatus)
+            (collection == 'students' && isStudentOfSchool(schoolId) && docId == getUserProfileDoc().data.studentDocId)
+            ||
+            // 3. Allow submitting quiz answers
+            (collection == 'quiz_submissions' && isStudentOfSchool(schoolId) && request.resource.data.studentId == getUserProfileDoc().data.studentDocId)
+        );
+    }
+
+    // =================================
+    // Student Notes (Nested Collection)
+    // =================================
+    match /schools/{schoolId}/students/{studentId}/notes/{noteId} {
+      allow read, write: if isStudentOfSchool(schoolId) && 
+                          getUserProfileDoc().data.studentDocId == studentId;
+    }
+  }
+}
