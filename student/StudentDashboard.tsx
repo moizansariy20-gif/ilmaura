@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useRef, Suspense, lazy, useMemo } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation, Link } from 'react-router-dom';
 import {
   Home01Icon,
@@ -33,7 +33,7 @@ import {
   CloudUploadIcon
 } from 'hugeicons-react';
 import { useAuth } from '../hooks/useAuth.ts';
-import { subscribeToSchoolDetails, subscribeToStudentData, subscribeToTeachers, subscribeToClassLogs } from '../services/api.ts';
+import { subscribeToSchoolDetails, subscribeToStudentData, subscribeToTeachers, subscribeToClassLogs, subscribeToSyllabusChapters, subscribeToStudentChapterProgress } from '../services/api.ts';
 import { supabase } from '../services/supabase.ts'; // UPDATED: Import Supabase
 import Loader from '../components/Loader.tsx';
 import StudentSkeleton from './components/StudentSkeleton.tsx';
@@ -96,14 +96,14 @@ const playClickSound = () => {
 
 const MenuList: React.FC<{title: string; items: any[]; setActiveTab: any}> = ({ title, items, setActiveTab }) => {
     return (
-      <div className="space-y-6 pb-24 px-4 pt-4 bg-[#FCFBF8] dark:bg-slate-900 min-h-full transition-colors duration-300">
+      <div className="space-y-6 pb-24 px-4 pt-4 bg-[#FCFBF8] dark:bg-[#020617] min-h-full transition-colors duration-300">
         <h1 className="text-3xl font-black text-slate-900 dark:text-[#D4AF37]">{title}</h1>
         <div className="space-y-3">
           {items.map((item, i) => (
             <button 
               key={i} 
               onClick={() => {if(item.action) item.action(); else setActiveTab(item.id);}} 
-              className="w-full flex items-center justify-between p-5 bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-bold transition-colors duration-300"
+              className="w-full flex items-center justify-between p-5 bg-white dark:bg-[#1e293b] border dark:border-[#1e293b] rounded-xl text-slate-900 dark:text-white font-bold transition-colors duration-300"
             >
               <div className="flex items-center gap-4">
                 <div className="text-[#1e3a8a] dark:text-[#D4AF37]">{item.icon}</div>
@@ -141,7 +141,7 @@ const MobileToolsView: React.FC<{ setActiveTab: (tab: string) => void }> = ({ se
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="min-h-full bg-[#FCFBF8] dark:bg-slate-900 pb-32 transition-colors duration-300"
+        className="min-h-full bg-[#FCFBF8] dark:bg-[#020617] pb-32 transition-colors duration-300"
       >
         <div className="w-full bg-gradient-to-br from-[#1e3a8a] to-[#1e40af] p-8 pt-12 pb-10 shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
@@ -155,7 +155,7 @@ const MobileToolsView: React.FC<{ setActiveTab: (tab: string) => void }> = ({ se
         </div>
 
         <div className="p-6 -mt-6 relative z-20">
-          <div className="border-4 border-[#D4AF37] rounded-[2.5rem] p-8 bg-white dark:bg-slate-800 shadow-[0_20px_50px_rgba(30,58,138,0.1),inset_0_0_40px_rgba(0,0,0,0.02)] grid grid-cols-2 gap-5 transition-colors duration-300">
+          <div className="border-4 border-[#D4AF37] rounded-[2.5rem] p-8 bg-white dark:bg-[#1e293b] shadow-[0_20px_50px_rgba(30,58,138,0.1),inset_0_0_40px_rgba(0,0,0,0.02)] grid grid-cols-2 gap-5 transition-colors duration-300">
             {menuCards.map(card => (
               <button 
                 key={card.id} 
@@ -172,6 +172,94 @@ const MobileToolsView: React.FC<{ setActiveTab: (tab: string) => void }> = ({ se
     );
 };
 
+const CurriculumTrackItem: React.FC<{ subject: any; currentClass: any; profile: any }> = ({ subject, currentClass, profile }) => {
+  const [chapters, setChapters] = useState<any[]>([]);
+  const [studentProgress, setStudentProgress] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    const unsub = subscribeToSyllabusChapters(subject.id, (data) => {
+      setChapters(data);
+      setLoading(false);
+    });
+    return () => unsub();
+  }, [subject.id]);
+
+  useEffect(() => {
+    if (!profile?.schoolId || !currentClass?.id || !subject.id) return;
+    
+    let localInterval: any;
+    const key = `student_prog_${currentClass.id}_${subject.id}`;
+    
+    const fetchFallback = () => {
+        try { 
+            const lp = JSON.parse(localStorage.getItem(key) || '[]'); 
+            setStudentProgress(prev => JSON.stringify(prev) === JSON.stringify(lp) ? prev : lp);
+        } catch(e) {}
+    };
+
+    const unsub = subscribeToStudentChapterProgress(profile.schoolId, currentClass.id, subject.id, (data) => {
+        if (data && data.length > 0) {
+            setStudentProgress(data);
+        } else {
+            fetchFallback();
+        }
+    });
+    
+    localInterval = setInterval(fetchFallback, 5000);
+
+    return () => {
+        unsub();
+        clearInterval(localInterval);
+    };
+  }, [profile?.schoolId, currentClass?.id, subject.id]);
+
+  const total = chapters.length;
+  const classCompleted = chapters.filter(c => c.isCompleted).length;
+  const classPercent = total > 0 ? Math.round((classCompleted / total) * 100) : 0;
+
+  const studentCompleted = studentProgress.filter(p => p.student_id === profile.id && p.is_completed).length;
+  const studentPercent = total > 0 ? Math.round((studentCompleted / total) * 100) : 0;
+
+  return (
+    <div className="flex flex-col gap-3 group py-2">
+      <div className="flex flex-col min-w-0 pr-4">
+        <span className="text-sm font-black text-[#1e3a8a] dark:text-white tracking-tight truncate leading-tight transition-colors">{subject.name}</span>
+        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest truncate">{currentClass?.name || 'Class'}</span>
+      </div>
+      
+      {/* Class Progress */}
+      <div className="space-y-1">
+          <div className="flex justify-between items-end">
+            <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400">Class Progress</span>
+            <span className="text-[10px] font-black text-slate-400 tabular-nums shrink-0">{classPercent}%</span>
+          </div>
+          <div className="h-1.5 w-full bg-slate-100 dark:bg-[#1e293b] rounded-full overflow-hidden shadow-inner">
+            <div 
+              className="h-full bg-gradient-to-r from-slate-300 to-slate-400 dark:from-slate-600 dark:to-slate-500 rounded-full transition-all duration-1000 ease-out" 
+              style={{ width: `${classPercent}%` }}
+            />
+          </div>
+      </div>
+
+      {/* Student Progress */}
+      <div className="space-y-1">
+          <div className="flex justify-between items-end">
+            <span className="text-[10px] font-bold text-[#D4AF37] dark:text-[#D4AF37]">My Progress</span>
+            <span className="text-[10px] font-black text-[#1e3a8a] dark:text-white tabular-nums shrink-0">{studentPercent}%</span>
+          </div>
+          <div className="h-2 w-full bg-slate-100 dark:bg-[#1e293b] rounded-full overflow-hidden shadow-inner">
+            <div 
+              className="h-full bg-gradient-to-r from-[#1e3a8a] to-[#D4AF37] rounded-full transition-all duration-1000 ease-out" 
+              style={{ width: `${studentPercent}%` }}
+            />
+          </div>
+      </div>
+    </div>
+  );
+};
+
 const MobileDashboard: React.FC<{
   setActiveView: (view: string) => void;
   announcements: any[];
@@ -181,9 +269,10 @@ const MobileDashboard: React.FC<{
   timetable: any[];
   school: any;
   currentClass: any;
+  subjects: any[];
   setInitialChatId: (id: string) => void;
   unreadCounts: { homework: number; classwork: number; assignments: number };
-}> = ({ setActiveView, announcements, profile, teachers, timetable, school, currentClass, setInitialChatId, unreadCounts }) => {
+}> = ({ setActiveView, announcements, profile, teachers, timetable, school, currentClass, subjects, setInitialChatId, unreadCounts }) => {
   const myTeacherIds = new Set(timetable.map(t => t.teacherId));
   
   if (currentClass?.class_teacher?.id) {
@@ -241,7 +330,7 @@ const MobileDashboard: React.FC<{
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FCFBF8] dark:bg-slate-900 transition-colors duration-300">
+    <div className="min-h-screen flex flex-col bg-[#FCFBF8] dark:bg-[#020617] transition-colors duration-300">
       <div className="w-full h-[250px] bg-gradient-to-br from-[#1e3a8a] to-[#1e40af] rounded-b-[3.5rem] shadow-[0_15px_40px_rgba(30,58,138,0.4)] relative z-10 shrink-0 flex flex-col justify-between px-6 pt-6 pb-8 overflow-hidden border-b-4 border-[#D4AF37]">
         <div className="absolute -top-24 -right-24 w-72 h-72 bg-white/10 rounded-full z-0"></div>
         <div className="relative z-20 w-full h-full">
@@ -292,13 +381,13 @@ const MobileDashboard: React.FC<{
         {displayTeachers && displayTeachers.length > 0 && (
           <div className="flex gap-4 overflow-x-auto pb-4 pt-1 px-6 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {displayTeachers.map((teacher, idx) => {
-              const isHead = classTeacherId === teacher.id;
+              const isHead = teacher.id && classTeacherId && String(teacher.id) === String(classTeacherId);
               return (
-                <div key={teacher.id || idx} onClick={() => handleTeacherClick(teacher.id)} className="flex flex-col items-center gap-2 min-w-[72px] cursor-pointer group shrink-0 relative">
+                <div key={teacher.id || `teacher-${idx}`} onClick={() => handleTeacherClick(teacher.id)} className="flex flex-col items-center gap-2 min-w-[72px] cursor-pointer group shrink-0 relative">
                   <div className={`w-16 h-16 rounded-full p-[3px] shadow-md active:scale-95 transition-transform duration-300 ${isHead ? 'bg-gradient-to-tr from-[#D4AF37] via-[#FDB931] to-[#D4AF37]' : 'bg-gradient-to-tr from-[#D4AF37] via-[#1e3a8a] to-[#D4AF37]'}`}>
-                    <div className="w-full h-full rounded-full border-2 border-white dark:border-slate-900 overflow-hidden bg-white dark:bg-slate-800 flex items-center justify-center relative">
+                    <div className="w-full h-full rounded-full border-2 border-white dark:border-slate-900 overflow-hidden bg-white dark:bg-[#1e293b] flex items-center justify-center relative">
                       {teacher.photoURL ? (
-                        <img src={teacher.photoURL} alt={teacher.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                        <img src={teacher.photoURL} alt="" title="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center font-black text-[#1e3a8a] text-xl">
                           {teacher.name ? teacher.name[0] : 'T'}
@@ -306,14 +395,15 @@ const MobileDashboard: React.FC<{
                       )}
                     </div>
                   </div>
-                  {isHead && (
+                  {isHead ? (
                     <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[8px] font-black px-2 py-0.5 rounded-full shadow-md z-10 border border-white flex items-center gap-1">
                        HEAD
                     </div>
+                  ) : (
+                    <span className="text-[10px] font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider text-center w-full truncate px-1 mt-1">
+                      {teacher.name ? teacher.name.split(' ')[0] : 'Teacher'}
+                    </span>
                   )}
-                  <span className="text-[10px] font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider text-center w-full truncate px-1 mt-1">
-                    {teacher.name ? teacher.name.split(' ')[0] : 'Teacher'}
-                  </span>
                 </div>
               );
             })}
@@ -351,7 +441,7 @@ const MobileDashboard: React.FC<{
           )}
         </div>
 
-        <div className="mt-auto w-full bg-white dark:bg-slate-800 rounded-t-[3rem] p-8 pb-32 border-t-4 border-[#D4AF37] shadow-[0_-15px_35px_rgba(30,58,138,0.08)] transition-colors duration-300">
+        <div className="mt-auto w-full bg-white dark:bg-[#1e293b] rounded-t-[3rem] p-8 pb-32 border-t-4 border-[#D4AF37] shadow-[0_-15px_35px_rgba(30,58,138,0.08)] transition-colors duration-300">
           <div className="flex items-center justify-between mb-8 px-2">
             <div className="flex items-center gap-3">
               <h3 className="text-2xl font-black font-heading text-[#1e3a8a] dark:text-[#D4AF37] drop-shadow-sm tracking-tight">Student Tools</h3>
@@ -386,6 +476,22 @@ const MobileDashboard: React.FC<{
               </button>
             ))}
           </div>
+
+          {subjects && subjects.filter(s => s.classId === currentClass?.id).length > 0 && (
+            <div className="mt-8 pt-8 border-t border-[#D4AF37]/20">
+              <div className="flex items-center justify-between mb-4 px-2">
+                 <h3 className="text-xl font-black font-heading text-[#1e3a8a] dark:text-[#D4AF37] drop-shadow-sm tracking-tight flex items-center gap-2">
+                   <Book01Icon size={22} />
+                   Curriculum Progress
+                 </h3>
+              </div>
+              <div className="space-y-1 bg-slate-50 dark:bg-[#020617]/50 p-4 rounded-3xl border border-slate-100 dark:border-[#1e293b]/50">
+                 {subjects.filter(s => s.classId === currentClass?.id).map(subject => (
+                    <CurriculumTrackItem key={subject.id} subject={subject} currentClass={currentClass} profile={profile} />
+                 ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -658,6 +764,7 @@ const StudentDashboard: React.FC = () => {
                 timetable={timetable}
                 school={school}
                 currentClass={currentClass}
+                subjects={subjects}
                 setInitialChatId={setInitialChatId}
                 unreadCounts={{
                     homework: unreadHomework,
@@ -693,7 +800,7 @@ const StudentDashboard: React.FC = () => {
   };
 
   return (
-    <div className="bg-[#FCFBF8] dark:bg-slate-900 min-h-screen font-sans text-slate-800 no-scrollbar overflow-y-auto transition-colors duration-300">
+    <div className="bg-[#FCFBF8] dark:bg-[#020617] min-h-screen font-sans text-slate-800 no-scrollbar overflow-y-auto transition-colors duration-300">
         <style>{`
           .no-scrollbar::-webkit-scrollbar { display: none; }
           .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -703,13 +810,13 @@ const StudentDashboard: React.FC = () => {
         {showNoticeModal && <NoticeModal notice={latestNotice} onClose={handleCloseNotice} />}
         
         {/* Only Mobile View is supported for Students currently as per design */}
-        <div className="relative w-full h-screen shadow-2xl bg-white dark:bg-slate-900 flex flex-col">
+        <div className="relative w-full h-screen shadow-2xl bg-white dark:bg-[#020617] flex flex-col">
             <div className="flex-1 overflow-y-auto">
                 {renderMobileView()}
             </div>
             
             {/* Navigation Bar (Fixed Bottom) */}
-            <div className="w-full z-[100] bg-white dark:bg-slate-900 border-t-2 border-slate-200 dark:border-slate-800 shadow-[0_-10px_30px_rgba(0,0,0,0.1)] transition-colors duration-300 shrink-0">
+            <div className="w-full z-[100] bg-white dark:bg-[#020617] border-t-2 border-slate-200 dark:border-[#334155] shadow-[0_-10px_30px_rgba(0,0,0,0.1)] transition-colors duration-300 shrink-0">
                 <div className="flex items-center justify-around w-full h-20 px-2 pb-2">
                     <button onClick={() => setActiveView('home')} className="flex flex-col items-center justify-center w-full h-full gap-1 transition-all">
                         <div className={`p-2 rounded-xl transition-all ${activeView === 'home' ? 'bg-[#1e3a8a] text-white -translate-y-2 shadow-lg shadow-[#1e3a8a]/30' : 'text-slate-600 dark:text-slate-400'}`}>

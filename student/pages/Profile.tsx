@@ -88,12 +88,12 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, school, currentClass
   };
 
   return (
-    <div className="min-h-full bg-white dark:bg-slate-900 pb-32 font-sans relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-full bg-white dark:bg-[#020617] pb-32 font-sans relative overflow-hidden transition-colors duration-300">
       {/* TOP NAV BAR */}
       <div className="px-6 pt-6 pb-2 flex items-center justify-between relative z-20">
           <button 
               onClick={() => navigate(-1)}
-              className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center border border-slate-100 dark:border-slate-700 active:scale-90 transition-transform"
+              className="w-10 h-10 rounded-xl bg-white dark:bg-[#1e293b] shadow-sm flex items-center justify-center border border-slate-100 dark:border-[#1e293b] active:scale-90 transition-transform"
           >
               <ArrowLeft size={20} className="text-[#1e3a8a] dark:text-[#D4AF37]" />
           </button>
@@ -114,7 +114,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, school, currentClass
 
       <div className="max-w-4xl mx-auto space-y-8 relative z-10 mt-4">
         {/* Header Section */}
-        <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+        <div className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#1e3a8a] via-[#D4AF37] to-[#1e3a8a]"></div>
           <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
           
@@ -139,16 +139,16 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, school, currentClass
 
         <div className="px-4 md:px-6 space-y-8">
           {/* --- MAIN BASE CARD --- */}
-          <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-6 border border-[#D4AF37]/20 shadow-xl relative mt-4">
+          <div className="bg-white dark:bg-[#1e293b] rounded-[2.5rem] p-6 border border-[#D4AF37]/20 shadow-xl relative mt-4">
             
             {/* Avatar Section - Centered & Overlapping */}
             <div className="flex justify-center -mt-20 mb-8 relative z-20">
                 <div className="relative group">
-                    <div className="w-32 h-32 rounded-full border-[6px] border-white dark:border-slate-800 shadow-2xl overflow-hidden bg-[#FCFBF8] dark:bg-slate-700 ring-4 ring-[#D4AF37]">
+                    <div className="w-32 h-32 rounded-full border-[6px] border-white dark:border-[#334155] shadow-2xl overflow-hidden bg-[#FCFBF8] dark:bg-slate-700 ring-4 ring-[#D4AF37]">
                         {formData.photoURL ? (
                             <img src={formData.photoURL} className="w-full h-full object-cover" />
                         ) : (
-                            <div className="w-full h-full flex items-center justify-center text-[#1e3a8a]/30 dark:text-[#D4AF37]/30 bg-[#FCFBF8] dark:bg-slate-800">
+                            <div className="w-full h-full flex items-center justify-center text-[#1e3a8a]/30 dark:text-[#D4AF37]/30 bg-[#FCFBF8] dark:bg-[#1e293b]">
                                 <User size={48} strokeWidth={1.5} />
                             </div>
                         )}
@@ -170,7 +170,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, school, currentClass
                                 <input 
                                     value={formData.name} 
                                     onChange={e => setFormData({...formData, name: e.target.value})} 
-                                    className="w-full pl-14 pr-6 py-5 bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/20 rounded-[1.5rem] font-bold text-[#1e3a8a] dark:text-white outline-none focus:ring-4 focus:ring-[#D4AF37]/10 focus:border-[#D4AF37]/50 transition-all placeholder:text-[#1e3a8a]/30 dark:placeholder:text-white/30"
+                                    className="w-full pl-14 pr-6 py-5 bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/20 rounded-[1.5rem] font-bold text-[#1e3a8a] dark:text-white outline-none focus:ring-4 focus:ring-[#D4AF37]/10 focus:border-[#D4AF37]/50 transition-all placeholder:text-[#1e3a8a]/30 dark:placeholder:text-white/30"
                                     placeholder="Enter your full name"
                                 />
                             </div>
@@ -184,7 +184,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, school, currentClass
                                         type="date" 
                                         value={formData.dob} 
                                         onChange={e => setFormData({...formData, dob: e.target.value})} 
-                                        className="w-full pl-14 pr-6 py-5 bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/20 rounded-[1.5rem] font-bold text-[#1e3a8a] dark:text-white outline-none focus:ring-4 focus:ring-[#D4AF37]/10 focus:border-[#D4AF37]/50 transition-all"
+                                        className="w-full pl-14 pr-6 py-5 bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/20 rounded-[1.5rem] font-bold text-[#1e3a8a] dark:text-white outline-none focus:ring-4 focus:ring-[#D4AF37]/10 focus:border-[#D4AF37]/50 transition-all"
                                     />
                                 </div>
                             </div>
@@ -195,7 +195,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, school, currentClass
                                     <input 
                                         value={formData.phone} 
                                         onChange={e => setFormData({...formData, phone: e.target.value})} 
-                                        className="w-full pl-14 pr-6 py-5 bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/20 rounded-[1.5rem] font-bold text-[#1e3a8a] dark:text-white outline-none focus:ring-4 focus:ring-[#D4AF37]/10 focus:border-[#D4AF37]/50 transition-all placeholder:text-[#1e3a8a]/30 dark:placeholder:text-white/30"
+                                        className="w-full pl-14 pr-6 py-5 bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/20 rounded-[1.5rem] font-bold text-[#1e3a8a] dark:text-white outline-none focus:ring-4 focus:ring-[#D4AF37]/10 focus:border-[#D4AF37]/50 transition-all placeholder:text-[#1e3a8a]/30 dark:placeholder:text-white/30"
                                         placeholder="03xx-xxxxxxx"
                                     />
                                 </div>

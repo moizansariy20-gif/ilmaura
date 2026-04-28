@@ -8,32 +8,27 @@ export const generateAIReport = async (
     data: any
 ): Promise<string> => {
     const prompt = `
-        You are a professional School Administration Auditor. 
-        Generate a comprehensive ${timeframe} ${reportType} report for a school based on the provided data.
+        You are an expert School Administrator and Data Analyst.
+        Generate a highly professional, easy-to-understand ${timeframe} ${reportType} report.
         
         DATA CONTEXT:
         ${JSON.stringify(data, null, 2)}
         
-        REPORT STRUCTURE:
-        1. **Summary**: A high-level overview of the school's status during this period.
-        2. **Key Metrics**: Analysis of core data points (Attendance, Financials, Enrollment).
-        3. **Data Analysis**: 
-           - Patterns in student and teacher attendance.
-           - Financial summary (Revenue vs Expenses).
-           - Operational status.
-        4. **Observations**:
-           - **Positive Findings**: What is working well.
-           - **Areas for Improvement**: Identified gaps or issues.
-           - **Risks**: Potential concerns.
-        5. **Recommendations**: Actionable steps for the administration.
-        6. **Conclusion**: Final summary of the reporting period.
+        CRITICAL INSTRUCTIONS:
+        - The audience is the school principal/management. Keep it exceptionally clean, concise, and easy to read.
+        - NO FLUFF. Do not include generic AI greetings or unnecessary filler text.
+        - Use simple, straightforward language. Avoid overly complex jargon.
+        - ALWAYS format the report beautifully using Markdown.
+        - Provide insightful analysis, not just a repeat of the numbers.
         
-        FORMATTING:
-        - Use standard Markdown with clear headings.
-        - Use tables for data presentation.
-        - Maintain a formal, objective, and professional tone.
-        - Avoid flowery or "AI-style" language. Use standard administrative terminology.
-        - Language: English.
+        REQUIRED STRUCTURE:
+        1. **📊 Executive Summary**: A 2-3 sentence overview of the current status.
+        2. **📈 Key Highlights**: Bullet points of top successes and biggest concerns.
+        3. **📋 Data Breakdown**: 
+           - Use MARKDOWN TABLES to present metrics cleanly.
+           - CRITICAL: Ensure every markdown table has proper spacing and NEW LINES between the header, separator (---), and each data row to render correctly. Do not collapse tables into a single line.
+           - DO NOT use text-based charts (no ASCII bars or emojis representing graphs) as real charts are already provided in the UI.
+        4. **💡 Actionable Recommendations**: 3-4 clear, direct steps the school should take right now.
     `;
 
     const MAX_RETRIES = 3;

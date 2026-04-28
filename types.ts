@@ -170,18 +170,35 @@ export interface StudentDocument {
   uploadedAt: string;
 }
 
+export type SchoolPlan = 'free' | 'paid' | 'trial';
+
+export interface PlanRequest {
+  id: string;
+  schoolId: string;
+  schoolName: string;
+  type: 'trial' | 'upgrade';
+  status: 'pending' | 'approved' | 'rejected';
+  requestDate: any;
+}
+
 export interface School {
   id: string;
   schoolCode?: string; // NEW: The human-readable ID (e.g. SCH-1234)
   name: string;
   logoURL: string;
+  plan?: SchoolPlan; // NEW: Access plan (free/paid/trial)
+  trialStartDate?: any;
+  trialEndDate?: any;
   bannerURLs?: string[]; // NEW: Custom school banner/poster URLs
   themeColor: string;
   city?: string;
+  state?: string;
+  country?: string;
   address?: string;
   phone?: string;
+  whatsapp?: string;
   email?: string;
-  isLearningHubEnabled?: boolean;
+  contactName?: string;
   // NEW: Smart ID Configuration
   smartIdConfig?: {
     isEnabled: boolean;
@@ -216,9 +233,14 @@ export interface School {
   teacherFormOverlayConfig?: AdmissionFormOverlayConfig;
   feeConfig?: {
     classFees: { [classId: string]: number };
+    classFeeBreakdown?: { [classId: string]: { name: string; amount: number }[] };
     admissionFee: number;
     annualCharges: number;
     lateFeeFine: number;
+    challanGenDay?: number;
+    feeDueDay?: number;
+    lastChallanNo?: number;
+    lastProcessedMonth?: string;
     paymentMethods: {
       cash: boolean;
       easypaisa: boolean;
@@ -249,6 +271,9 @@ export interface School {
       backgroundImageURL?: string;
       primaryColor?: string;
       secondaryColor?: string;
+      signatureLeftLabel?: string;
+      signatureRightLabel?: string;
+      footerNote?: string;
     };
   };
   // NEW: EasyPaisa payment gateway configuration
@@ -392,6 +417,19 @@ export interface Teacher {
 }
 
 // New: A reference to a teacher with essential info for embedding.
+export interface Staff {
+  id: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  designation: string;
+  loginId?: string;
+  auth_status?: 'pending' | 'active';
+  schoolId: string;
+  uid?: string; // Linked to user_profiles
+  staff_permissions?: Record<string, StaffPermission>;
+}
+
 export interface TeacherReference {
   id: string;
   name: string;
@@ -461,6 +499,8 @@ export interface FeeTransaction {
   classId: string;
   month: string;
   amountPaid: number;
+  totalAmount?: number;
+  balanceAmount?: number;
   fineAmount: number;
   discountAmount: number;
   // Fix: Add 'Challan' as a valid payment method
@@ -468,12 +508,13 @@ export interface FeeTransaction {
   transactionId?: string;
   receiptNo: string;
   timestamp: any;
-  status: 'Success' | 'Pending' | 'Failed';
+  status: 'Success' | 'Pending' | 'Failed' | 'Partial';
   remarks?: string;
   recordedBy: string;
   // NEW: EasyPaisa specific transaction details
   easyPaisaPaymentUrl?: string; // URL for the student to pay
   easyPaisaOrderId?: string;    // Unique order ID from EasyPaisa
+  normalizedDate?: string;      // Optimized date string for fast filtering
   // NEW: Properties for ledger
   type?: 'payment' | 'challan';
   amount?: number;
@@ -531,6 +572,7 @@ export interface Mark {
 export interface Resource {
   id?: string;
   title: string;
+  description?: string;
   url?: string;
   classId: string;
   subjectId: string;
@@ -540,7 +582,6 @@ export interface Resource {
   fileURL?: string;
   fileName?: string;
   mimeType?: string;
-  description?: string; // Add description for Learning Hub
   downloadCount?: number;
   createdAt?: number;
 }
@@ -573,8 +614,23 @@ export enum TopicDifficulty {
 
 export interface SyllabusChapter {
   id: string;
+  schoolId: string;
+  subjectId: string;
   name: string;
-  content?: string;
+  description?: string;
+  order: number;
+  expectedCompletionDate?: string;
+  isCompleted: boolean;
+  completedAt?: any;
+  checkpoints?: { id: string; name: string; isCompleted: boolean }[];
+}
+
+export interface SubjectProgress {
+  subjectId: string;
+  classId: string;
+  totalChapters: number;
+  completedChapters: number;
+  lastUpdated: any;
 }
 
 export interface SyllabusTopic {
@@ -584,6 +640,22 @@ export interface SyllabusTopic {
   difficulty: TopicDifficulty;
   duration: number; // in hours
   chapterId: string;
+}
+
+export interface Course {
+  id: string;
+  schoolId: string;
+  title: string;
+  code: string;
+  description?: string;
+  department?: string;
+  level?: string; // e.g. Primary, Secondary, O-Level
+  duration?: string;
+  subjectIds: string[];
+  batchIds?: string[];
+  thumbnailUrl?: string;
+  createdAt: any;
+  status: 'Active' | 'Draft' | 'Archived';
 }
 
 export interface GraphicalSyllabus {
@@ -648,34 +720,6 @@ export interface Curriculum {
     teacherId: string;
     syllabus?: GraphicalSyllabus;
     academicPlan?: GraphicalAcademicPlan;
-}
-
-// NEW: Interfaces for Global AI Learning Hub
-export interface LearningResource {
-  id?: string;
-  title: string;
-  platform: 'YouTube';
-  description: string;
-  url: string;
-  channel: string;
-  videoCount?: number;
-  thumbnailUrl?: string;
-  level?: 'Beginner' | 'Intermediate' | 'Advanced';
-  rating?: number;
-  channelLogoUrl?: string;
-  subscriberCount?: string;
-  subscriberCountRaw?: number;
-  category?: string;
-  createdAt?: any;
-}
-
-// NEW: Interface for YouTube Channel Search Results
-export interface LearningChannel {
-  channelName: string;
-  platform: 'YouTube';
-  description: string;
-  url: string;
-  subscriberCount: string;
 }
 
 // NEW: Interfaces for Live Quiz Feature
@@ -789,4 +833,31 @@ export interface TicketMessage {
   senderRole: 'mother-admin' | 'principal';
   message: string;
   createdAt: string;
+}
+
+export interface LearningResource {
+  id?: string; // Made optional as youtubeService doesn't provide it
+  title: string;
+  description: string;
+  url: string;
+  type?: 'video' | 'article' | 'quiz'; // Made optional
+  duration?: string;
+  tags?: string[];
+  channel?: string;
+  channelLogoUrl?: string;
+  subscriberCount?: string;
+  subscriberCountRaw?: number;
+  videoCount?: number;
+  views?: string;
+  publishedAt?: string;
+  thumbnailUrl?: string;
+  platform?: string;
+}
+
+export interface LearningChannel {
+  id: string;
+  name: string;
+  description: string;
+  thumbnail: string;
+  resources: LearningResource[];
 }

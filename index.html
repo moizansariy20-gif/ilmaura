@@ -37,19 +37,19 @@
       window.updatePWAManifest = (schoolName, logoUrl) => {
         const manifest = {
           "short_name": schoolName || "Ilmaura",
-          "name": schoolName ? `${schoolName} Portal` : "Ilmaura School Portal",
+          "name": schoolName ? `${schoolName} App` : "Ilmaura School App",
           "icons": [
             {
               "src": logoUrl || "/ilmaura-mascot.png",
               "sizes": "192x192",
               "type": "image/png",
-              "purpose": "any maskable"
+              "purpose": "any"
             },
             {
               "src": logoUrl || "/ilmaura-mascot.png",
               "sizes": "512x512",
               "type": "image/png",
-              "purpose": "any maskable"
+              "purpose": "any"
             }
           ],
           "start_url": ".",
@@ -148,6 +148,15 @@
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=Roboto+Slab:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Cinzel:wght@400;600;700;900&family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Pacifico&family=Orbitron:wght@400;500;600;700;800;900&family=Bebas+Neue&family=Merriweather:ital,wght@0,400;0,700;0,900;1,400&family=Righteous&family=Kalam:wght@300;400;700&family=Caveat:wght@400..700&family=Nanum+Pen+Script&display=swap');
       
+      /* Global Scrollbar Hiding */
+      ::-webkit-scrollbar {
+        display: none;
+      }
+      * {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
       body {
         font-family: 'Inter', sans-serif;
         -webkit-tap-highlight-color: transparent;
@@ -196,6 +205,15 @@
         0% { transform: translateX(-100%); }
         50% { transform: translateX(0%); }
         100% { transform: translateX(100%); }
+      }
+
+      @keyframes shake {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(10deg); }
+        75% { transform: rotate(-10deg); }
+      }
+      .shake-animation {
+        animation: shake 0.5s infinite;
       }
     </style>
 <link rel="stylesheet" href="/index.css">

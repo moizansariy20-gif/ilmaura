@@ -112,11 +112,11 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ profile }) => {
 
 
   return (
-    <div className="min-h-full bg-white dark:bg-slate-900 pb-32 font-sans relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-full bg-white dark:bg-[#020617] pb-32 font-sans relative overflow-hidden transition-colors duration-300">
       <div className="max-w-3xl mx-auto space-y-8 relative z-10">
         
         {/* Header Section */}
-        <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(107,29,47,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+        <div className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(107,29,47,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#6B1D2F] via-[#D4AF37] to-[#6B1D2F]"></div>
           <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
           
@@ -149,7 +149,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ profile }) => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-5 bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/10 rounded-2xl shadow-sm space-y-3">
+              <div className="p-5 bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/10 rounded-2xl shadow-sm space-y-3">
                 <div className="flex items-center gap-3">
                   <Globe size={18} className="text-[#D4AF37]" />
                   <p className="text-[10px] font-black text-[#6B1D2F]/60 dark:text-[#D4AF37]/60 uppercase tracking-widest">{t.language}</p>
@@ -165,7 +165,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ profile }) => {
                 </select>
               </div>
 
-              <div className="p-5 bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/10 rounded-2xl shadow-sm space-y-3">
+              <div className="p-5 bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/10 rounded-2xl shadow-sm space-y-3">
                 <div className="flex items-center gap-3">
                   <Moon size={18} className="text-[#D4AF37]" />
                   <p className="text-[10px] font-black text-[#6B1D2F]/60 dark:text-[#D4AF37]/60 uppercase tracking-widest">{t.appearance}</p>
@@ -200,7 +200,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ profile }) => {
                 <label className="text-[10px] font-black text-[#6B1D2F]/60 dark:text-[#D4AF37]/60 uppercase tracking-widest ml-1">{t.emailAddress || "Email Address"}</label>
                 <div className="relative">
                   <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-[#D4AF37]" size={18} />
-                  <input name="email" type="email" value={formData.email} onChange={handleInputChange} className="w-full pl-14 pr-6 py-4 bg-white dark:bg-slate-800 border border-[#6B1D2F]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#6B1D2F]/30 focus:ring-2 focus:ring-[#6B1D2F]/10 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-all" />
+                  <input name="email" type="email" value={formData.email} onChange={handleInputChange} className="w-full pl-14 pr-6 py-4 bg-white dark:bg-[#1e293b] border border-[#6B1D2F]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#6B1D2F]/30 focus:ring-2 focus:ring-[#6B1D2F]/10 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-all" />
                 </div>
               </div>
 
@@ -209,14 +209,14 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ profile }) => {
                   <label className="text-[10px] font-black text-[#6B1D2F]/60 dark:text-[#D4AF37]/60 uppercase tracking-widest ml-1">{t.newPasskey || "New Password"}</label>
                   <div className="relative">
                     <KeyRound className="absolute left-5 top-1/2 -translate-y-1/2 text-[#D4AF37]" size={18} />
-                    <input name="newPassword" type="password" value={formData.newPassword} onChange={handleInputChange} placeholder={t.newPasskey || "New Password"} className="w-full pl-14 pr-6 py-4 bg-white dark:bg-slate-800 border border-[#6B1D2F]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#6B1D2F]/30 focus:ring-2 focus:ring-[#6B1D2F]/10 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-all placeholder:text-slate-300" />
+                    <input name="newPassword" type="password" value={formData.newPassword} onChange={handleInputChange} placeholder={t.newPasskey || "New Password"} className="w-full pl-14 pr-6 py-4 bg-white dark:bg-[#1e293b] border border-[#6B1D2F]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#6B1D2F]/30 focus:ring-2 focus:ring-[#6B1D2F]/10 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-all placeholder:text-slate-300" />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-[#6B1D2F]/60 dark:text-[#D4AF37]/60 uppercase tracking-widest ml-1">{t.confirmPasskey || "Confirm Password"}</label>
                   <div className="relative">
                     <KeyRound className="absolute left-5 top-1/2 -translate-y-1/2 text-[#D4AF37]" size={18} />
-                    <input name="confirmPassword" type="password" value={formData.confirmPassword} onChange={handleInputChange} placeholder={t.confirmPasskey || "Confirm Password"} className="w-full pl-14 pr-6 py-4 bg-white dark:bg-slate-800 border border-[#6B1D2F]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#6B1D2F]/30 focus:ring-2 focus:ring-[#6B1D2F]/10 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-all placeholder:text-slate-300" />
+                    <input name="confirmPassword" type="password" value={formData.confirmPassword} onChange={handleInputChange} placeholder={t.confirmPasskey || "Confirm Password"} className="w-full pl-14 pr-6 py-4 bg-white dark:bg-[#1e293b] border border-[#6B1D2F]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#6B1D2F]/30 focus:ring-2 focus:ring-[#6B1D2F]/10 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-all placeholder:text-slate-300" />
                   </div>
                 </div>
               </div>
@@ -249,7 +249,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ profile }) => {
 
               <button 
                 onClick={() => logout()}
-                className="py-4 bg-white dark:bg-slate-800 text-rose-600 dark:text-rose-400 text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-sm border border-rose-100 dark:border-rose-900/30 hover:bg-rose-50 dark:hover:bg-rose-900/10 active:scale-95 transition-all flex items-center justify-center gap-3"
+                className="py-4 bg-white dark:bg-[#1e293b] text-rose-600 dark:text-rose-400 text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-sm border border-rose-100 dark:border-rose-900/30 hover:bg-rose-50 dark:hover:bg-rose-900/10 active:scale-95 transition-all flex items-center justify-center gap-3"
               >
                 <LogOut size={16} />
                 {t.logout || "Logout"}

@@ -1,5 +1,5 @@
 {
   "name": "ilmaura all in one solution",
-  "description": "A high-performance Super Admin dashboard for multi-school SaaS orchestration, focusing on school management, revenue control, and system health.",
+  "description": "A comprehensive school management solution (SaaS) featuring advanced fee management with partial payments, thermal receipt generation, and real-time ledger tracking.",
   "requestFramePermissions": []
 }

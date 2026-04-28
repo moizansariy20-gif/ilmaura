@@ -106,11 +106,11 @@ const Timetable: React.FC<TimetableProps> = ({ profile, timetable, subjects, cla
   };
 
   return (
-    <div className="min-h-full bg-white dark:bg-slate-900 pb-32 font-sans relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-full bg-white dark:bg-[#020617] pb-32 font-sans relative overflow-hidden transition-colors duration-300">
       <div className="max-w-3xl mx-auto space-y-8 relative z-10">
         
         {/* Header & Filters Combined - Same as Homework */}
-        <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(107,29,47,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+        <div className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(107,29,47,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#6B1D2F] via-[#D4AF37] to-[#6B1D2F]"></div>
           <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
           
@@ -127,7 +127,7 @@ const Timetable: React.FC<TimetableProps> = ({ profile, timetable, subjects, cla
             </div>
             <div className="flex p-1.5 md:p-2 bg-gradient-to-br from-[#6B1D2F] to-[#4A1420] shadow-[0_10px_25px_-5px_rgba(107,29,47,0.4),inset_0_2px_4px_rgba(255,255,255,0.2)] rounded-2xl border-2 border-[#D4AF37]/40 relative group overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-tr from-[#D4AF37]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl overflow-hidden border border-[#D4AF37]/30 bg-white/10 dark:bg-slate-800/10 flex items-center justify-center relative z-10">
+              <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl overflow-hidden border border-[#D4AF37]/30 bg-white/10 dark:bg-[#1e293b]/10 flex items-center justify-center relative z-10">
                 {profile.photoURL ? (
                   <img 
                     src={profile.photoURL} 
@@ -155,7 +155,7 @@ const Timetable: React.FC<TimetableProps> = ({ profile, timetable, subjects, cla
               <select 
                 value={selectedClassId}
                 onChange={e => setSelectedClassId(e.target.value)}
-                className="w-full appearance-none pl-6 pr-12 py-4 bg-white dark:bg-slate-800 border border-[#E5E0D8] dark:border-[#D4AF37]/20 hover:border-[#D4AF37]/50 rounded-xl text-sm font-bold text-[#6B1D2F] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all shadow-[inset_0_2px_8px_rgba(107,29,47,0.04),0_1px_2px_rgba(255,255,255,1)]"
+                className="w-full appearance-none pl-6 pr-12 py-4 bg-white dark:bg-[#1e293b] border border-[#E5E0D8] dark:border-[#D4AF37]/20 hover:border-[#D4AF37]/50 rounded-xl text-sm font-bold text-[#6B1D2F] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all shadow-[inset_0_2px_8px_rgba(107,29,47,0.04),0_1px_2px_rgba(255,255,255,1)]"
               >
                 {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
@@ -177,7 +177,7 @@ const Timetable: React.FC<TimetableProps> = ({ profile, timetable, subjects, cla
                 </div>
 
                 {isHoliday ? (
-                  <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl border-2 border-dashed border-[#D4AF37]/30 text-center shadow-sm">
+                  <div className="bg-white dark:bg-[#1e293b] p-8 rounded-3xl border-2 border-dashed border-[#D4AF37]/30 text-center shadow-sm">
                     <p className="text-[#A89F91] dark:text-slate-400 font-black uppercase tracking-[0.3em] text-sm">{t.noClassesScheduled}</p>
                   </div>
                 ) : (
@@ -191,10 +191,10 @@ const Timetable: React.FC<TimetableProps> = ({ profile, timetable, subjects, cla
                           key={`${dayKey}-${slotConfig.label}`}
                           className={`p-6 rounded-3xl border transition-all relative overflow-hidden group ${
                             isBreak 
-                              ? 'bg-[#FCFBF8] dark:bg-slate-800/50 border-[#D4AF37]/20 shadow-sm' 
+                              ? 'bg-[#FCFBF8] dark:bg-[#0f172a] border-[#D4AF37]/20 shadow-sm' 
                               : slot 
-                                ? 'bg-white dark:bg-slate-800 border-[#D4AF37]/20 shadow-[0_10px_40px_-10px_rgba(107,29,47,0.1)] hover:shadow-[0_15px_50px_-12px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50'
-                                : 'bg-slate-50/50 dark:bg-slate-800/20 border-slate-100 dark:border-slate-700 opacity-60'
+                                ? 'bg-white dark:bg-[#1e293b] border-[#D4AF37]/20 shadow-[0_10px_40px_-10px_rgba(107,29,47,0.1)] hover:shadow-[0_15px_50px_-12px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50'
+                                : 'bg-slate-50/50 dark:bg-[#1e293b]/20 border-slate-100 dark:border-[#1e293b] opacity-60'
                           }`}
                         >
                           {slot && <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-[#D4AF37] to-[#6B1D2F]"></div>}
@@ -246,7 +246,7 @@ const Timetable: React.FC<TimetableProps> = ({ profile, timetable, subjects, cla
 
           <div className="pt-10 border-t border-[#D4AF37]/20 flex flex-col sm:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-[#FCFBF8] dark:bg-slate-800 rounded-xl flex items-center justify-center border border-[#D4AF37]/20 shadow-sm">
+              <div className="w-10 h-10 bg-[#FCFBF8] dark:bg-[#1e293b] rounded-xl flex items-center justify-center border border-[#D4AF37]/20 shadow-sm">
                 <LayoutGrid size={20} className="text-[#D4AF37]" />
               </div>
               <p className="text-[10px] font-black text-[#A89F91] dark:text-slate-400 uppercase tracking-widest">{t.teachersOfficialCopy}</p>
@@ -260,9 +260,9 @@ const Timetable: React.FC<TimetableProps> = ({ profile, timetable, subjects, cla
 
       {/* Hidden Print Section */}
       <div ref={printRef} style={{ display: 'none', width: '794px', padding: '40px', background: 'white', fontFamily: 'sans-serif' }}>
-        <div className="border border-slate-200 dark:border-slate-700 p-8">
+        <div className="border border-slate-200 dark:border-[#1e293b] p-8">
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-6 mb-8">
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#1e293b] pb-6 mb-8">
             <div className="flex items-center gap-4">
               {school?.logoURL ? (
                 <img src={school.logoURL} alt="Logo" className="w-16 h-16 object-contain" referrerPolicy="no-referrer" />
@@ -283,12 +283,12 @@ const Timetable: React.FC<TimetableProps> = ({ profile, timetable, subjects, cla
           </div>
 
           {/* Table */}
-          <table className="w-full border-collapse border border-slate-200 dark:border-slate-700 mb-10">
+          <table className="w-full border-collapse border border-slate-200 dark:border-[#1e293b] mb-10">
             <thead>
-              <tr className="bg-slate-50 dark:bg-slate-800/50">
-                <th className="border border-slate-200 dark:border-slate-700 p-3 text-xs font-bold uppercase text-slate-700 dark:text-slate-200">Day</th>
+              <tr className="bg-slate-50 dark:bg-[#0f172a]">
+                <th className="border border-slate-200 dark:border-[#1e293b] p-3 text-xs font-bold uppercase text-slate-700 dark:text-slate-200">Day</th>
                 {masterStructure.map((m: any, i: number) => (
-                  <th key={i} className="border border-slate-200 dark:border-slate-700 p-3 text-[10px] font-bold uppercase text-slate-700 dark:text-slate-200">
+                  <th key={i} className="border border-slate-200 dark:border-[#1e293b] p-3 text-[10px] font-bold uppercase text-slate-700 dark:text-slate-200">
                     <span className="text-[10px] font-bold text-slate-700 dark:text-slate-200">{m.startTime}-{m.endTime}</span>
                   </th>
                 ))}
@@ -299,17 +299,17 @@ const Timetable: React.FC<TimetableProps> = ({ profile, timetable, subjects, cla
                 const currentStructure = dayStructures[day] || masterStructure;
                 return (
                   <tr key={day}>
-                    <td className="border border-slate-200 dark:border-slate-700 p-3 bg-slate-50 dark:bg-slate-800/50 font-bold uppercase text-center text-slate-800 dark:text-slate-100 text-xs">{day}</td>
+                    <td className="border border-slate-200 dark:border-[#1e293b] p-3 bg-slate-50 dark:bg-[#0f172a] font-bold uppercase text-center text-slate-800 dark:text-slate-100 text-xs">{day}</td>
                     {masterStructure.map((_: any, i: number) => {
                       const mSlot = currentStructure[i];
-                      if (!mSlot) return <td key={i} className="border border-slate-200 dark:border-slate-700 p-3 text-center text-slate-200">-</td>;
+                      if (!mSlot) return <td key={i} className="border border-slate-200 dark:border-[#1e293b] p-3 text-center text-slate-200">-</td>;
                       
                       const timeString = `${mSlot.startTime} - ${mSlot.endTime}`;
                       const slot = timetable.find(s => s.day === day && s.timeSlot === timeString && s.classId === selectedClassId);
                       
                       if (mSlot.isBreak) {
                         return (
-                          <td key={i} className="border border-slate-200 dark:border-slate-700 p-3 bg-slate-50 dark:bg-slate-800/50 text-center">
+                          <td key={i} className="border border-slate-200 dark:border-[#1e293b] p-3 bg-slate-50 dark:bg-[#0f172a] text-center">
                             <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">BREAK</span>
                           </td>
                         );
@@ -321,13 +321,13 @@ const Timetable: React.FC<TimetableProps> = ({ profile, timetable, subjects, cla
                         // Actually, the teacher portal timetable shows the timetable for a specific class.
                         // Let's just show the subject name.
                         return (
-                          <td key={i} className="border border-slate-200 dark:border-slate-700 p-3 text-center">
+                          <td key={i} className="border border-slate-200 dark:border-[#1e293b] p-3 text-center">
                             <div className="font-bold text-slate-900 dark:text-white text-[10px] uppercase leading-tight">{subject?.name || '---'}</div>
                           </td>
                         );
                       }
                       
-                      return <td key={i} className="border border-slate-200 dark:border-slate-700 p-3 text-center text-slate-200">-</td>;
+                      return <td key={i} className="border border-slate-200 dark:border-[#1e293b] p-3 text-center text-slate-200">-</td>;
                     })}
                   </tr>
                 );
@@ -337,8 +337,8 @@ const Timetable: React.FC<TimetableProps> = ({ profile, timetable, subjects, cla
 
           {/* Footer Section */}
           <div className="grid grid-cols-2 gap-6">
-            <div className="border border-slate-200 dark:border-slate-700 p-4">
-              <h3 className="text-xs font-bold uppercase text-slate-800 dark:text-slate-100 mb-3 border-b border-slate-200 dark:border-slate-700 pb-2">Class Discipline & Manners / آداب اور نظم و ضبط</h3>
+            <div className="border border-slate-200 dark:border-[#1e293b] p-4">
+              <h3 className="text-xs font-bold uppercase text-slate-800 dark:text-slate-100 mb-3 border-b border-slate-200 dark:border-[#1e293b] pb-2">Class Discipline & Manners / آداب اور نظم و ضبط</h3>
               <ul className="space-y-2 text-[10px] text-slate-700 dark:text-slate-200">
                 <li className="flex justify-between"><span>1. Be Punctual & Respectful</span> <span dir="rtl">وقت کی پابندی اور احترام کریں</span></li>
                 <li className="flex justify-between"><span>2. Maintain Cleanliness</span> <span dir="rtl">صفائی کا خاص خیال رکھیں</span></li>
@@ -346,8 +346,8 @@ const Timetable: React.FC<TimetableProps> = ({ profile, timetable, subjects, cla
                 <li className="flex justify-between"><span>4. Be Kind to Peers</span> <span dir="rtl">ساتھیوں کے ساتھ حسن سلوک کریں</span></li>
               </ul>
             </div>
-            <div className="border border-slate-200 dark:border-slate-700 p-4">
-              <h3 className="text-xs font-bold uppercase text-slate-800 dark:text-slate-100 mb-3 border-b border-slate-200 dark:border-slate-700 pb-2">Important Instructions / ضروری ہدایات</h3>
+            <div className="border border-slate-200 dark:border-[#1e293b] p-4">
+              <h3 className="text-xs font-bold uppercase text-slate-800 dark:text-slate-100 mb-3 border-b border-slate-200 dark:border-[#1e293b] pb-2">Important Instructions / ضروری ہدایات</h3>
               <ul className="space-y-2 text-[10px] text-slate-700 dark:text-slate-200">
                 <li className="flex justify-between"><span>• Arrive before the bell rings</span> <span dir="rtl">گھنٹی بجنے سے پہلے کلاس میں پہنچیں</span></li>
                 <li className="flex justify-between"><span>• Follow the timetable strictly</span> <span dir="rtl">ٹائم ٹیبل کی سختی سے پابندی کریں</span></li>

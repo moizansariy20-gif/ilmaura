@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, Suspense, lazy } from 'react';
-import { useLocation, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
 import Loader from './components/Loader.tsx';
@@ -9,6 +9,7 @@ import SocialAuthCallback from './components/SocialAuthCallback.tsx';
 import PrintAdmissionFormView from './components/PrintAdmissionFormView.tsx';
 import OfflineScreen from './components/OfflineScreen.tsx';
 import { resolveSchoolBySubdomain, getSchoolBranding } from './services/api.ts';
+import { LockKey } from 'phosphor-react';
 
 // Helper for PWA Branding
 const updateBranding = async (schoolId: string) => {
@@ -45,21 +46,22 @@ const TeacherRoutes = () => {
 };
 
 const App: React.FC = () => {
-  const location = useLocation();
-
-  if (location.pathname === '/social-auth-callback') {
-    return <SocialAuthCallback />;
-  }
-
-  if (location.pathname.includes('/print/admission-form')) {
-    return <PrintAdmissionFormView />;
-  }
+  const { loading, user, profile, error, logout } = useAuth();
+  const { token, notification } = useNotifications();
 
   // --- STARTUP LOGIC ---
-  const [showSplash, setShowSplash] = useState(true);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || ('standalone' in navigator && (navigator as any).standalone);
+  const [showSplash, setShowSplash] = useState(!isStandalone);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
-  const [schoolBranding, setSchoolBranding] = useState<{name: string, logoURL: string} | null>(null);
+  const [schoolBranding, setSchoolBranding] = useState<{name: string, logoURL: string, plan?: string} | null>(null);
+  const [isMobileViewport, setIsMobileViewport] = useState(window.innerWidth < 1024);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobileViewport(window.innerWidth < 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const handleOnline = () => setIsOffline(false);
@@ -78,9 +80,14 @@ const App: React.FC = () => {
   const [activeSchoolId, setActiveSchoolId] = useState<string | null>(() => {
     return localStorage.getItem('active_school_portal_id') || sessionStorage.getItem('active_school_portal_id');
   });
-  
-  const { loading, user, profile, error, logout } = useAuth();
-  const { token, notification } = useNotifications();
+
+  if (window.location.pathname === '/social-auth-callback') {
+    return <SocialAuthCallback />;
+  }
+
+  if (window.location.pathname.includes('/print/admission-form')) {
+    return <PrintAdmissionFormView />;
+  }
 
   // --- SUBDOMAIN RESOLUTION ---
   useEffect(() => {
@@ -275,7 +282,7 @@ const App: React.FC = () => {
 
   // 0. Show Offline Screen if No Internet
   if (isOffline) {
-    return <OfflineScreen />;
+    return <OfflineScreen schoolName={schoolBranding?.name} />;
   }
 
   // 1. Show Splash (Highest Priority)
@@ -303,16 +310,52 @@ const App: React.FC = () => {
   if (error) {
     return (
       <div className="h-screen flex items-center justify-center bg-rose-50 text-rose-700 p-4 text-center">
-        <div>
-          <h2 className="font-bold">Authentication Error</h2>
-          <p>{error}</p>
-           <button onClick={handleLogout} className="mt-4 px-4 py-2 bg-rose-600 text-white rounded-lg text-sm font-bold">
+        <div className="bg-white border-2 border-rose-300 p-8 shadow-2xl rounded-none">
+          <h2 className="font-black italic uppercase tracking-tighter text-2xl mb-2">Authentication Error</h2>
+          <p className="font-medium text-sm mb-6">{error}</p>
+           <button onClick={handleLogout} className="px-6 py-3 bg-rose-600 text-white rounded-none text-[10px] font-black uppercase tracking-widest hover:bg-rose-700 transition-colors">
             Logout and Retry
           </button>
         </div>
       </div>
     );
   }
+
+  const isPlanFree = schoolBranding?.plan === 'free';
+  const renderTeacherRoutes = () => isPlanFree ? <PlanLockMessage /> : <TeacherRoutes />;
+  const renderStudentRoutes = () => isPlanFree ? <PlanLockMessage /> : <StudentRoutes />;
+  const renderPrincipalRoutes = () => (isPlanFree && isMobileViewport) ? <PrincipalMobileLockMessage /> : <PrincipalApp profile={profile} onLogout={handleLogout} onClearSchoolId={handleClearSchoolId} />;
+
+  const PrincipalMobileLockMessage = () => (
+      <div className="h-screen w-full flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 p-6 text-center">
+          <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mb-4">
+              <LockKey size={32} weight="fill" />
+          </div>
+          <h2 className="text-2xl font-black italic uppercase tracking-tighter text-slate-900 dark:text-white mb-2">Desktop Only Mode</h2>
+          <p className="text-slate-500 font-medium max-w-md mb-6">
+              You are currently using the Free Plan. The Principal Mobile App view is locked. <br/><br/>
+              <strong>To access your portal, please use a Desktop or Laptop computer, or maximize this window.</strong>
+          </p>
+          <button onClick={handleLogout} className="px-6 py-3 bg-[#1e3a8a] text-white font-bold text-xs uppercase tracking-widest rounded-none hover:bg-[#172554] transition-colors shadow-md">
+              Return to Login
+          </button>
+      </div>
+  );
+
+  const PlanLockMessage = () => (
+      <div className="h-screen w-full flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 p-6 text-center">
+          <div className="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mb-4">
+              <LockKey size={32} weight="fill" />
+          </div>
+          <h2 className="text-2xl font-black italic uppercase tracking-tighter text-slate-900 dark:text-white mb-2">Access Locked</h2>
+          <p className="text-slate-500 font-medium max-w-md mb-6">
+              Your school is currently on the Free Plan. Student and Teacher applications are restricted. Please ask your administration to upgrade to the Premium Plan to unlock student & teacher mobile portals.
+          </p>
+          <button onClick={handleLogout} className="px-6 py-3 bg-[#1e3a8a] text-white font-bold text-xs uppercase tracking-widest rounded-none hover:bg-[#172554] transition-colors shadow-md">
+              Return to Login
+          </button>
+      </div>
+  );
 
   return (
     <Suspense fallback={<Loader message={schoolBranding ? `Loading ${schoolBranding.name}...` : "Loading Ilmaura..."} />}>
@@ -332,9 +375,9 @@ const App: React.FC = () => {
           element={
             activeSchoolId ? (
               user && profile && profile.role !== 'mother-admin' ? (
-                profile.role === 'principal' ? <PrincipalApp profile={profile} onLogout={handleLogout} onClearSchoolId={handleClearSchoolId} /> :
-                profile.role === 'teacher' ? <TeacherRoutes /> :
-                profile.role === 'student' ? <StudentRoutes /> :
+                profile.role === 'principal' ? renderPrincipalRoutes() :
+                profile.role === 'teacher' ? renderTeacherRoutes() :
+                profile.role === 'student' ? renderStudentRoutes() :
                 <SchoolLoginGate schoolId={activeSchoolId} onTryAgain={handleClearSchoolId} />
               ) : (
                 <SchoolLoginGate schoolId={activeSchoolId} onTryAgain={handleClearSchoolId} />
@@ -344,15 +387,15 @@ const App: React.FC = () => {
                 <Login onPortalChange={setActiveSchoolId} />
               ) : (
                 profile.role === 'mother-admin' ? <MotherAdminApp profile={profile} onLogout={handleLogout} /> :
-                profile.role === 'principal' ? <PrincipalApp profile={profile} onLogout={handleLogout} onClearSchoolId={handleClearSchoolId} /> :
-                profile.role === 'teacher' ? <TeacherRoutes /> :
-                profile.role === 'student' ? <StudentRoutes /> :
+                profile.role === 'principal' ? renderPrincipalRoutes() :
+                profile.role === 'teacher' ? renderTeacherRoutes() :
+                profile.role === 'student' ? renderStudentRoutes() :
                 <div className="h-screen flex items-center justify-center bg-slate-100">
-                  <div className="text-center">
-                    <h1 className="text-2xl font-bold text-slate-800">Role not recognized</h1>
-                    <p className="text-slate-500 mb-4">Could not determine your role. Please contact administration.</p>
-                    <button onClick={handleLogout} className="px-4 py-2 bg-slate-700 text-white rounded-lg text-sm font-bold">
-                      Logout
+                  <div className="text-center bg-white border-2 border-slate-300 p-12 shadow-2xl rounded-none">
+                    <h1 className="text-2xl font-black italic uppercase italic tracking-tighter text-slate-800 mb-2">Role Not Recognized</h1>
+                    <p className="text-slate-500 mb-8 font-medium text-sm">Could not determine your institutional permissions. Please contact administration.</p>
+                    <button onClick={handleLogout} className="px-8 py-4 bg-slate-900 text-white rounded-none text-[10px] font-black uppercase tracking-widest hover:bg-[#1e3a8a] transition-all">
+                      Terminate Session
                     </button>
                   </div>
                 </div>

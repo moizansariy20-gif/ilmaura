@@ -90,6 +90,44 @@ async function startServer() {
     }
   });
 
+  app.post("/api/send-onboarding-email", async (req, res) => {
+    const { email, schoolCode, schoolName, verificationUrl } = req.body;
+    
+    if (!email || !schoolCode || !schoolName || !verificationUrl) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    try {
+      const { data, error } = await resend.emails.send({
+        from: "Ilmaura Admin <onboarding@resend.dev>",
+        to: email, // Ensure this is a valid email string
+        subject: `Welcome to Ilmaura - ${schoolName}`,
+        html: `
+          <div style="font-family: sans-serif; padding: 20px; color: #333; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 12px;">
+            <h2 style="color: #007bff;">Welcome to Ilmaura!</h2>
+            <p>Your school <strong>${schoolName}</strong> has been registered successfully.</p>
+            <div style="background: #f4f7f6; padding: 20px; border-radius: 12px; margin: 20px 0;">
+              <p style="margin: 0; font-size: 16px;"><strong>Your Unique School ID (Code):</strong></p>
+              <p style="margin: 5px 0 0 0; font-size: 24px; font-weight: bold; color: #007bff;">${schoolCode}</p>
+            </div>
+            <p>Please verify your email to activate your account:</p>
+            <a href="${verificationUrl}" style="background: #007bff; color: white; padding: 12px 20px; text-decoration: none; border-radius: 8px; display: inline-block;">Verify Email</a>
+          </div>
+        `
+      });
+
+      if (error) {
+        console.error("Resend API Error:", error);
+        return res.json({ success: false, error: error.message });
+      }
+      res.json({ success: true, data });
+    } catch (err: any) {
+      console.error("Server Error sending email:", err);
+      // Don't fail the request if email fails
+      res.json({ success: false, error: err.message });
+    }
+  });
+
   app.get("/api/health", (req, res) => {
     res.json({ status: "ok" });
   });
@@ -276,7 +314,7 @@ async function startServer() {
   } else {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
-    app.get('*', (req, res) => {
+    app.get('*all', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }

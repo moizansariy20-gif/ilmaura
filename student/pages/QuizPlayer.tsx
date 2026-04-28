@@ -164,7 +164,7 @@ const QuizBackground = ({ isUrgent }: { isUrgent: boolean }) => (
 
 const ScoreBadge = ({ score }: { score: number }) => (
   <div className="bg-black/20 backdrop-blur-md px-4 py-2 rounded-full flex items-center gap-2 border border-white/10 shadow-sm">
-    <span className="bg-white dark:bg-slate-800 text-[#46178f] text-[10px] font-black px-1.5 rounded uppercase">PTS</span>
+    <span className="bg-white dark:bg-[#1e293b] text-[#46178f] text-[10px] font-black px-1.5 rounded uppercase">PTS</span>
     <span className="text-white font-black font-mono text-xl tracking-widest">{score}</span>
   </div>
 );
@@ -367,7 +367,7 @@ const QuizPlayer: React.FC<QuizPlayerProps> = ({ quiz, profile, onFinish, onQuiz
         <div className="fixed inset-0 flex items-center justify-center bg-[#46178f] z-[300]">
             <QuizBackground isUrgent={false} />
             <div className="relative z-10 text-center animate-in zoom-in-50 duration-500">
-                <div className="w-24 h-24 bg-white dark:bg-slate-800 rounded-2xl rotate-12 mx-auto mb-6 flex items-center justify-center shadow-[0_10px_0_rgba(0,0,0,0.2)]">
+                <div className="w-24 h-24 bg-white dark:bg-[#1e293b] rounded-2xl rotate-12 mx-auto mb-6 flex items-center justify-center shadow-[0_10px_0_rgba(0,0,0,0.2)]">
                     <Zap size={48} className="text-[#46178f] fill-current" />
                 </div>
                 <h1 className="text-5xl font-black text-white tracking-tighter drop-shadow-lg">{quiz.title}</h1>
@@ -386,7 +386,7 @@ const QuizPlayer: React.FC<QuizPlayerProps> = ({ quiz, profile, onFinish, onQuiz
         <div className="fixed inset-0 flex flex-col items-center justify-center bg-[#46178f] z-[300] overflow-hidden font-sans">
             <QuizBackground isUrgent={false} />
             <div className="relative z-10 text-center animate-in zoom-in duration-500 px-6">
-                <div className="w-32 h-32 bg-white/10 dark:bg-slate-800/10 rounded-full flex items-center justify-center mx-auto mb-8 backdrop-blur-md border border-white/20 shadow-2xl">
+                <div className="w-32 h-32 bg-white/10 dark:bg-[#1e293b]/10 rounded-full flex items-center justify-center mx-auto mb-8 backdrop-blur-md border border-white/20 shadow-2xl">
                     <Check size={64} className="text-white" strokeWidth={4} />
                 </div>
                 <h1 className="text-5xl md:text-7xl font-black text-white tracking-tight mb-4 drop-shadow-md">
@@ -395,7 +395,7 @@ const QuizPlayer: React.FC<QuizPlayerProps> = ({ quiz, profile, onFinish, onQuiz
                 <p className="text-xl text-white/80 font-bold mb-12">
                     Thanks for participating!
                 </p>
-                <button onClick={onFinish} className="bg-white dark:bg-slate-800 text-[#46178f] px-8 py-3 md:px-10 md:py-4 rounded-2xl font-black text-lg md:text-xl shadow-[0_8px_0_rgba(0,0,0,0.2)] active:shadow-none active:translate-y-[8px] transition-all flex items-center gap-3 mx-auto hover:bg-slate-50">
+                <button onClick={onFinish} className="bg-white dark:bg-[#1e293b] text-[#46178f] px-8 py-3 md:px-10 md:py-4 rounded-2xl font-black text-lg md:text-xl shadow-[0_8px_0_rgba(0,0,0,0.2)] active:shadow-none active:translate-y-[8px] transition-all flex items-center gap-3 mx-auto hover:bg-slate-50">
                     <Home size={24} /> Back to Dashboard
                 </button>
             </div>
@@ -410,14 +410,14 @@ const QuizPlayer: React.FC<QuizPlayerProps> = ({ quiz, profile, onFinish, onQuiz
         
         <div className="h-16 flex items-center justify-between px-4 md:px-6 z-20 relative bg-black/10 backdrop-blur-sm shrink-0">
             <div className="flex items-center gap-4 text-white">
-                <span className="font-black text-lg bg-white/20 dark:bg-slate-800/20 px-3 py-1 rounded-full">{qIndex + 1} / {quiz.questions.length}</span>
+                <span className="font-black text-lg bg-white/20 dark:bg-[#1e293b]/20 px-3 py-1 rounded-full">{qIndex + 1} / {quiz.questions.length}</span>
             </div>
             <div className="font-black text-white tracking-tighter text-xl italic hidden md:block opacity-50">
                 Ilmaura Quiz
             </div>
             <div className="flex items-center gap-3">
                 <ScoreBadge score={score} />
-                <button onClick={() => { isMutedGlobal = !isMutedGlobal; setIsMuted(!isMuted); }} className="w-10 h-10 bg-white/10 dark:bg-slate-800/10 rounded-full flex items-center justify-center hover:bg-white/20 dark:bg-slate-800/20 text-white transition-colors">
+                <button onClick={() => { isMutedGlobal = !isMutedGlobal; setIsMuted(!isMuted); }} className="w-10 h-10 bg-white/10 dark:bg-[#1e293b]/10 rounded-full flex items-center justify-center hover:bg-white/20 dark:bg-[#1e293b]/20 text-white transition-colors">
                     {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
                 </button>
             </div>
@@ -438,7 +438,7 @@ const QuizPlayer: React.FC<QuizPlayerProps> = ({ quiz, profile, onFinish, onQuiz
                                 <CircularTimer duration={currentQ.timeLimit} timeLeft={timeLeft} />
                             )}
                         </div>
-                        <div className="bg-white dark:bg-slate-800 p-6 md:p-10 rounded-[2rem] shadow-[0_8px_0_rgba(0,0,0,0.1)] text-center border-b-[6px] border-gray-200 animate-in zoom-in-95 duration-300 min-h-[150px] md:min-h-[200px] flex items-center justify-center">
+                        <div className="bg-white dark:bg-[#1e293b] p-6 md:p-10 rounded-[2rem] shadow-[0_8px_0_rgba(0,0,0,0.1)] text-center border-b-[6px] border-gray-200 animate-in zoom-in-95 duration-300 min-h-[150px] md:min-h-[200px] flex items-center justify-center">
                             <h2 className="text-xl md:text-3xl font-black text-slate-800 dark:text-slate-100 leading-snug">
                                 {currentQ.questionText}
                             </h2>
@@ -487,8 +487,8 @@ const QuizPlayer: React.FC<QuizPlayerProps> = ({ quiz, profile, onFinish, onQuiz
                 <div className="flex-1 flex flex-col items-center justify-center w-full relative">
                     
                     <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
-                        <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 dark:bg-slate-800/10 rounded-full blur-3xl"></div>
-                        <div className="absolute bottom-10 right-10 w-40 h-40 bg-white/10 dark:bg-slate-800/10 rounded-full blur-3xl"></div>
+                        <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 dark:bg-[#1e293b]/10 rounded-full blur-3xl"></div>
+                        <div className="absolute bottom-10 right-10 w-40 h-40 bg-white/10 dark:bg-[#1e293b]/10 rounded-full blur-3xl"></div>
                     </div>
 
                     <h2 className="text-5xl md:text-7xl font-black text-white tracking-tight mb-8 drop-shadow-md animate-bounce-short text-center">

@@ -86,11 +86,11 @@ const Timetable: React.FC<TimetableProps> = ({ timetable, subjects, school, prof
   };
 
   return (
-    <div className="min-h-full bg-white dark:bg-slate-900 pb-32 font-sans relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-full bg-white dark:bg-[#020617] pb-32 font-sans relative overflow-hidden transition-colors duration-300">
       <div className="max-w-4xl mx-auto space-y-8 relative z-10">
         
         {/* Header Section */}
-        <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+        <div className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#1e3a8a] via-[#D4AF37] to-[#1e3a8a]"></div>
           <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
           
@@ -133,7 +133,7 @@ const Timetable: React.FC<TimetableProps> = ({ timetable, subjects, school, prof
               <button 
                 key={day}
                 onClick={() => setSelectedDay(day)} 
-                className={`snap-start shrink-0 px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all border ${selectedDay === day ? 'bg-[#1e3a8a] text-white border-[#1e3a8a] shadow-md' : 'bg-[#FCFBF8] dark:bg-slate-800/50 text-[#1e3a8a]/60 dark:text-white/60 border-[#D4AF37]/20 hover:border-[#D4AF37]/50'}`}
+                className={`snap-start shrink-0 px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all border ${selectedDay === day ? 'bg-[#1e3a8a] text-white border-[#1e3a8a] shadow-md' : 'bg-[#FCFBF8] dark:bg-[#0f172a] text-[#1e3a8a]/60 dark:text-white/60 border-[#D4AF37]/20 hover:border-[#D4AF37]/50'}`}
               >
                 {day}
               </button>
@@ -143,7 +143,7 @@ const Timetable: React.FC<TimetableProps> = ({ timetable, subjects, school, prof
           {/* Cards Layout */}
           <div className="space-y-4 mt-4">
             {fullHolidays[selectedDay] ? (
-              <div className="text-center py-20 bg-[#FCFBF8] dark:bg-slate-800/50 rounded-2xl border border-[#D4AF37]/10 border-dashed">
+              <div className="text-center py-20 bg-[#FCFBF8] dark:bg-[#0f172a] rounded-2xl border border-[#D4AF37]/10 border-dashed">
                   <div className="w-20 h-20 bg-white dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-[#D4AF37]/20">
                       <AlertCircle size={32} className="text-[#D4AF37]" />
                   </div>
@@ -158,7 +158,7 @@ const Timetable: React.FC<TimetableProps> = ({ timetable, subjects, school, prof
                   
                   if (isBreak) {
                     return (
-                      <div key={index} className="md:col-span-2 flex items-center gap-4 p-4 bg-slate-100 dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-inner">
+                      <div key={index} className="md:col-span-2 flex items-center gap-4 p-4 bg-slate-100 dark:bg-[#1e293b]/80 rounded-2xl border border-slate-200 dark:border-[#1e293b] shadow-inner">
                         <div className="w-12 h-12 rounded-xl bg-slate-200 dark:bg-slate-700 flex items-center justify-center shrink-0">
                           <Coffee size={24} className="text-slate-500 dark:text-slate-400" />
                         </div>
@@ -171,7 +171,7 @@ const Timetable: React.FC<TimetableProps> = ({ timetable, subjects, school, prof
                   }
 
                   return (
-                    <div key={index} className="group flex gap-4 p-5 bg-[#FCFBF8] dark:bg-slate-800/50 rounded-2xl border border-[#D4AF37]/20 hover:border-[#D4AF37]/50 hover:shadow-lg transition-all relative overflow-hidden">
+                    <div key={index} className="group flex gap-4 p-5 bg-[#FCFBF8] dark:bg-[#0f172a] rounded-2xl border border-[#D4AF37]/20 hover:border-[#D4AF37]/50 hover:shadow-lg transition-all relative overflow-hidden">
                       <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#D4AF37]/10 to-transparent rounded-bl-full pointer-events-none"></div>
                       
                       <div className="w-14 h-14 rounded-2xl bg-white dark:bg-slate-700 border border-[#D4AF37]/20 flex items-center justify-center shrink-0 shadow-sm group-hover:scale-110 transition-transform duration-300">

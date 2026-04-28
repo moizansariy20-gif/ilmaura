@@ -127,11 +127,11 @@ const Notifications: React.FC<NotificationsProps> = ({ profile, currentClass, an
   };
 
   return (
-    <div className="min-h-full bg-white dark:bg-slate-900 pb-32 font-sans relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-full bg-white dark:bg-[#020617] pb-32 font-sans relative overflow-hidden transition-colors duration-300">
       <div className="max-w-3xl mx-auto space-y-8 relative z-10">
         
         {/* Header Section */}
-        <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+        <div className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#1e3a8a] via-[#D4AF37] to-[#1e3a8a]"></div>
           <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
           
@@ -169,7 +169,7 @@ const Notifications: React.FC<NotificationsProps> = ({ profile, currentClass, an
                             key={index}
                             onClick={() => setSelectedItem(item)}
                             style={{ animationDelay: `${index * 50}ms` }}
-                            className="group flex gap-4 p-5 bg-[#FCFBF8] dark:bg-slate-800/50 rounded-2xl border border-[#D4AF37]/10 hover:border-[#D4AF37]/30 hover:shadow-md transition-all animate-in slide-in-from-bottom-2 duration-300 cursor-pointer"
+                            className="group flex gap-4 p-5 bg-[#FCFBF8] dark:bg-[#0f172a] rounded-2xl border border-[#D4AF37]/10 hover:border-[#D4AF37]/30 hover:shadow-md transition-all animate-in slide-in-from-bottom-2 duration-300 cursor-pointer"
                         >
                             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${item.color} border shadow-sm`}>
                                 {item.icon}
@@ -189,7 +189,7 @@ const Notifications: React.FC<NotificationsProps> = ({ profile, currentClass, an
                         </div>
                     ))
                 ) : (
-                    <div className="text-center py-20 bg-[#FCFBF8] dark:bg-slate-800/50 rounded-2xl border border-[#D4AF37]/10 border-dashed">
+                    <div className="text-center py-20 bg-[#FCFBF8] dark:bg-[#0f172a] rounded-2xl border border-[#D4AF37]/10 border-dashed">
                         <div className="w-20 h-20 bg-white dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-[#D4AF37]/20">
                             <CheckCircle size={32} className="text-[#D4AF37]" />
                         </div>
@@ -202,7 +202,7 @@ const Notifications: React.FC<NotificationsProps> = ({ profile, currentClass, an
                   <div className="flex justify-center pt-4">
                     <button 
                       onClick={handleSeeMore}
-                      className="px-6 py-3 bg-white dark:bg-slate-800 border border-[#D4AF37]/30 text-[#1e3a8a] dark:text-[#D4AF37] font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center gap-2"
+                      className="px-6 py-3 bg-white dark:bg-[#1e293b] border border-[#D4AF37]/30 text-[#1e3a8a] dark:text-[#D4AF37] font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center gap-2"
                     >
                       See More
                     </button>
@@ -215,7 +215,7 @@ const Notifications: React.FC<NotificationsProps> = ({ profile, currentClass, an
       {selectedItem && (
         <div className="fixed inset-0 z-[500] flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-slate-900/70 backdrop-blur-sm" onClick={() => setSelectedItem(null)}></div>
-            <div className="bg-white dark:bg-slate-800 w-full max-w-sm rounded-3xl relative z-10 shadow-2xl animate-in zoom-in-95 duration-300 overflow-hidden border border-[#D4AF37]/20">
+            <div className="bg-white dark:bg-[#1e293b] w-full max-w-sm rounded-3xl relative z-10 shadow-2xl animate-in zoom-in-95 duration-300 overflow-hidden border border-[#D4AF37]/20">
                 {/* Header */}
                 <div className={`${selectedItem.detailColor} p-6 md:p-8 text-white relative overflow-hidden`}>
                     <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-white/0 via-white/50 to-white/0"></div>
@@ -232,7 +232,7 @@ const Notifications: React.FC<NotificationsProps> = ({ profile, currentClass, an
                 </div>
                 
                 {/* Content */}
-                <div className="p-6 md:p-8 bg-[#FCFBF8] dark:bg-slate-800">
+                <div className="p-6 md:p-8 bg-[#FCFBF8] dark:bg-[#1e293b]">
                     {selectedItem.media_url && (
                         <div className="mb-6 rounded-2xl overflow-hidden border border-[#D4AF37]/20 shadow-sm">
                             {selectedItem.media_type === 'video' ? (

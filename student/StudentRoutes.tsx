@@ -27,7 +27,7 @@ const StudentRoutes: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-100 dark:bg-slate-950 flex justify-center">
       {/* Mobile-centric container for desktop */}
-      <div className="w-full max-w-[430px] min-h-screen bg-white dark:bg-slate-900 shadow-[0_0_50px_-12px_rgba(0,0,0,0.25)] relative flex flex-col overflow-hidden">
+      <div className="w-full max-w-[430px] min-h-screen bg-white dark:bg-[#020617] shadow-[0_0_50px_-12px_rgba(0,0,0,0.25)] relative flex flex-col overflow-hidden">
         {loading ? (
           <StudentSkeleton />
         ) : (

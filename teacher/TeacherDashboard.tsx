@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, Suspense, lazy } from 'react';
+import React, { useState, useEffect, Suspense, lazy, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { 
@@ -7,10 +7,10 @@ import {
   MessageSquare, BarChart2, BrainCircuit, LogOut, Menu, Bell, Clock, 
   X, ChevronRight, UserCircle, BookCheck, FilePen, Sparkles, MessageCircle,
   ShieldAlert, Lock, CheckCircle, Camera, Calendar as CalendarIcon, UploadCloud,
-  Home as HomeIcon, Settings
+  Home as HomeIcon, Settings, PenTool
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.ts';
-import { subscribeToSchoolDetails, subscribeToTeacherData } from '../services/api.ts';
+import { subscribeToSchoolDetails, subscribeToTeacherData, subscribeToSyllabusChapters } from '../services/api.ts';
 import TeacherSkeleton from './components/TeacherSkeleton.tsx';
 import Loader from '../components/Loader.tsx';
 import { supabase } from '../services/supabase.ts';
@@ -31,6 +31,9 @@ const Quizzes = lazy(() => import('./pages/Quizzes.tsx'));
 const SettingsPage = lazy(() => import('./pages/Settings.tsx'));
 const TeacherMessenger = lazy(() => import('./pages/Messenger.tsx'));
 const Notifications = lazy(() => import('./pages/Notifications.tsx'));
+const CurriculumInsight = lazy(() => import('./pages/CurriculumInsight.tsx'));
+const StudentCurriculum = lazy(() => import('./pages/StudentCurriculum.tsx'));
+const TeachingTools = lazy(() => import('./pages/AiTools.tsx'));
 import { FirestoreError } from 'firebase/firestore';
 import { Assignment } from '../types.ts';
 import { useTranslation } from '../services/translations.ts';
@@ -71,6 +74,8 @@ const MobileToolsView: React.FC<{ setActiveTab: (tab: string) => void }> = ({ se
       { id: 'homework', label: t.homework, icon: <FilePen className="w-8 h-8 text-[#D4AF37]" /> },
       { id: 'messenger', label: t.messages, icon: <MessageSquare className="w-8 h-8 text-[#D4AF37]" /> },
       { id: 'quizzes', label: t.quizzes, icon: <BrainCircuit className="w-8 h-8 text-[#D4AF37]" /> },
+      { id: 'student_curriculum', label: 'Progress', icon: <CheckCircle className="w-8 h-8 text-[#D4AF37]" /> },
+      { id: 'curriculum_insight', label: t.curriculumInsight || 'Curriculum', icon: <BookCheck className="w-8 h-8 text-[#D4AF37]" /> },
       { id: 'notifications', label: t.alerts, icon: <Bell className="w-8 h-8 text-[#D4AF37]" /> },
       { id: 'timetable', label: t.timetable, icon: <Clock className="w-8 h-8 text-[#D4AF37]" /> },
       { id: 'resources', label: t.resources, icon: <UploadCloud className="w-8 h-8 text-[#D4AF37]" /> },
@@ -83,7 +88,7 @@ const MobileToolsView: React.FC<{ setActiveTab: (tab: string) => void }> = ({ se
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="min-h-full bg-[#FCFBF8] dark:bg-slate-900 pb-32 transition-colors duration-300"
+        className="min-h-full bg-[#FCFBF8] dark:bg-[#020617] pb-32 transition-colors duration-300"
       >
         <div className="w-full bg-gradient-to-b from-[#6B1D2F] to-[#4A1421] p-8 pt-12 pb-10 shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-[#D4AF37]/5 rounded-full -mr-32 -mt-32 blur-3xl"></div>
@@ -97,7 +102,7 @@ const MobileToolsView: React.FC<{ setActiveTab: (tab: string) => void }> = ({ se
         </div>
 
         <div className="p-6 -mt-6 relative z-20">
-          <div className="border-4 border-[#D4AF37] rounded-[2.5rem] p-8 bg-white dark:bg-slate-800 shadow-[0_20px_50px_rgba(107,29,47,0.1),inset_0_0_40px_rgba(0,0,0,0.02)] grid grid-cols-2 gap-5 transition-colors duration-300">
+          <div className="border-4 border-[#D4AF37] rounded-[2.5rem] p-8 bg-white dark:bg-[#1e293b] shadow-[0_20px_50px_rgba(107,29,47,0.1),inset_0_0_40px_rgba(0,0,0,0.02)] grid grid-cols-2 gap-5 transition-colors duration-300">
             {menuCards.map(card => (
               <button 
                 key={card.id} 
@@ -114,15 +119,92 @@ const MobileToolsView: React.FC<{ setActiveTab: (tab: string) => void }> = ({ se
     );
 };
 
+const CurriculumTrackItem: React.FC<{ assign: any; setActiveTab: (t: string) => void }> = ({ assign, setActiveTab }) => {
+  const [chapters, setChapters] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    const unsub = subscribeToSyllabusChapters(assign.subjectId, (data) => {
+      setChapters(data);
+      setLoading(false);
+    });
+    return () => unsub();
+  }, [assign.subjectId]);
+
+  const completed = chapters.filter(c => c.isCompleted).length;
+  const total = chapters.length;
+  const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+  return (
+    <div 
+      onClick={() => setActiveTab('curriculum_insight')} 
+      className="flex flex-col gap-2 cursor-pointer group active:opacity-70 py-2"
+    >
+      <div className="flex justify-between items-end">
+        <div className="flex flex-col min-w-0 pr-4">
+          <span className="text-sm font-black text-[#6B1D2F] dark:text-white tracking-tight truncate leading-tight group-hover:text-[#D4AF37] transition-colors">{assign.subjectName}</span>
+          <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest truncate">{assign.className}</span>
+        </div>
+        <span className="text-xs font-black text-[#D4AF37] tabular-nums shrink-0">{percent}%</span>
+      </div>
+      <div className="h-1.5 w-full bg-slate-100 dark:bg-[#1e293b] rounded-full overflow-hidden shadow-inner">
+        <div 
+          className="h-full bg-gradient-to-r from-[#6B1D2F] to-[#D4AF37] rounded-full transition-all duration-1000 ease-out" 
+          style={{ width: `${percent}%` }}
+        />
+      </div>
+    </div>
+  );
+};
+
 const MobileTeacherDashboard: React.FC<{
   setActiveTab: (tab: string) => void; profile: any; classes: any[]; students: any[];
-  timetable: any[]; school: any; assignments: Assignment[];
-}> = ({ setActiveTab, profile, classes, students, timetable, school, assignments }) => {
+  timetable: any[]; school: any; assignments: any[]; subjects: any[];
+}> = ({ setActiveTab, profile, classes, students, timetable, school, assignments, subjects }) => {
   const { t } = useTranslation();
   const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
   const todaysClassesCount = timetable.filter(slot => slot.day === today).length;
   const salutation = getSalutation(profile.gender, t);
   const firstName = profile.name ? profile.name.split(' ')[0] : t.teacher;
+
+  // Derive teacher's subject assignments for progress tracking
+  const teacherAssignments = useMemo(() => {
+    const tid = profile.teacherId;
+    const assigns: { subjectId: string, subjectName: string, className: string }[] = [];
+    if (!subjects || !classes) return assigns;
+    
+    classes.forEach(cls => {
+      if (cls.subjectAssignments) {
+        Object.keys(cls.subjectAssignments).forEach(subId => {
+          const teacherRef = cls.subjectAssignments![subId];
+          if (teacherRef?.id === tid || (teacherRef?.name && teacherRef.name === profile.name)) {
+            const subject = subjects.find(s => s.id === subId);
+            if (subject) {
+              assigns.push({
+                subjectId: subId,
+                subjectName: subject.name,
+                className: `${cls.name}${cls.section ? ` (${cls.section})` : ''}`
+              });
+            }
+          }
+        });
+      }
+    });
+
+    subjects.filter(sub => (sub as any).teacherId === tid).forEach(sub => {
+      const exists = assigns.some(a => a.subjectId === sub.id);
+      if (!exists) {
+        assigns.push({
+          subjectId: sub.id,
+          subjectName: sub.name,
+          className: classes.find(c => c.id === sub.classId)?.name || 'Direct'
+        });
+      }
+    });
+
+    return assigns;
+  }, [profile, classes, subjects]);
 
   const quickStats = [
     { label: t.today, icon: <CalendarCheck size={24} className="text-[#D4AF37]" />, value: `${todaysClassesCount}`, action: 'timetable' },
@@ -136,6 +218,8 @@ const MobileTeacherDashboard: React.FC<{
     { id: 'homework', label: t.homework, icon: <FilePen className="w-8 h-8 text-[#D4AF37]" /> },
     { id: 'messenger', label: t.messages, icon: <MessageSquare className="w-8 h-8 text-[#D4AF37]" /> },
     { id: 'quizzes', label: t.quizzes, icon: <BrainCircuit className="w-8 h-8 text-[#D4AF37]" /> },
+    { id: 'student_curriculum', label: 'Progress', icon: <CheckCircle className="w-8 h-8 text-[#D4AF37]" /> },
+    { id: 'curriculum_insight', label: t.curriculumInsight || 'Curriculum', icon: <BookCheck className="w-8 h-8 text-[#D4AF37]" /> },
     { id: 'notifications', label: t.alerts, icon: <Bell className="w-8 h-8 text-[#D4AF37]" /> },
     { id: 'timetable', label: t.timetable, icon: <Clock className="w-8 h-8 text-[#D4AF37]" /> },
     { id: 'resources', label: t.resources, icon: <UploadCloud className="w-8 h-8 text-[#D4AF37]" /> },
@@ -144,7 +228,7 @@ const MobileTeacherDashboard: React.FC<{
   ];
 
   return (
-    <div className="min-h-full flex flex-col bg-[#FCFBF8] dark:bg-slate-900 transition-colors duration-300">
+    <div className="min-h-full flex flex-col bg-[#FCFBF8] dark:bg-[#020617] transition-colors duration-300">
       <div className="w-full h-[250px] bg-gradient-to-br from-[#6B1D2F] to-[#4A1421] rounded-b-[3.5rem] shadow-[0_10px_30px_rgba(107,29,47,0.3)] relative z-10 shrink-0 flex flex-col justify-between px-6 pt-6 pb-8 overflow-hidden">
         <div className="absolute -top-24 -right-24 w-72 h-72 bg-[#D4AF37]/10 rounded-full z-0 shadow-sm"></div>
         <div className="relative z-20 w-full h-full">
@@ -194,7 +278,7 @@ const MobileTeacherDashboard: React.FC<{
               return (
                 <div key={cls.id} onClick={() => { playClickSound(); setActiveTab('class_view'); }} className="flex flex-col items-center gap-2 min-w-[72px] cursor-pointer group shrink-0">
                   <div className="w-16 h-16 rounded-full p-[3px] bg-gradient-to-tr from-[#D4AF37] via-[#6B1D2F] to-[#D4AF37] shadow-md active:scale-95 transition-transform duration-300">
-                    <div className="w-full h-full rounded-full border-2 border-white dark:border-slate-900 overflow-hidden bg-white dark:bg-slate-800 flex items-center justify-center relative">
+                    <div className="w-full h-full rounded-full border-2 border-white dark:border-slate-900 overflow-hidden bg-white dark:bg-[#1e293b] flex items-center justify-center relative">
                       {cls.image ? (
                         <img src={cls.image} alt={displayName} className="w-full h-full object-cover" />
                       ) : (
@@ -242,7 +326,7 @@ const MobileTeacherDashboard: React.FC<{
           )}
         </div>
 
-        <div className="mt-auto w-full bg-white dark:bg-slate-800 rounded-t-[3rem] p-8 pb-32 border-t-4 border-[#D4AF37] shadow-[0_-15px_35px_rgba(107,29,47,0.08)] transition-colors duration-300">
+        <div className="mt-auto w-full bg-white dark:bg-[#1e293b] rounded-t-[3rem] p-8 pb-32 border-t-4 border-[#D4AF37] shadow-[0_-15px_35px_rgba(107,29,47,0.08)] transition-colors duration-300">
           <div className="flex items-center justify-between mb-8 px-2">
             <div className="flex items-center gap-3">
               <h3 className="text-2xl font-black font-heading text-[#6B1D2F] dark:text-[#D4AF37] drop-shadow-sm tracking-tight">{t.teachingTools}</h3>
@@ -260,6 +344,22 @@ const MobileTeacherDashboard: React.FC<{
               </button>
             ))}
           </div>
+
+          {teacherAssignments.length > 0 && (
+            <div className="mt-8 pt-8 border-t border-[#D4AF37]/20">
+              <div className="flex items-center justify-between mb-4 px-2">
+                 <h3 className="text-xl font-black font-heading text-[#6B1D2F] dark:text-[#D4AF37] drop-shadow-sm tracking-tight flex items-center gap-2">
+                   <BookCheck size={22} />
+                   Curriculum Progress
+                 </h3>
+              </div>
+              <div className="space-y-1 bg-slate-50 dark:bg-[#020617]/50 p-4 rounded-3xl border border-slate-100 dark:border-[#1e293b]/50">
+                 {teacherAssignments.map(assign => (
+                    <CurriculumTrackItem key={assign.subjectId} assign={assign} setActiveTab={setActiveTab} />
+                 ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -269,14 +369,14 @@ const MobileTeacherDashboard: React.FC<{
 const MenuList: React.FC<{title: string; items: any[]; setActiveTab: any}> = ({ title, items, setActiveTab }) => {
     const { t } = useTranslation();
     return (
-      <div className="space-y-6 pb-24 px-4 pt-4 bg-[#FCFBF8] dark:bg-slate-900 min-h-full transition-colors duration-300">
+      <div className="space-y-6 pb-24 px-4 pt-4 bg-[#FCFBF8] dark:bg-[#020617] min-h-full transition-colors duration-300">
         <h1 className="text-3xl font-black text-slate-900 dark:text-[#D4AF37]">{title}</h1>
         <div className="space-y-3">
           {items.map((item, i) => (
             <button 
               key={i} 
               onClick={() => {if(item.action) item.action(); else setActiveTab(item.id);}} 
-              className="w-full flex items-center justify-between p-5 bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-bold transition-colors duration-300"
+              className="w-full flex items-center justify-between p-5 bg-white dark:bg-[#1e293b] border dark:border-[#1e293b] rounded-xl text-slate-900 dark:text-white font-bold transition-colors duration-300"
             >
               <div className="flex items-center gap-4">
                 <div className="text-[#6B1D2F] dark:text-[#D4AF37]">{item.icon}</div>
@@ -378,6 +478,8 @@ const TeacherDashboard: React.FC = () => {
       { id: 'timetable', label: t.timetable, icon: <Clock size={20} /> },
       { id: 'class_view', label: t.classes, icon: <Users size={20} /> },
       { id: 'quizzes', label: t.quizzes, icon: <BrainCircuit size={20} /> },
+      { id: 'curriculum_insight', label: t.curriculumInsight || 'Curriculum', icon: <BookCheck size={20} /> },
+      { id: 'student_curriculum', label: 'Student Progress', icon: <CheckCircle size={20} /> },
       { id: 'class_log', label: t.classwork, icon: <BookCheck size={20} /> },
       { id: 'homework', label: t.homework, icon: <FilePen size={20} /> },
       { id: 'exams', label: t.results, icon: <Award size={20} /> },
@@ -415,6 +517,9 @@ const TeacherDashboard: React.FC = () => {
             <Route path="/notices" element={<Notices profile={profile} classes={classes} />} />
             <Route path="/messenger" element={<TeacherMessenger />} />
             <Route path="/notifications" element={<Notifications profile={profile} />} />
+            <Route path="/curriculum_insight" element={<CurriculumInsight profile={profile} classes={classes} subjects={subjects} />} />
+            <Route path="/student_curriculum" element={<StudentCurriculum profile={profile} subjects={subjects} classes={classes} setActiveTab={setActiveTab} />} />
+            <Route path="/teaching_tools" element={<TeachingTools profile={profile} classes={classes} subjects={subjects} setActiveTab={setActiveTab} />} />
             <Route path="/profile" element={<ProfilePage profile={profile} school={school} />} />
             <Route path="/settings" element={<SettingsPage profile={profile} />} />
             <Route path="/profile-menu" element={<MenuList title={t.profileAndMore} items={PROFILE_MENU_ITEMS} setActiveTab={setActiveTab} />} />
@@ -432,17 +537,17 @@ const TeacherDashboard: React.FC = () => {
 
         switch (activeTab) {
           case 'home':
-            return <MobileTeacherDashboard setActiveTab={setActiveTab} profile={profile} classes={classes} students={students} timetable={timetable} school={school} assignments={assignments} />;
+            return <MobileTeacherDashboard setActiveTab={setActiveTab} profile={profile} classes={classes} students={students} timetable={timetable} school={school} assignments={assignments} subjects={subjects} />;
           case 'tools':
             return <MobileToolsView setActiveTab={setActiveTab} />;
           case 'profile-menu':
             return <MenuList title={t.profileAndMore} items={PROFILE_MENU_ITEMS} setActiveTab={setActiveTab} />;
           default:
             return (
-              <div className="min-h-full flex flex-col bg-[#FCFBF8] dark:bg-slate-900 transition-colors duration-300">
+              <div className="min-h-full flex flex-col bg-[#FCFBF8] dark:bg-[#020617] transition-colors duration-300">
                 <MobilePageBanner title={pageTitle} profile={profile} setActiveTab={setActiveTab} />
-                <div className="flex-1 flex flex-col bg-white dark:bg-slate-900 transition-colors duration-300">
-                    <div className="bg-white dark:bg-slate-800 mt-4 rounded-t-2xl px-0 pt-6 pb-32 shadow-xl flex-1 mobile-content-card relative z-20 min-h-[70vh] transition-colors duration-300">
+                <div className="flex-1 flex flex-col bg-white dark:bg-[#020617] transition-colors duration-300">
+                    <div className="bg-white dark:bg-[#1e293b] mt-4 rounded-t-2xl px-0 pt-6 pb-32 shadow-xl flex-1 mobile-content-card relative z-20 min-h-[70vh] transition-colors duration-300">
                         {renderContent()}
                     </div>
                 </div>
@@ -452,7 +557,7 @@ const TeacherDashboard: React.FC = () => {
     };
 
     return (
-      <div className="bg-[#FCFBF8] dark:bg-slate-900 min-h-screen font-sans text-slate-800 no-scrollbar overflow-y-auto transition-colors duration-300">
+      <div className="bg-[#FCFBF8] dark:bg-[#020617] min-h-screen font-sans text-slate-800 no-scrollbar overflow-y-auto transition-colors duration-300">
         <style>{`
           .no-scrollbar::-webkit-scrollbar { display: none; }
           .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -460,12 +565,12 @@ const TeacherDashboard: React.FC = () => {
           body::-webkit-scrollbar { display: none; }
         `}</style>
         
-        <div className="relative w-full h-screen shadow-2xl bg-white dark:bg-slate-900 flex flex-col">
+        <div className="relative w-full h-screen shadow-2xl bg-white dark:bg-[#020617] flex flex-col">
           <div className="flex-1 overflow-y-auto">
             {renderMobileView()}
           </div>
           
-          <div className="w-full z-[100] bg-white dark:bg-slate-900 border-t-2 border-slate-200 dark:border-slate-800 shadow-[0_-10px_30px_rgba(0,0,0,0.1)] transition-colors duration-300 shrink-0">
+          <div className="w-full z-[100] bg-white dark:bg-[#020617] border-t-2 border-slate-200 dark:border-[#334155] shadow-[0_-10px_30px_rgba(0,0,0,0.1)] transition-colors duration-300 shrink-0">
             <div className="flex items-center justify-around w-full h-20 px-2 pb-2">
               {MOBILE_NAV_ITEMS.map((item) => {
                 const isActive = activeTab === item.id || (item.id === 'profile-menu' && ['profile', 'logout'].includes(activeTab));
