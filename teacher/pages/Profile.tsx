@@ -159,11 +159,11 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, school }) => {
   };
 
   return (
-    <div className="min-h-full bg-white dark:bg-slate-900 pb-32 font-sans relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-full bg-white dark:bg-[#020617] pb-32 font-sans relative overflow-hidden transition-colors duration-300">
       <div className="max-w-3xl mx-auto space-y-8 relative z-10">
         
         {/* Header Section - Same as Homework */}
-        <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(107,29,47,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+        <div className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(107,29,47,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#6B1D2F] via-[#D4AF37] to-[#6B1D2F]"></div>
           <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
           
@@ -227,15 +227,15 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, school }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-[#6B1D2F]/60 dark:text-[#D4AF37]/60 uppercase tracking-widest ml-1">{t.fullName}</label>
-                <input name="name" type="text" value={formData.name} onChange={handleInputChange} className="w-full px-6 py-4 bg-white dark:bg-slate-800 border border-[#6B1D2F]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#6B1D2F]/30 focus:ring-2 focus:ring-[#6B1D2F]/10 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-all" />
+                <input name="name" type="text" value={formData.name} onChange={handleInputChange} className="w-full px-6 py-4 bg-white dark:bg-[#1e293b] border border-[#6B1D2F]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#6B1D2F]/30 focus:ring-2 focus:ring-[#6B1D2F]/10 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-all" />
               </div>
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-[#6B1D2F]/60 dark:text-[#D4AF37]/60 uppercase tracking-widest ml-1">{t.phoneNumber}</label>
-                <input name="phone" type="text" value={formData.phone} onChange={handleInputChange} className="w-full px-6 py-4 bg-white dark:bg-slate-800 border border-[#6B1D2F]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#6B1D2F]/30 focus:ring-2 focus:ring-[#6B1D2F]/10 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-all" />
+                <input name="phone" type="text" value={formData.phone} onChange={handleInputChange} className="w-full px-6 py-4 bg-white dark:bg-[#1e293b] border border-[#6B1D2F]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#6B1D2F]/30 focus:ring-2 focus:ring-[#6B1D2F]/10 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-all" />
               </div>
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-[#6B1D2F]/60 dark:text-[#D4AF37]/60 uppercase tracking-widest ml-1">{t.gender}</label>
-                <select name="gender" value={formData.gender} onChange={handleInputChange} className="w-full px-6 py-4 bg-white dark:bg-slate-800 border border-[#6B1D2F]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#6B1D2F]/30 focus:ring-2 focus:ring-[#6B1D2F]/10 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-all appearance-none cursor-pointer">
+                <select name="gender" value={formData.gender} onChange={handleInputChange} className="w-full px-6 py-4 bg-white dark:bg-[#1e293b] border border-[#6B1D2F]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#6B1D2F]/30 focus:ring-2 focus:ring-[#6B1D2F]/10 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-all appearance-none cursor-pointer">
                   <option value="">{t.selectGender}</option>
                   <option value="Male">{t.male}</option>
                   <option value="Female">{t.female}</option>
@@ -244,7 +244,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, school }) => {
               </div>
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-[#6B1D2F]/60 dark:text-[#D4AF37]/60 uppercase tracking-widest ml-1">{t.dob}</label>
-                <input name="dob" type="date" value={formData.dob} onChange={handleInputChange} className="w-full px-6 py-4 bg-white dark:bg-slate-800 border border-[#6B1D2F]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#6B1D2F]/30 focus:ring-2 focus:ring-[#6B1D2F]/10 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-all" />
+                <input name="dob" type="date" value={formData.dob} onChange={handleInputChange} className="w-full px-6 py-4 bg-white dark:bg-[#1e293b] border border-[#6B1D2F]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#6B1D2F]/30 focus:ring-2 focus:ring-[#6B1D2F]/10 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-all" />
               </div>
             </div>
           </div>

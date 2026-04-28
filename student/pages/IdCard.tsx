@@ -119,12 +119,12 @@ const IdCardPage: React.FC<IdCardPageProps> = ({ profile, school, currentClass }
   };
 
   return (
-    <div className="min-h-full bg-white dark:bg-slate-900 pb-32 font-sans relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-full bg-white dark:bg-[#020617] pb-32 font-sans relative overflow-hidden transition-colors duration-300">
       {/* TOP NAV BAR */}
       <div className="px-6 pt-6 pb-2 flex items-center justify-between relative z-20">
           <button 
               onClick={() => navigate(-1)}
-              className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center border border-slate-100 dark:border-slate-700 active:scale-90 transition-transform"
+              className="w-10 h-10 rounded-xl bg-white dark:bg-[#1e293b] shadow-sm flex items-center justify-center border border-slate-100 dark:border-[#1e293b] active:scale-90 transition-transform"
           >
               <ArrowLeft size={20} className="text-[#1e3a8a] dark:text-[#D4AF37]" />
           </button>
@@ -145,7 +145,7 @@ const IdCardPage: React.FC<IdCardPageProps> = ({ profile, school, currentClass }
 
       <div className="max-w-4xl mx-auto space-y-8 relative z-10 mt-4">
         {/* Header Section */}
-        <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+        <div className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#1e3a8a] via-[#D4AF37] to-[#1e3a8a]"></div>
           <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
           
@@ -169,7 +169,7 @@ const IdCardPage: React.FC<IdCardPageProps> = ({ profile, school, currentClass }
         </div>
 
         <div className="px-4 lg:px-8">
-          <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-6 md:p-10 border border-[#D4AF37]/20 shadow-xl min-h-[500px] flex flex-col items-center">
+          <div className="bg-white dark:bg-[#1e293b] rounded-[2.5rem] p-6 md:p-10 border border-[#D4AF37]/20 shadow-xl min-h-[500px] flex flex-col items-center">
             
             <div className="w-full max-w-md mx-auto text-center mb-8">
                 <div className="w-16 h-16 bg-[#D4AF37]/10 text-[#1e3a8a] dark:text-[#D4AF37] rounded-2xl flex items-center justify-center mx-auto mb-4 border border-[#D4AF37]/20">
@@ -235,7 +235,7 @@ const IdCardPage: React.FC<IdCardPageProps> = ({ profile, school, currentClass }
                     </div>
                 </div>
             ) : (
-                <div className="flex-1 flex flex-col items-center justify-center text-center p-10 w-full max-w-sm border-2 border-dashed border-[#D4AF37]/20 rounded-[3rem] bg-[#FCFBF8] dark:bg-slate-800/50">
+                <div className="flex-1 flex flex-col items-center justify-center text-center p-10 w-full max-w-sm border-2 border-dashed border-[#D4AF37]/20 rounded-[3rem] bg-[#FCFBF8] dark:bg-[#0f172a]">
                     <div className="w-24 h-24 bg-[#D4AF37]/10 rounded-full flex items-center justify-center mb-6">
                         <User size={48} className="text-[#1e3a8a]/30 dark:text-[#D4AF37]/30" />
                     </div>

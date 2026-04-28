@@ -178,13 +178,13 @@ const Homework: React.FC<HomeworkProps> = ({ profile, subjects, currentClass, sc
   };
 
   return (
-    <div className="min-h-full bg-white dark:bg-slate-900 pb-32 font-sans relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-full bg-white dark:bg-[#020617] pb-32 font-sans relative overflow-hidden transition-colors duration-300">
       
       {/* TOP NAV BAR */}
       <div className="px-6 pt-6 pb-2 flex items-center justify-between relative z-20">
           <button 
               onClick={() => navigate(-1)}
-              className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center border border-slate-100 dark:border-slate-700 active:scale-90 transition-transform"
+              className="w-10 h-10 rounded-xl bg-white dark:bg-[#1e293b] shadow-sm flex items-center justify-center border border-slate-100 dark:border-[#1e293b] active:scale-90 transition-transform"
           >
               <ArrowLeft size={20} className="text-slate-600 dark:text-slate-300" />
           </button>
@@ -204,7 +204,7 @@ const Homework: React.FC<HomeworkProps> = ({ profile, subjects, currentClass, sc
       </div>
 
       {/* Header Section - Matches Attendance/Fees Page */}
-      <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+      <div className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#1e3a8a] via-[#D4AF37] to-[#1e3a8a]"></div>
         <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
         
@@ -229,7 +229,7 @@ const Homework: React.FC<HomeworkProps> = ({ profile, subjects, currentClass, sc
       <div className="max-w-4xl mx-auto px-4 md:px-6 mt-8 space-y-10">
         
         {/* Date Navigator - Premium Style */}
-        <div className="bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/10 rounded-3xl p-6 shadow-sm flex items-center justify-between">
+        <div className="bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/10 rounded-3xl p-6 shadow-sm flex items-center justify-between">
             <button onClick={handlePrevDay} className="w-12 h-12 flex items-center justify-center bg-white dark:bg-slate-700 text-[#1e3a8a] dark:text-white rounded-2xl border border-[#D4AF37]/20 shadow-sm active:scale-95 transition-all">
                 <ChevronLeft size={24} strokeWidth={2.5} />
             </button>
@@ -272,7 +272,7 @@ const Homework: React.FC<HomeworkProps> = ({ profile, subjects, currentClass, sc
                                 transition={{ delay: index * 0.1 }}
                                 className="group"
                             >
-                                <div className="bg-[#FCFBF8] dark:bg-slate-800/50 rounded-[2.5rem] overflow-hidden shadow-sm border border-[#D4AF37]/10">
+                                <div className="bg-[#FCFBF8] dark:bg-[#0f172a] rounded-[2.5rem] overflow-hidden shadow-sm border border-[#D4AF37]/10">
                                     <div className="p-6 border-b border-[#D4AF37]/10 bg-gradient-to-r from-[#1e3a8a]/5 to-transparent flex justify-between items-center">
                                         <h4 className="font-black text-[#1e3a8a] dark:text-[#D4AF37] uppercase tracking-widest text-sm">{subjectName}</h4>
                                         <div className="flex items-center gap-2">
@@ -320,8 +320,8 @@ const Homework: React.FC<HomeworkProps> = ({ profile, subjects, currentClass, sc
                 </AnimatePresence>
             ) : (
                 /* Empty State */
-                <div className="flex flex-col items-center justify-center py-20 text-center space-y-6 bg-[#FCFBF8] dark:bg-slate-800/50 rounded-[3rem] border border-[#D4AF37]/10 border-dashed">
-                    <div className="w-32 h-32 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-md border-4 border-[#FCFBF8]">
+                <div className="flex flex-col items-center justify-center py-20 text-center space-y-6 bg-[#FCFBF8] dark:bg-[#0f172a] rounded-[3rem] border border-[#D4AF37]/10 border-dashed">
+                    <div className="w-32 h-32 bg-white dark:bg-[#1e293b] rounded-full flex items-center justify-center shadow-md border-4 border-[#FCFBF8]">
                         <Bookmark size={48} className="text-slate-200" />
                     </div>
                     <div>

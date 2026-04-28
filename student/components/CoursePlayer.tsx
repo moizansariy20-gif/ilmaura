@@ -89,7 +89,7 @@ const CoursePlayer: React.FC<CoursePlayerProps> = ({ course, onClose }) => {
                     href={course.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-2xl font-black text-sm shadow-2xl hover:bg-slate-200 transition-all active:scale-95"
+                    className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-white dark:bg-[#1e293b] text-slate-900 dark:text-white rounded-2xl font-black text-sm shadow-2xl hover:bg-slate-200 transition-all active:scale-95"
                 >
                     <YouTubeIcon />
                     Watch on YouTube

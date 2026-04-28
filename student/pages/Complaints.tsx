@@ -116,12 +116,12 @@ const Complaints: React.FC<{ profile: any }> = ({ profile }) => {
     };
 
     return (
-        <div className="min-h-full bg-white dark:bg-slate-900 pb-32 font-sans relative overflow-hidden transition-colors duration-300">
+        <div className="min-h-full bg-white dark:bg-[#020617] pb-32 font-sans relative overflow-hidden transition-colors duration-300">
             {/* TOP NAV BAR */}
             <div className="px-6 pt-6 pb-2 flex items-center justify-between relative z-20">
                 <button 
                     onClick={() => navigate(-1)}
-                    className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center border border-slate-100 dark:border-slate-700 active:scale-90 transition-transform"
+                    className="w-10 h-10 rounded-xl bg-white dark:bg-[#1e293b] shadow-sm flex items-center justify-center border border-slate-100 dark:border-[#1e293b] active:scale-90 transition-transform"
                 >
                     <ArrowLeft size={20} className="text-[#1e3a8a] dark:text-[#D4AF37]" />
                 </button>
@@ -142,7 +142,7 @@ const Complaints: React.FC<{ profile: any }> = ({ profile }) => {
 
             <div className="max-w-4xl mx-auto space-y-8 relative z-10 mt-4">
                 {/* Header Section */}
-                <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+                <div className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
                     <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#1e3a8a] via-[#D4AF37] to-[#1e3a8a]"></div>
                     <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
                     
@@ -176,7 +176,7 @@ const Complaints: React.FC<{ profile: any }> = ({ profile }) => {
                             <p className="text-sm font-black text-[#1e3a8a] dark:text-white uppercase tracking-widest">Loading...</p>
                         </div>
                     ) : complaints.length === 0 ? (
-                        <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-12 text-center border border-[#D4AF37]/20 shadow-xl">
+                        <div className="bg-white dark:bg-[#1e293b] rounded-[2.5rem] p-12 text-center border border-[#D4AF37]/20 shadow-xl">
                             <div className="w-24 h-24 bg-[#D4AF37]/10 rounded-full flex items-center justify-center mx-auto mb-6">
                                 <Megaphone size={48} className="text-[#1e3a8a]/30 dark:text-[#D4AF37]/30" />
                             </div>
@@ -187,7 +187,7 @@ const Complaints: React.FC<{ profile: any }> = ({ profile }) => {
                         </div>
                     ) : (
                         complaints.map((item) => (
-                            <div key={item.id} className="bg-white dark:bg-slate-800 rounded-[2rem] p-6 border border-[#D4AF37]/20 shadow-lg hover:shadow-xl transition-all group active:scale-[0.98]">
+                            <div key={item.id} className="bg-white dark:bg-[#1e293b] rounded-[2rem] p-6 border border-[#D4AF37]/20 shadow-lg hover:shadow-xl transition-all group active:scale-[0.98]">
                                 <div className="flex justify-between items-start mb-4">
                                     <StatusBadge status={item.status} />
                                     <span className="text-[10px] font-black text-[#1e3a8a]/40 dark:text-white/40 uppercase tracking-widest">{item.date}</span>
@@ -204,7 +204,7 @@ const Complaints: React.FC<{ profile: any }> = ({ profile }) => {
                                         {item.mediaUrls.map((url, idx) => {
                                             const isVideo = url.toLowerCase().match(/\.(mp4|webm|ogg|mov)$/) || url.includes('video');
                                             return (
-                                                <div key={idx} className="relative w-24 h-24 shrink-0 rounded-xl overflow-hidden border border-[#D4AF37]/20 bg-[#FCFBF8] dark:bg-slate-800/50">
+                                                <div key={idx} className="relative w-24 h-24 shrink-0 rounded-xl overflow-hidden border border-[#D4AF37]/20 bg-[#FCFBF8] dark:bg-[#0f172a]">
                                                     {isVideo ? (
                                                         <div className="w-full h-full flex items-center justify-center bg-slate-900">
                                                             <VideoIcon size={24} className="text-white opacity-50" />
@@ -233,7 +233,7 @@ const Complaints: React.FC<{ profile: any }> = ({ profile }) => {
                                         </div>
                                         <span className="text-[10px] font-black text-[#1e3a8a]/40 dark:text-white/40 uppercase tracking-widest">Ticket: #{item.id.slice(0, 5)}</span>
                                     </div>
-                                    <div className="w-8 h-8 rounded-full bg-[#FCFBF8] dark:bg-slate-800/50 flex items-center justify-center text-[#1e3a8a]/30 dark:text-white/30 group-hover:bg-[#1e3a8a] group-hover:text-[#D4AF37] transition-all border border-[#D4AF37]/20">
+                                    <div className="w-8 h-8 rounded-full bg-[#FCFBF8] dark:bg-[#0f172a] flex items-center justify-center text-[#1e3a8a]/30 dark:text-white/30 group-hover:bg-[#1e3a8a] group-hover:text-[#D4AF37] transition-all border border-[#D4AF37]/20">
                                         <ChevronRight size={18} />
                                     </div>
                                 </div>
@@ -247,13 +247,13 @@ const Complaints: React.FC<{ profile: any }> = ({ profile }) => {
             {showModal && (
                 <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4">
                     <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-md transition-opacity" onClick={() => setShowModal(false)}></div>
-                    <div className="bg-white dark:bg-slate-800 w-full max-w-lg rounded-t-[3rem] sm:rounded-[3rem] p-10 relative z-10 shadow-2xl animate-in slide-in-from-bottom duration-500 border border-[#D4AF37]/30">
+                    <div className="bg-white dark:bg-[#1e293b] w-full max-w-lg rounded-t-[3rem] sm:rounded-[3rem] p-10 relative z-10 shadow-2xl animate-in slide-in-from-bottom duration-500 border border-[#D4AF37]/30">
                         <div className="flex items-center justify-between mb-10">
                             <div>
                                 <h3 className="text-3xl font-black text-[#1e3a8a] dark:text-[#D4AF37] tracking-tighter">New Complaint</h3>
                                 <p className="text-[10px] font-black text-[#1e3a8a]/40 dark:text-white/40 uppercase tracking-widest mt-1">Submit your issue to the Principal</p>
                             </div>
-                            <button onClick={() => setShowModal(false)} className="w-12 h-12 bg-[#FCFBF8] dark:bg-slate-800 rounded-2xl flex items-center justify-center text-[#1e3a8a]/40 dark:text-white/40 active:scale-90 transition-all border border-[#D4AF37]/20 hover:bg-[#D4AF37]/10 hover:text-[#1e3a8a] dark:hover:text-[#D4AF37]">
+                            <button onClick={() => setShowModal(false)} className="w-12 h-12 bg-[#FCFBF8] dark:bg-[#1e293b] rounded-2xl flex items-center justify-center text-[#1e3a8a]/40 dark:text-white/40 active:scale-90 transition-all border border-[#D4AF37]/20 hover:bg-[#D4AF37]/10 hover:text-[#1e3a8a] dark:hover:text-[#D4AF37]">
                                 <Plus size={24} className="rotate-45" />
                             </button>
                         </div>
@@ -264,7 +264,7 @@ const Complaints: React.FC<{ profile: any }> = ({ profile }) => {
                                 <input 
                                     type="text" 
                                     placeholder="Enter issue (e.g. Fee Issue, Result Error)"
-                                    className="w-full bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/20 rounded-[1.5rem] p-5 font-black text-[#1e3a8a] dark:text-white focus:border-[#D4AF37] focus:ring-4 focus:ring-[#D4AF37]/10 outline-none transition-all placeholder:text-[#1e3a8a]/30 dark:placeholder:text-white/30"
+                                    className="w-full bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/20 rounded-[1.5rem] p-5 font-black text-[#1e3a8a] dark:text-white focus:border-[#D4AF37] focus:ring-4 focus:ring-[#D4AF37]/10 outline-none transition-all placeholder:text-[#1e3a8a]/30 dark:placeholder:text-white/30"
                                     value={newTitle}
                                     onChange={(e) => setNewTitle(e.target.value)}
                                 />
@@ -274,7 +274,7 @@ const Complaints: React.FC<{ profile: any }> = ({ profile }) => {
                                 <label className="text-[11px] font-black text-[#1e3a8a] dark:text-[#D4AF37] uppercase tracking-widest block mb-3 ml-1">Details</label>
                                 <textarea 
                                     placeholder="Describe your issue in detail..."
-                                    className="w-full bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/20 rounded-[1.5rem] p-5 font-black text-[#1e3a8a] dark:text-white focus:border-[#D4AF37] focus:ring-4 focus:ring-[#D4AF37]/10 outline-none transition-all h-40 resize-none placeholder:text-[#1e3a8a]/30 dark:placeholder:text-white/30"
+                                    className="w-full bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/20 rounded-[1.5rem] p-5 font-black text-[#1e3a8a] dark:text-white focus:border-[#D4AF37] focus:ring-4 focus:ring-[#D4AF37]/10 outline-none transition-all h-40 resize-none placeholder:text-[#1e3a8a]/30 dark:placeholder:text-white/30"
                                     value={newDesc}
                                     onChange={(e) => setNewDesc(e.target.value)}
                                 />
@@ -284,7 +284,7 @@ const Complaints: React.FC<{ profile: any }> = ({ profile }) => {
                                 <label className="text-[11px] font-black text-[#1e3a8a] dark:text-[#D4AF37] uppercase tracking-widest block mb-3 ml-1">Attachments (Images/Videos)</label>
                                 <div className="flex flex-wrap gap-3">
                                     {selectedFiles.map((file, idx) => (
-                                        <div key={idx} className="relative w-20 h-20 bg-[#FCFBF8] dark:bg-slate-800/50 rounded-2xl border border-[#D4AF37]/20 flex items-center justify-center overflow-hidden">
+                                        <div key={idx} className="relative w-20 h-20 bg-[#FCFBF8] dark:bg-[#0f172a] rounded-2xl border border-[#D4AF37]/20 flex items-center justify-center overflow-hidden">
                                             {file.type.startsWith('image/') ? (
                                                 <img src={URL.createObjectURL(file)} className="w-full h-full object-cover" alt="Preview" />
                                             ) : (
@@ -298,7 +298,7 @@ const Complaints: React.FC<{ profile: any }> = ({ profile }) => {
                                             </button>
                                         </div>
                                     ))}
-                                    <label className="w-20 h-20 bg-[#FCFBF8] dark:bg-slate-800/50 border-2 border-dashed border-[#D4AF37]/30 rounded-2xl flex flex-col items-center justify-center text-[#1e3a8a]/40 dark:text-white/40 hover:border-[#D4AF37] hover:text-[#1e3a8a] dark:hover:text-[#D4AF37] transition-all cursor-pointer active:scale-90">
+                                    <label className="w-20 h-20 bg-[#FCFBF8] dark:bg-[#0f172a] border-2 border-dashed border-[#D4AF37]/30 rounded-2xl flex flex-col items-center justify-center text-[#1e3a8a]/40 dark:text-white/40 hover:border-[#D4AF37] hover:text-[#1e3a8a] dark:hover:text-[#D4AF37] transition-all cursor-pointer active:scale-90">
                                         <Plus size={20} />
                                         <span className="text-[8px] font-black uppercase mt-1">Add</span>
                                         <input type="file" className="hidden" multiple accept="image/*,video/*" onChange={handleFileChange} />

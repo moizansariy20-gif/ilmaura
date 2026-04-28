@@ -12,8 +12,17 @@ const TextSpotlight: React.FC<TextSpotlightProps> = ({ h1, h2, p, showCursor }) 
   const containerRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  React.useEffect(() => {
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 768);
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDesktop) return;
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
       setMousePos({
@@ -28,10 +37,10 @@ const TextSpotlight: React.FC<TextSpotlightProps> = ({ h1, h2, p, showCursor }) 
       <div 
         ref={containerRef}
         onMouseMove={handleMouseMove}
-        onMouseEnter={() => setIsHovering(true)}
+        onMouseEnter={() => isDesktop && setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
-        data-hide-cursor="true"
-        className="relative cursor-none select-none inline-block"
+        data-hide-cursor={isDesktop ? "true" : "false"}
+        className={`relative select-none inline-block ${isDesktop ? 'cursor-none' : 'cursor-default'}`}
       >
         {/* Base Layer (Normal - Slate/Blue) */}
         <div className="text-center py-4 px-6">
@@ -46,40 +55,42 @@ const TextSpotlight: React.FC<TextSpotlightProps> = ({ h1, h2, p, showCursor }) 
         </div>
 
         {/* Spotlight Overlay (Black bg, White/Blue text, Zoomed) */}
-        <motion.div 
-          initial={false}
-          animate={{ 
-            opacity: isHovering ? 1 : 0,
-            clipPath: `circle(${isHovering ? 60 : 0}px at ${mousePos.x}px ${mousePos.y}px)`
-          }}
-          transition={{
-            type: "spring",
-            stiffness: 250,
-            damping: 25,
-            opacity: { duration: 0.2 }
-          }}
-          className="absolute inset-0 z-20 pointer-events-none overflow-hidden"
-        >
-          <div 
-            className="bg-black w-full h-full flex flex-col items-center justify-center px-6"
-            style={{
-              transform: `scale(1.15)`, // Slightly more zoom
-              transformOrigin: `${mousePos.x}px ${mousePos.y}px`,
-              transition: 'transform 0.1s ease-out'
+        {isDesktop && (
+          <motion.div 
+            initial={false}
+            animate={{ 
+              opacity: isHovering ? 1 : 0,
+              clipPath: `circle(${isHovering ? 60 : 0}px at ${mousePos.x}px ${mousePos.y}px)`
             }}
+            transition={{
+              type: "spring",
+              stiffness: 250,
+              damping: 25,
+              opacity: { duration: 0.2 }
+            }}
+            className="absolute inset-0 z-20 pointer-events-none overflow-hidden"
           >
-            <div className="text-center w-full py-4">
-              <h2 className="text-3xl lg:text-4xl font-black text-white mb-4 tracking-tight">
-                {h1} <br/><span className="text-[#007bff]">{h2}</span>
-                {showCursor && p.length === 0 && <span className="animate-pulse text-[#007bff]">|</span>}
-              </h2>
-              <p className="text-white/80 text-sm lg:text-base leading-relaxed max-w-lg mx-auto">
-                {p}
-                {showCursor && p.length > 0 && <span className="animate-pulse">|</span>}
-              </p>
+            <div 
+              className="bg-black w-full h-full flex flex-col items-center justify-center px-6"
+              style={{
+                transform: `scale(1.15)`, // Slightly more zoom
+                transformOrigin: `${mousePos.x}px ${mousePos.y}px`,
+                transition: 'transform 0.1s ease-out'
+              }}
+            >
+              <div className="text-center w-full py-4">
+                <h2 className="text-3xl lg:text-4xl font-black text-white mb-4 tracking-tight">
+                  {h1} <br/><span className="text-[#007bff]">{h2}</span>
+                  {showCursor && p.length === 0 && <span className="animate-pulse text-[#007bff]">|</span>}
+                </h2>
+                <p className="text-white/80 text-sm lg:text-base leading-relaxed max-w-lg mx-auto">
+                  {p}
+                  {showCursor && p.length > 0 && <span className="animate-pulse">|</span>}
+                </p>
+              </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        )}
       </div>
     </div>
   );

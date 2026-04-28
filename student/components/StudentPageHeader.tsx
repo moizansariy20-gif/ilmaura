@@ -24,7 +24,7 @@ const StudentPageHeader: React.FC<StudentPageHeaderProps> = ({ profile, currentC
   const nameFontSize = getFontSizeClass(name);
 
   return (
-    <div className="w-full bg-white dark:bg-slate-800 rounded-b-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] relative z-10 shrink-0 flex flex-col justify-center px-6 pt-8 pb-10 border-b border-slate-100 dark:border-slate-800/50 overflow-hidden mb-6">
+    <div className="w-full bg-white dark:bg-[#1e293b] rounded-b-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] relative z-10 shrink-0 flex flex-col justify-center px-6 pt-8 pb-10 border-b border-slate-100 dark:border-[#334155]/50 overflow-hidden mb-6">
         {/* Yellow Circle Decoration - Large sized like dashboard */}
         <div className="absolute -top-24 -right-24 w-72 h-72 bg-[#FFD700] rounded-full z-0 shadow-sm"></div>
         
@@ -52,7 +52,7 @@ const StudentPageHeader: React.FC<StudentPageHeaderProps> = ({ profile, currentC
 
             {/* Profile Image - Large Size (w-24 h-24) to match Dashboard */}
             <div className="relative z-20 -mt-2 -mr-2 shrink-0">
-                <div className="w-24 h-24 rounded-full p-1 bg-white dark:bg-slate-800 shadow-2xl border-4 border-slate-50">
+                <div className="w-24 h-24 rounded-full p-1 bg-white dark:bg-[#1e293b] shadow-2xl border-4 border-slate-50">
                     {profile?.photoURL ? (
                         <img src={profile.photoURL} className="w-full h-full rounded-full object-cover shadow-inner" alt="Profile" />
                     ) : (

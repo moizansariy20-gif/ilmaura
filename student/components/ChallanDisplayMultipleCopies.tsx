@@ -46,7 +46,7 @@ const ChallanDisplayMultipleCopies: React.FC<ChallanDisplayMultipleCopiesProps> 
   if (!challanData) return null;
 
   return (
-    <div className="w-full flex flex-nowrap bg-white dark:bg-slate-800 p-0 relative h-full" style={{ minWidth: '1080px' /* 3 * 360px */ }}>
+    <div className="w-full flex flex-nowrap bg-white dark:bg-[#1e293b] p-0 relative h-full" style={{ minWidth: '1080px' /* 3 * 360px */ }}>
       {/* School Copy */}
       <div className="w-[360px] border-r border-dashed border-gray-300 print:border-none">
         <StudentChallanView challanData={{...challanData, titleSuffix: 'School Copy'}} school={school} />

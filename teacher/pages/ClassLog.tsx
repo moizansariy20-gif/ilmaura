@@ -124,31 +124,31 @@ const Classwork: React.FC<ClassworkProps> = ({ profile, classes, subjects }) => 
       <h1 className="text-3xl font-black text-slate-800 dark:text-slate-100 tracking-tight">Daily Classwork Log</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-gradient-to-b from-white to-[#6B1D2F]/5 p-4 rounded-2xl border border-[#6B1D2F]/10 dark:border-slate-700 border-b-4 border-b-[#6B1D2F]/20 shadow-[0_8px_15px_rgba(107,29,47,0.08),0_3px_6px_rgba(107,29,47,0.04),inset_0_2px_0_rgba(255,255,255,1)]">
+        <div className="bg-gradient-to-b from-white to-[#6B1D2F]/5 p-4 rounded-2xl border border-[#6B1D2F]/10 dark:border-[#1e293b] border-b-4 border-b-[#6B1D2F]/20 shadow-[0_8px_15px_rgba(107,29,47,0.08),0_3px_6px_rgba(107,29,47,0.04),inset_0_2px_0_rgba(255,255,255,1)]">
           <label className="text-xs font-bold text-slate-400">Class</label>
-          <select value={selectedClassId} onChange={e => setSelectedClassId(e.target.value)} className="w-full mt-1 p-2 bg-white dark:bg-slate-800 border-[#6B1D2F]/10 dark:border-slate-700 border rounded-lg font-bold text-sm shadow-inner outline-none focus:ring-2 focus:ring-[#6B1D2F]/10">
+          <select value={selectedClassId} onChange={e => setSelectedClassId(e.target.value)} className="w-full mt-1 p-2 bg-white dark:bg-[#1e293b] border-[#6B1D2F]/10 dark:border-[#1e293b] border rounded-lg font-bold text-sm shadow-inner outline-none focus:ring-2 focus:ring-[#6B1D2F]/10">
             {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
-        <div className="bg-gradient-to-b from-white to-[#6B1D2F]/5 p-4 rounded-2xl border border-[#6B1D2F]/10 dark:border-slate-700 border-b-4 border-b-[#6B1D2F]/20 shadow-[0_8px_15px_rgba(107,29,47,0.08),0_3px_6px_rgba(107,29,47,0.04),inset_0_2px_0_rgba(255,255,255,1)]">
+        <div className="bg-gradient-to-b from-white to-[#6B1D2F]/5 p-4 rounded-2xl border border-[#6B1D2F]/10 dark:border-[#1e293b] border-b-4 border-b-[#6B1D2F]/20 shadow-[0_8px_15px_rgba(107,29,47,0.08),0_3px_6px_rgba(107,29,47,0.04),inset_0_2px_0_rgba(255,255,255,1)]">
           <label className="text-xs font-bold text-slate-400">Date</label>
-          <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-full mt-1 p-2 bg-white dark:bg-slate-800 border-[#6B1D2F]/10 dark:border-slate-700 border rounded-lg font-bold text-sm shadow-inner outline-none focus:ring-2 focus:ring-[#6B1D2F]/10" />
+          <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-full mt-1 p-2 bg-white dark:bg-[#1e293b] border-[#6B1D2F]/10 dark:border-[#1e293b] border rounded-lg font-bold text-sm shadow-inner outline-none focus:ring-2 focus:ring-[#6B1D2F]/10" />
         </div>
       </div>
       
-      <div className="bg-gradient-to-b from-white to-[#6B1D2F]/5 p-6 rounded-2xl border border-[#6B1D2F]/10 dark:border-slate-700 border-b-4 border-b-[#6B1D2F]/20 shadow-[0_8px_15px_rgba(107,29,47,0.08),0_3px_6px_rgba(107,29,47,0.04),inset_0_2px_0_rgba(255,255,255,1)]">
+      <div className="bg-gradient-to-b from-white to-[#6B1D2F]/5 p-6 rounded-2xl border border-[#6B1D2F]/10 dark:border-[#1e293b] border-b-4 border-b-[#6B1D2F]/20 shadow-[0_8px_15px_rgba(107,29,47,0.08),0_3px_6px_rgba(107,29,47,0.04),inset_0_2px_0_rgba(255,255,255,1)]">
         <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-2">Post New Classwork</h3>
-        <textarea value={content} onChange={e => setContent(e.target.value)} placeholder="What did you cover in class today?" className="w-full mt-2 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg h-24 text-sm"/>
+        <textarea value={content} onChange={e => setContent(e.target.value)} placeholder="What did you cover in class today?" className="w-full mt-2 p-3 bg-slate-50 dark:bg-[#0f172a] rounded-lg h-24 text-sm"/>
         
         <div className="mt-4">
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-400 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700 cursor-not-allowed">
+            <div className="flex items-center gap-2 text-xs font-bold text-slate-400 p-3 bg-slate-50 dark:bg-[#0f172a] rounded-lg border border-slate-200 dark:border-[#1e293b] cursor-not-allowed">
               <ImageIcon size={14}/> 
               <span>Attach a Photo (Coming Soon)</span>
             </div>
         </div>
         
-        <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <select value={selectedSubjectId} onChange={e => setSelectedSubjectId(e.target.value)} className="w-full sm:w-auto p-2 bg-slate-100 border-slate-200 dark:border-slate-700 border rounded-lg font-bold text-xs">
+        <div className="mt-4 pt-4 border-t border-slate-100 dark:border-[#334155] flex flex-col sm:flex-row items-center justify-between gap-4">
+          <select value={selectedSubjectId} onChange={e => setSelectedSubjectId(e.target.value)} className="w-full sm:w-auto p-2 bg-slate-100 border-slate-200 dark:border-[#1e293b] border rounded-lg font-bold text-xs">
             <option value="">-- Select Subject --</option>
             {subjectsForClass.map(subject => <option key={subject.id} value={subject.id}>{subject.name}</option>)}
           </select>
@@ -170,7 +170,7 @@ const Classwork: React.FC<ClassworkProps> = ({ profile, classes, subjects }) => 
             filteredLogs.length > 0 ? (
                 <div className="space-y-4">
                     {filteredLogs.map(log => (
-                        <div key={log.id} className="bg-gradient-to-b from-white to-[#6B1D2F]/5 p-4 rounded-2xl border border-[#6B1D2F]/10 dark:border-slate-700 border-b-4 border-b-[#6B1D2F]/20 shadow-[0_8px_15px_rgba(107,29,47,0.08),0_3px_6px_rgba(107,29,47,0.04),inset_0_2px_0_rgba(255,255,255,1)] group">
+                        <div key={log.id} className="bg-gradient-to-b from-white to-[#6B1D2F]/5 p-4 rounded-2xl border border-[#6B1D2F]/10 dark:border-[#1e293b] border-b-4 border-b-[#6B1D2F]/20 shadow-[0_8px_15px_rgba(107,29,47,0.08),0_3px_6px_rgba(107,29,47,0.04),inset_0_2px_0_rgba(255,255,255,1)] group">
                             <div className="flex justify-between items-start">
                                 <div>
                                     <span className="px-2 py-1 bg-[#6B1D2F]/5 text-[#6B1D2F] dark:text-white rounded-md text-xs font-black">{getSubjectName(log.subjectId)}</span>
@@ -181,14 +181,14 @@ const Classwork: React.FC<ClassworkProps> = ({ profile, classes, subjects }) => 
                         </div>
                     ))}
                 </div>
-            ) : <p className="text-slate-500 dark:text-slate-400 text-sm bg-slate-50 dark:bg-slate-800/50 p-6 rounded-lg text-center">No classwork entries found for this day.</p>
+            ) : <p className="text-slate-500 dark:text-slate-400 text-sm bg-slate-50 dark:bg-[#0f172a] p-6 rounded-lg text-center">No classwork entries found for this day.</p>
         )}
       </div>
 
       {showSuccessModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setShowSuccessModal(false)}></div>
-          <div className="bg-white dark:bg-slate-800 w-full max-w-sm rounded-[2.5rem] shadow-2xl relative z-10 p-10 animate-in zoom-in-95 text-center">
+          <div className="bg-white dark:bg-[#1e293b] w-full max-w-sm rounded-[2.5rem] shadow-2xl relative z-10 p-10 animate-in zoom-in-95 text-center">
             <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-6"><CheckCircle size={32} /></div>
             <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-2">Posted!</h3>
             <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">The classwork has been successfully posted for students to view.</p>
@@ -202,7 +202,7 @@ const Classwork: React.FC<ClassworkProps> = ({ profile, classes, subjects }) => 
       {confirmDeleteTarget && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setConfirmDeleteTarget(null)}></div>
-            <div className="bg-white dark:bg-slate-800 w-full max-w-sm rounded-[2.5rem] shadow-2xl relative z-10 p-10 animate-in zoom-in-95 text-center">
+            <div className="bg-white dark:bg-[#1e293b] w-full max-w-sm rounded-[2.5rem] shadow-2xl relative z-10 p-10 animate-in zoom-in-95 text-center">
                 <div className="w-16 h-16 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-rose-100">
                     <Trash2 size={32} />
                 </div>

@@ -17,7 +17,9 @@ export const requestNotificationPermission = async (userId: string) => {
       
       let swRegistration = null;
       if ('serviceWorker' in navigator) {
-        swRegistration = await navigator.serviceWorker.getRegistration('/firebase-messaging-sw.js');
+        // Wait for the service worker to be ready to ensure it's active
+        swRegistration = await navigator.serviceWorker.ready;
+        console.log("Service Worker ready:", swRegistration);
       }
 
       const token = await getToken(messaging, {

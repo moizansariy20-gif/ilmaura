@@ -81,7 +81,6 @@ export interface School {
   name: string;
   logoURL: string;
   themeColor: string;
-  isLearningHubEnabled?: boolean;
   // NEW: Store custom field definitions for teachers
   teacherFieldConfig?: CustomFieldDef[]; 
   // NEW: Store custom field definitions for students
@@ -326,7 +325,6 @@ export interface Resource {
   fileURL?: string;
   fileName?: string;
   mimeType?: string;
-  description?: string; // Add description for Learning Hub
 }
 
 // NEW: Interface for Daily Class Log
@@ -431,34 +429,6 @@ export interface Curriculum {
     teacherId: string;
     syllabus?: GraphicalSyllabus;
     academicPlan?: GraphicalAcademicPlan;
-}
-
-// NEW: Interfaces for Global AI Learning Hub
-export interface LearningResource {
-  id?: string;
-  title: string;
-  platform: 'YouTube';
-  description: string;
-  url: string;
-  channel: string;
-  videoCount?: number;
-  thumbnailUrl?: string;
-  level?: 'Beginner' | 'Intermediate' | 'Advanced';
-  rating?: number;
-  channelLogoUrl?: string;
-  subscriberCount?: string;
-  subscriberCountRaw?: number;
-  category?: string;
-  createdAt?: any;
-}
-
-// NEW: Interface for YouTube Channel Search Results
-export interface LearningChannel {
-  channelName: string;
-  platform: 'YouTube';
-  description: string;
-  url: string;
-  subscriberCount: string;
 }
 
 // NEW: Interfaces for Live Quiz Feature

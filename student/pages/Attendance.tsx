@@ -144,7 +144,7 @@ const Attendance: React.FC<AttendanceProps> = ({ attendance = [], profile, curre
       const isSunday = tempDate.getDay() === 0;
       const holidayName = holidays[dateKey];
 
-      let bgColor = 'bg-slate-50 dark:bg-slate-800/50';
+      let bgColor = 'bg-slate-50 dark:bg-[#0f172a]';
       let textColor = 'text-slate-400';
       let borderStyle = 'border-transparent';
 
@@ -205,13 +205,13 @@ const Attendance: React.FC<AttendanceProps> = ({ attendance = [], profile, curre
   const displayedActivities = showFullMonthHistory ? generatedTimeline : generatedTimeline.slice(0, 7);
 
   return (
-    <div className="min-h-full bg-white dark:bg-slate-900 pb-32 font-sans relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-full bg-white dark:bg-[#020617] pb-32 font-sans relative overflow-hidden transition-colors duration-300">
       
       {/* TOP NAV BAR */}
       <div className="px-6 pt-6 pb-2 flex items-center justify-between relative z-20">
           <button 
               onClick={() => navigate(-1)}
-              className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center border border-slate-100 dark:border-slate-700 active:scale-90 transition-transform"
+              className="w-10 h-10 rounded-xl bg-white dark:bg-[#1e293b] shadow-sm flex items-center justify-center border border-slate-100 dark:border-[#1e293b] active:scale-90 transition-transform"
           >
               <ArrowLeft size={20} className="text-slate-600 dark:text-slate-300" />
           </button>
@@ -231,7 +231,7 @@ const Attendance: React.FC<AttendanceProps> = ({ attendance = [], profile, curre
       </div>
 
       {/* Header Section - Matches Settings/Fees Page */}
-      <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+      <div className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#1e3a8a] via-[#D4AF37] to-[#1e3a8a]"></div>
         <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
         
@@ -263,7 +263,7 @@ const Attendance: React.FC<AttendanceProps> = ({ attendance = [], profile, curre
             { label: 'Leaves', value: loading ? '...' : leaveCount, icon: <Coffee size={18} />, color: 'text-amber-500' },
             { label: 'Percentage', value: loading ? '...' : `${monthlyPercentage}%`, icon: <TrendingUp size={18} />, color: 'text-[#D4AF37]' }
           ].map((stat, i) => (
-            <div key={i} className={`p-5 bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/10 rounded-2xl shadow-sm flex flex-col items-center text-center ${loading ? 'animate-pulse' : ''}`}>
+            <div key={i} className={`p-5 bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/10 rounded-2xl shadow-sm flex flex-col items-center text-center ${loading ? 'animate-pulse' : ''}`}>
               <div className={`${stat.color} mb-3`}>{stat.icon}</div>
               <p className="text-lg font-black text-[#1e3a8a] dark:text-white tracking-tighter">{stat.value}</p>
               <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mt-1">{stat.label}</p>
@@ -272,7 +272,7 @@ const Attendance: React.FC<AttendanceProps> = ({ attendance = [], profile, curre
         </div>
 
         {/* Efficiency Section */}
-        <div className={`bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/10 rounded-3xl p-8 shadow-sm ${loading ? 'animate-pulse' : ''}`}>
+        <div className={`bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/10 rounded-3xl p-8 shadow-sm ${loading ? 'animate-pulse' : ''}`}>
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="relative w-32 h-32 flex-shrink-0">
               <svg className="w-full h-full transform -rotate-90">
@@ -322,7 +322,7 @@ const Attendance: React.FC<AttendanceProps> = ({ attendance = [], profile, curre
             <div className="h-px bg-gradient-to-r from-[#D4AF37]/40 to-transparent flex-1"></div>
           </div>
 
-          <div className="bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/10 rounded-3xl p-6 md:p-8 shadow-sm">
+          <div className="bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/10 rounded-3xl p-6 md:p-8 shadow-sm">
             <div className="flex items-center justify-between mb-8">
               <button onClick={handlePrevMonth} className="w-10 h-10 flex items-center justify-center bg-white dark:bg-slate-700 text-[#1e3a8a] dark:text-white rounded-xl border border-[#D4AF37]/20 shadow-sm active:scale-95 transition-all"><ChevronLeft size={18} /></button>
               <div className="text-center">
@@ -340,7 +340,7 @@ const Attendance: React.FC<AttendanceProps> = ({ attendance = [], profile, curre
             
             <div className="grid grid-cols-7 gap-2 justify-items-center mb-8 relative">
               {isLoadingHolidays && (
-                <div className="absolute inset-0 z-10 bg-white/40 dark:bg-slate-800/40 backdrop-blur-[1px] flex items-center justify-center rounded-xl">
+                <div className="absolute inset-0 z-10 bg-white/40 dark:bg-[#1e293b]/40 backdrop-blur-[1px] flex items-center justify-center rounded-xl">
                   <Loader2 className="w-6 h-6 text-[#D4AF37] animate-spin" />
                 </div>
               )}
@@ -386,7 +386,7 @@ const Attendance: React.FC<AttendanceProps> = ({ attendance = [], profile, curre
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ delay: i * 0.05 }}
-                    className="bg-[#FCFBF8] dark:bg-slate-800/50 p-4 rounded-2xl border border-[#D4AF37]/10 flex items-center justify-between group shadow-sm hover:border-[#1e3a8a]/20 transition-all"
+                    className="bg-[#FCFBF8] dark:bg-[#0f172a] p-4 rounded-2xl border border-[#D4AF37]/10 flex items-center justify-between group shadow-sm hover:border-[#1e3a8a]/20 transition-all"
                   >
                     <div className="flex items-center gap-4">
                       <div className={`w-12 h-12 rounded-xl flex flex-col items-center justify-center border border-[#D4AF37]/10 ${
@@ -429,7 +429,7 @@ const Attendance: React.FC<AttendanceProps> = ({ attendance = [], profile, curre
                   </motion.div>
                 ))
               ) : (
-                <div className="p-10 bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/10 rounded-2xl text-center">
+                <div className="p-10 bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/10 rounded-2xl text-center">
                   <Clock size={32} className="text-slate-200 mx-auto mb-3" />
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">No recent activity</p>
                 </div>

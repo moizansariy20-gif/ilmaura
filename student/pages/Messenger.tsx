@@ -180,12 +180,12 @@ const Messenger: React.FC<MessengerProps> = ({ profile, currentClass, initialCha
   // --- VIEW: INBOX ---
   if (!activeChatId) {
     return (
-      <div className="min-h-full bg-white dark:bg-slate-900 pb-32 font-sans relative overflow-hidden transition-colors duration-300">
+      <div className="min-h-full bg-white dark:bg-[#020617] pb-32 font-sans relative overflow-hidden transition-colors duration-300">
         {/* TOP NAV BAR */}
         <div className="px-6 pt-6 pb-2 flex items-center justify-between relative z-20">
             <button 
                 onClick={() => navigate(-1)}
-                className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center border border-slate-100 dark:border-slate-700 active:scale-90 transition-transform"
+                className="w-10 h-10 rounded-xl bg-white dark:bg-[#1e293b] shadow-sm flex items-center justify-center border border-slate-100 dark:border-[#1e293b] active:scale-90 transition-transform"
             >
                 <ArrowLeft size={20} className="text-[#1e3a8a] dark:text-[#D4AF37]" />
             </button>
@@ -206,7 +206,7 @@ const Messenger: React.FC<MessengerProps> = ({ profile, currentClass, initialCha
 
         <div className="max-w-4xl mx-auto space-y-8 relative z-10 mt-4">
           {/* Header Section */}
-          <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+          <div className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
             <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#1e3a8a] via-[#D4AF37] to-[#1e3a8a]"></div>
             <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
             
@@ -231,7 +231,7 @@ const Messenger: React.FC<MessengerProps> = ({ profile, currentClass, initialCha
 
           <div className="px-4 md:px-6 space-y-8">
             {/* Search */}
-            <div className="bg-[#FCFBF8] dark:bg-slate-800/50 p-3 rounded-[2rem] border border-[#D4AF37]/20 shadow-sm flex items-center mb-6">
+            <div className="bg-[#FCFBF8] dark:bg-[#0f172a] p-3 rounded-[2rem] border border-[#D4AF37]/20 shadow-sm flex items-center mb-6">
                 <div className="w-10 h-10 flex items-center justify-center text-[#1e3a8a]/50 dark:text-[#D4AF37]/50">
                     <Search size={20} />
                 </div>
@@ -243,7 +243,7 @@ const Messenger: React.FC<MessengerProps> = ({ profile, currentClass, initialCha
             </div>
 
             {/* Chat List Card */}
-            <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] border border-[#D4AF37]/20 shadow-xl overflow-hidden min-h-[500px]">
+            <div className="bg-white dark:bg-[#1e293b] rounded-[2.5rem] border border-[#D4AF37]/20 shadow-xl overflow-hidden min-h-[500px]">
                 <div className="p-6 pb-4 border-b border-[#D4AF37]/10">
                     <h3 className="text-lg font-black text-[#1e3a8a] dark:text-[#D4AF37] uppercase tracking-widest drop-shadow-sm">Your Teachers</h3>
                 </div>
@@ -256,7 +256,7 @@ const Messenger: React.FC<MessengerProps> = ({ profile, currentClass, initialCha
                             className="p-5 flex items-center gap-4 hover:bg-[#D4AF37]/5 dark:hover:bg-slate-800/80 transition-colors cursor-pointer active:scale-[0.98] duration-200"
                         >
                             {/* Avatar */}
-                            <div className={`w-14 h-14 rounded-full flex items-center justify-center text-white font-black text-lg shrink-0 shadow-md border-2 border-white dark:border-slate-700 ${contact.role === 'group' ? 'bg-gradient-to-br from-[#1e3a8a] to-blue-600' : 'bg-gradient-to-br from-emerald-500 to-teal-500'} overflow-hidden`}>
+                            <div className={`w-14 h-14 rounded-full flex items-center justify-center text-white font-black text-lg shrink-0 shadow-md border-2 border-white dark:border-[#1e293b] ${contact.role === 'group' ? 'bg-gradient-to-br from-[#1e3a8a] to-blue-600' : 'bg-gradient-to-br from-emerald-500 to-teal-500'} overflow-hidden`}>
                                 {contact.photoURL ? (
                                     <img src={contact.photoURL} alt={contact.name} className="w-full h-full object-cover" />
                                 ) : (
@@ -299,8 +299,8 @@ const Messenger: React.FC<MessengerProps> = ({ profile, currentClass, initialCha
     <div className="fixed inset-0 z-[300] bg-[#f8fafc] flex flex-col animate-in slide-in-from-right duration-300">
       
       {/* Header */}
-      <div className="bg-white dark:bg-slate-800 px-4 py-3 flex items-center gap-3 border-b border-slate-200 dark:border-slate-700 shadow-sm shrink-0 safe-top h-20">
-         <button onClick={() => setActiveChatId(null)} className="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-800/50 rounded-full transition-all active:scale-90">
+      <div className="bg-white dark:bg-[#1e293b] px-4 py-3 flex items-center gap-3 border-b border-slate-200 dark:border-[#1e293b] shadow-sm shrink-0 safe-top h-20">
+         <button onClick={() => setActiveChatId(null)} className="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-[#0f172a] rounded-full transition-all active:scale-90">
             <ArrowLeft size={24} />
          </button>
          
@@ -327,8 +327,8 @@ const Messenger: React.FC<MessengerProps> = ({ profile, currentClass, initialCha
 
          {activeContact?.role !== 'group' && (
              <div className="flex gap-2 text-slate-400">
-                 <button className="p-2 hover:bg-slate-50 dark:bg-slate-800/50 rounded-full"><Phone size={20} /></button>
-                 <button className="p-2 hover:bg-slate-50 dark:bg-slate-800/50 rounded-full"><Video size={20} /></button>
+                 <button className="p-2 hover:bg-slate-50 dark:bg-[#0f172a] rounded-full"><Phone size={20} /></button>
+                 <button className="p-2 hover:bg-slate-50 dark:bg-[#0f172a] rounded-full"><Video size={20} /></button>
              </div>
          )}
       </div>
@@ -382,9 +382,9 @@ const Messenger: React.FC<MessengerProps> = ({ profile, currentClass, initialCha
 
       {/* Input Area */}
       {activeContact?.role !== 'group' ? (
-        <div className="bg-white dark:bg-slate-800 p-3 border-t border-slate-200 dark:border-slate-700 shrink-0 safe-bottom">
+        <div className="bg-white dark:bg-[#1e293b] p-3 border-t border-slate-200 dark:border-[#1e293b] shrink-0 safe-bottom">
             <div className="max-w-3xl mx-auto flex items-end gap-2">
-                <div className="flex-1 bg-slate-100 rounded-[1.5rem] flex items-center p-1.5 border border-transparent focus-within:border-indigo-300 focus-within:bg-white dark:bg-slate-800 transition-all shadow-inner">
+                <div className="flex-1 bg-slate-100 rounded-[1.5rem] flex items-center p-1.5 border border-transparent focus-within:border-indigo-300 focus-within:bg-white dark:bg-[#1e293b] transition-all shadow-inner">
                     <button className="p-2 text-slate-400 hover:text-slate-600 dark:text-slate-300 rounded-full"><Smile size={24} /></button>
                     <textarea 
                         value={newMessage}
@@ -408,8 +408,8 @@ const Messenger: React.FC<MessengerProps> = ({ profile, currentClass, initialCha
             </div>
         </div>
       ) : (
-          <div className="bg-white dark:bg-slate-800 p-4 border-t border-slate-200 dark:border-slate-700 text-center">
-              <p className="text-xs font-bold text-slate-400 bg-slate-50 dark:bg-slate-800/50 py-2 rounded-xl">Only Admins can send messages in this group.</p>
+          <div className="bg-white dark:bg-[#1e293b] p-4 border-t border-slate-200 dark:border-[#1e293b] text-center">
+              <p className="text-xs font-bold text-slate-400 bg-slate-50 dark:bg-[#0f172a] py-2 rounded-xl">Only Admins can send messages in this group.</p>
           </div>
       )}
 

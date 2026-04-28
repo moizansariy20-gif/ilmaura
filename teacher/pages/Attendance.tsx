@@ -181,12 +181,12 @@ const Attendance: React.FC<AttendanceProps> = ({ profile, classes, students }) =
 
 
   return (
-    <div className="min-h-full bg-white dark:bg-slate-800 pb-32 font-sans relative overflow-hidden">
+    <div className="min-h-full bg-white dark:bg-[#1e293b] pb-32 font-sans relative overflow-hidden">
       
       <div className="max-w-3xl mx-auto space-y-8 relative z-10">
         
         {/* Header & Filters Combined - Matching Homework Style */}
-        <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(107,29,47,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+        <div className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(107,29,47,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#6B1D2F] via-[#D4AF37] to-[#6B1D2F]"></div>
           <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
           
@@ -205,7 +205,7 @@ const Attendance: React.FC<AttendanceProps> = ({ profile, classes, students }) =
             </div>
             <div className="flex p-1.5 md:p-2 bg-gradient-to-br from-[#6B1D2F] to-[#4A1420] shadow-[0_10px_25px_-5px_rgba(107,29,47,0.4),inset_0_2px_4px_rgba(255,255,255,0.2)] rounded-2xl border-2 border-[#D4AF37]/40 relative group overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-tr from-[#D4AF37]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl overflow-hidden border border-[#D4AF37]/30 bg-white/10 dark:bg-slate-800/10 flex items-center justify-center relative z-10">
+              <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl overflow-hidden border border-[#D4AF37]/30 bg-white/10 dark:bg-[#1e293b]/10 flex items-center justify-center relative z-10">
                 {profile.photoURL ? (
                   <img 
                     src={profile.photoURL} 
@@ -234,7 +234,7 @@ const Attendance: React.FC<AttendanceProps> = ({ profile, classes, students }) =
                 <select 
                   value={selectedClassId} 
                   onChange={e => setSelectedClassId(e.target.value)} 
-                  className="w-full p-4 bg-white dark:bg-slate-800 shadow-[inset_0_2px_8px_rgba(107,29,47,0.04),0_1px_2px_rgba(255,255,255,1)] border border-[#E5E0D8] dark:border-slate-700 hover:border-[#D4AF37]/50 rounded-xl text-sm font-bold text-[#6B1D2F] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all appearance-none"
+                  className="w-full p-4 bg-white dark:bg-[#1e293b] shadow-[inset_0_2px_8px_rgba(107,29,47,0.04),0_1px_2px_rgba(255,255,255,1)] border border-[#E5E0D8] dark:border-[#1e293b] hover:border-[#D4AF37]/50 rounded-xl text-sm font-bold text-[#6B1D2F] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all appearance-none"
                 >
                   {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
@@ -249,7 +249,7 @@ const Attendance: React.FC<AttendanceProps> = ({ profile, classes, students }) =
                 type="date" 
                 value={selectedDate} 
                 onChange={e => setSelectedDate(e.target.value)} 
-                className="w-full p-4 bg-white dark:bg-slate-800 shadow-[inset_0_2px_8px_rgba(107,29,47,0.04),0_1px_2px_rgba(255,255,255,1)] border border-[#E5E0D8] dark:border-slate-700 hover:border-[#D4AF37]/50 rounded-xl text-sm font-bold text-[#6B1D2F] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all" 
+                className="w-full p-4 bg-white dark:bg-[#1e293b] shadow-[inset_0_2px_8px_rgba(107,29,47,0.04),0_1px_2px_rgba(255,255,255,1)] border border-[#E5E0D8] dark:border-[#1e293b] hover:border-[#D4AF37]/50 rounded-xl text-sm font-bold text-[#6B1D2F] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all" 
               />
             </div>
           </div>
@@ -264,7 +264,7 @@ const Attendance: React.FC<AttendanceProps> = ({ profile, classes, students }) =
             </button>
             <button 
               onClick={() => setIsScannerOpen(true)} 
-              className="w-full py-4 bg-white dark:bg-slate-800 text-[#6B1D2F] dark:text-white rounded-2xl font-black text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(107,29,47,0.1)] border-2 border-[#D4AF37]/30 active:scale-[0.98]"
+              className="w-full py-4 bg-white dark:bg-[#1e293b] text-[#6B1D2F] dark:text-white rounded-2xl font-black text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(107,29,47,0.1)] border-2 border-[#D4AF37]/30 active:scale-[0.98]"
             >
               <QrCode size={20} className="text-[#D4AF37]" />
               <span className="tracking-wide uppercase text-xs">Scan QR Attendance</span>
@@ -275,9 +275,9 @@ const Attendance: React.FC<AttendanceProps> = ({ profile, classes, students }) =
         <div className="px-4 md:px-6 space-y-8">
           {/* Stats Grid - Matching Homework Style */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            <div className="bg-white dark:bg-slate-800 p-5 md:p-6 rounded-3xl flex items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
+            <div className="bg-white dark:bg-[#1e293b] p-5 md:p-6 rounded-3xl flex items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
                 <div className="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full group-hover:scale-150 transition-transform duration-700"></div>
-                <div className="w-14 h-14 bg-gradient-to-br from-[#FCFBF8] to-white shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_4px_10px_rgba(107,29,47,0.05)] border border-[#E5E0D8] dark:border-slate-700 text-[#D4AF37] rounded-2xl flex items-center justify-center shrink-0 relative z-10">
+                <div className="w-14 h-14 bg-gradient-to-br from-[#FCFBF8] to-white shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_4px_10px_rgba(107,29,47,0.05)] border border-[#E5E0D8] dark:border-[#1e293b] text-[#D4AF37] rounded-2xl flex items-center justify-center shrink-0 relative z-10">
                   <Users size={24} className="drop-shadow-sm" />
                 </div>
                 <div className="relative z-10">
@@ -285,7 +285,7 @@ const Attendance: React.FC<AttendanceProps> = ({ profile, classes, students }) =
                     <p className="text-[10px] font-bold uppercase text-[#D4AF37] tracking-widest mt-2">{t.total}</p>
                 </div>
             </div>
-            <div className="bg-white dark:bg-slate-800 p-5 md:p-6 rounded-3xl flex items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
+            <div className="bg-white dark:bg-[#1e293b] p-5 md:p-6 rounded-3xl flex items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
                 <div className="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-full group-hover:scale-150 transition-transform duration-700"></div>
                 <div className="w-14 h-14 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 rounded-2xl flex items-center justify-center shrink-0 shadow-sm border border-emerald-100 dark:border-emerald-900/30 relative z-10">
                   <UserCheck size={24} className="drop-shadow-sm" />
@@ -295,7 +295,7 @@ const Attendance: React.FC<AttendanceProps> = ({ profile, classes, students }) =
                     <p className="text-[10px] font-bold uppercase text-emerald-600 tracking-widest mt-2">{t.present}</p>
                 </div>
             </div>
-            <div className="bg-white dark:bg-slate-800 p-5 md:p-6 rounded-3xl flex items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
+            <div className="bg-white dark:bg-[#1e293b] p-5 md:p-6 rounded-3xl flex items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
                 <div className="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-rose-500/10 to-transparent rounded-full group-hover:scale-150 transition-transform duration-700"></div>
                 <div className="w-14 h-14 bg-rose-50 dark:bg-rose-900/20 text-rose-600 rounded-2xl flex items-center justify-center shrink-0 shadow-sm border border-rose-100 dark:border-rose-900/30 relative z-10">
                   <UserX size={24} className="drop-shadow-sm" />
@@ -305,7 +305,7 @@ const Attendance: React.FC<AttendanceProps> = ({ profile, classes, students }) =
                     <p className="text-[10px] font-bold uppercase text-rose-600 tracking-widest mt-2">{t.absent}</p>
                 </div>
             </div>
-            <div className="bg-white dark:bg-slate-800 p-5 md:p-6 rounded-3xl flex items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
+            <div className="bg-white dark:bg-[#1e293b] p-5 md:p-6 rounded-3xl flex items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
                 <div className="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-amber-500/10 to-transparent rounded-full group-hover:scale-150 transition-transform duration-700"></div>
                 <div className="w-14 h-14 bg-amber-50 dark:bg-amber-900/20 text-amber-600 rounded-2xl flex items-center justify-center shrink-0 shadow-sm border border-amber-100 dark:border-amber-900/30 relative z-10">
                   <Coffee size={24} className="drop-shadow-sm" />
@@ -330,7 +330,7 @@ const Attendance: React.FC<AttendanceProps> = ({ profile, classes, students }) =
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {studentsInClass.length > 0 ? studentsInClass.map(student => {
                 const status = attendanceRecords.get(student.id);
-                let statusBg = 'bg-white dark:bg-slate-800';
+                let statusBg = 'bg-white dark:bg-[#1e293b]';
                 let statusBorder = 'border-[#D4AF37]/20';
                 let accentColor = 'from-[#D4AF37] to-[#6B1D2F]';
                 
@@ -358,9 +358,9 @@ const Attendance: React.FC<AttendanceProps> = ({ profile, classes, students }) =
                       <div className="flex items-center gap-5">
                         <div className="relative shrink-0">
                           {student.photoURL ? (
-                              <img src={student.photoURL} alt={student.name} className="w-16 h-16 rounded-2xl object-cover shadow-md border-2 border-white dark:border-slate-700" />
+                              <img src={student.photoURL} alt={student.name} className="w-16 h-16 rounded-2xl object-cover shadow-md border-2 border-white dark:border-[#1e293b]" />
                           ) : (
-                              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#6B1D2F] to-[#4A1420] flex items-center justify-center text-white font-black text-2xl shrink-0 border-2 border-white dark:border-slate-700 shadow-lg">
+                              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#6B1D2F] to-[#4A1420] flex items-center justify-center text-white font-black text-2xl shrink-0 border-2 border-white dark:border-[#1e293b] shadow-lg">
                                   {student.name[0]}
                               </div>
                           )}
@@ -385,7 +385,7 @@ const Attendance: React.FC<AttendanceProps> = ({ profile, classes, students }) =
                       const studentLeave = leaveApplications.find(l => l.student_id === student.id && l.start_date <= selectedDate && l.end_date >= selectedDate);
                       if (studentLeave) {
                         return (
-                          <div className="flex flex-col gap-3 bg-[#FCFBF8] dark:bg-slate-900 p-4 rounded-2xl shadow-[inset_0_2px_8px_rgba(107,29,47,0.04)] border border-amber-200 dark:border-amber-900/30 relative z-10">
+                          <div className="flex flex-col gap-3 bg-[#FCFBF8] dark:bg-[#020617] p-4 rounded-2xl shadow-[inset_0_2px_8px_rgba(107,29,47,0.04)] border border-amber-200 dark:border-amber-900/30 relative z-10">
                             <div className="flex justify-between items-center">
                               <span className="text-sm font-bold text-amber-600 flex items-center gap-2 capitalize">
                                 <ShieldAlert size={16} /> Leave Application ({studentLeave.status})
@@ -419,22 +419,22 @@ const Attendance: React.FC<AttendanceProps> = ({ profile, classes, students }) =
                       }
 
                       return (
-                        <div className="flex gap-3 bg-[#FCFBF8] dark:bg-slate-900 p-2 rounded-2xl justify-between shadow-[inset_0_2px_8px_rgba(107,29,47,0.04)] border border-[#E5E0D8] dark:border-slate-700 relative z-10">
+                        <div className="flex gap-3 bg-[#FCFBF8] dark:bg-[#020617] p-2 rounded-2xl justify-between shadow-[inset_0_2px_8px_rgba(107,29,47,0.04)] border border-[#E5E0D8] dark:border-[#1e293b] relative z-10">
                            <button 
                               onClick={() => handleSetAttendance(student.id, 'Present')} 
-                              className={`p-4 rounded-xl transition-all flex-1 flex items-center justify-center ${status === 'Present' ? 'bg-emerald-500 text-white shadow-[0_4px_12px_rgba(16,185,129,0.3)] scale-[1.02]' : 'bg-white dark:bg-slate-800 text-[#A89F91] dark:text-slate-400 hover:text-emerald-600 border border-[#E5E0D8] dark:border-slate-700 shadow-sm hover:shadow-md active:scale-95'}`}
+                              className={`p-4 rounded-xl transition-all flex-1 flex items-center justify-center ${status === 'Present' ? 'bg-emerald-500 text-white shadow-[0_4px_12px_rgba(16,185,129,0.3)] scale-[1.02]' : 'bg-white dark:bg-[#1e293b] text-[#A89F91] dark:text-slate-400 hover:text-emerald-600 border border-[#E5E0D8] dark:border-[#1e293b] shadow-sm hover:shadow-md active:scale-95'}`}
                            >
                               <Check size={24} strokeWidth={3} />
                            </button>
                            <button 
                               onClick={() => handleSetAttendance(student.id, 'Absent')} 
-                              className={`p-4 rounded-xl transition-all flex-1 flex items-center justify-center ${status === 'Absent' ? 'bg-rose-500 text-white shadow-[0_4px_12px_rgba(244,63,94,0.3)] scale-[1.02]' : 'bg-white dark:bg-slate-800 text-[#A89F91] dark:text-slate-400 hover:text-rose-600 border border-[#E5E0D8] dark:border-slate-700 shadow-sm hover:shadow-md active:scale-95'}`}
+                              className={`p-4 rounded-xl transition-all flex-1 flex items-center justify-center ${status === 'Absent' ? 'bg-rose-500 text-white shadow-[0_4px_12px_rgba(244,63,94,0.3)] scale-[1.02]' : 'bg-white dark:bg-[#1e293b] text-[#A89F91] dark:text-slate-400 hover:text-rose-600 border border-[#E5E0D8] dark:border-[#1e293b] shadow-sm hover:shadow-md active:scale-95'}`}
                            >
                               <X size={24} strokeWidth={3} />
                            </button>
                            <button 
                               onClick={() => handleSetAttendance(student.id, 'Leave')} 
-                              className={`p-4 rounded-xl transition-all flex-1 flex items-center justify-center ${status === 'Leave' ? 'bg-amber-500 text-white shadow-[0_4px_12px_rgba(245,158,11,0.3)] scale-[1.02]' : 'bg-white dark:bg-slate-800 text-[#A89F91] dark:text-slate-400 hover:text-amber-600 border border-[#E5E0D8] dark:border-slate-700 shadow-sm hover:shadow-md active:scale-95'}`}
+                              className={`p-4 rounded-xl transition-all flex-1 flex items-center justify-center ${status === 'Leave' ? 'bg-amber-500 text-white shadow-[0_4px_12px_rgba(245,158,11,0.3)] scale-[1.02]' : 'bg-white dark:bg-[#1e293b] text-[#A89F91] dark:text-slate-400 hover:text-amber-600 border border-[#E5E0D8] dark:border-[#1e293b] shadow-sm hover:shadow-md active:scale-95'}`}
                            >
                               <Coffee size={24} strokeWidth={3} />
                            </button>
@@ -444,7 +444,7 @@ const Attendance: React.FC<AttendanceProps> = ({ profile, classes, students }) =
                   </div>
                 );
               }) : (
-                <div className="col-span-full text-center py-24 rounded-3xl text-[#D4AF37] bg-white dark:bg-slate-800 shadow-[0_10px_40px_-10px_rgba(107,29,47,0.05)] border-2 border-[#D4AF37]/30 border-dashed">
+                <div className="col-span-full text-center py-24 rounded-3xl text-[#D4AF37] bg-white dark:bg-[#1e293b] shadow-[0_10px_40px_-10px_rgba(107,29,47,0.05)] border-2 border-[#D4AF37]/30 border-dashed">
                    <div className="w-20 h-20 bg-gradient-to-br from-[#FCFBF8] to-white dark:from-slate-700 dark:to-slate-800 shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_4px_10px_rgba(107,29,47,0.05)] rounded-2xl flex items-center justify-center mx-auto mb-6 border border-[#D4AF37]/20">
                      <Users size={36} className="text-[#D4AF37]" />
                    </div>
@@ -460,12 +460,12 @@ const Attendance: React.FC<AttendanceProps> = ({ profile, classes, students }) =
       {/* Leave Reason Modal */}
       {selectedLeave && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-md shadow-[0_20px_60px_-15px_rgba(107,29,47,0.3)] border border-[#D4AF37]/30 animate-in zoom-in-95 duration-200 relative overflow-hidden flex flex-col max-h-[85vh]">
+          <div className="bg-white dark:bg-[#1e293b] rounded-3xl w-full max-w-md shadow-[0_20px_60px_-15px_rgba(107,29,47,0.3)] border border-[#D4AF37]/30 animate-in zoom-in-95 duration-200 relative overflow-hidden flex flex-col max-h-[85vh]">
             {/* Top Gradient Bar */}
             <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#6B1D2F] via-[#D4AF37] to-[#6B1D2F]"></div>
             
             {/* Header */}
-            <div className="flex justify-between items-center p-5 pb-4 border-b border-slate-100 dark:border-slate-700/50">
+            <div className="flex justify-between items-center p-5 pb-4 border-b border-slate-100 dark:border-[#1e293b]/50">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center border border-amber-200 dark:border-amber-800/50">
                   <ShieldAlert className="text-amber-500" size={20} />
@@ -486,7 +486,7 @@ const Attendance: React.FC<AttendanceProps> = ({ profile, classes, students }) =
             {/* Content */}
             <div className="p-5 space-y-4 overflow-y-auto custom-scrollbar">
               {/* Date Range & Status */}
-              <div className="bg-[#FCFBF8] dark:bg-slate-900/50 p-3.5 rounded-2xl border border-[#D4AF37]/20 shadow-[inset_0_2px_8px_rgba(212,175,55,0.05)]">
+              <div className="bg-[#FCFBF8] dark:bg-[#020617]/50 p-3.5 rounded-2xl border border-[#D4AF37]/20 shadow-[inset_0_2px_8px_rgba(212,175,55,0.05)]">
                 <div className="flex justify-between items-center mb-2">
                   <p className="text-[10px] font-black text-[#6B1D2F]/60 dark:text-[#D4AF37]/60 uppercase tracking-widest">Date Range</p>
                   <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${
@@ -506,7 +506,7 @@ const Attendance: React.FC<AttendanceProps> = ({ profile, classes, students }) =
               {/* Reason */}
               <div>
                 <p className="text-[10px] font-black text-[#6B1D2F]/60 dark:text-[#D4AF37]/60 uppercase tracking-widest mb-1.5 ml-1">Application Reason</p>
-                <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm max-h-40 overflow-y-auto custom-scrollbar">
+                <div className="bg-white dark:bg-[#020617] p-4 rounded-2xl border border-slate-200 dark:border-[#1e293b] shadow-sm max-h-40 overflow-y-auto custom-scrollbar">
                   <p className="text-sm text-slate-600 dark:text-slate-300 whitespace-pre-wrap font-medium leading-relaxed">
                     {selectedLeave.reason}
                   </p>
@@ -539,7 +539,7 @@ const Attendance: React.FC<AttendanceProps> = ({ profile, classes, students }) =
       {scannedStudent && (
         <div className="fixed top-24 right-4 md:right-10 z-[110] bg-emerald-600 text-white border-4 border-[#6B1D2F] shadow-[8px_8px_0px_rgba(107,29,47,0.3)] p-6 animate-in slide-in-from-right-12 fade-in duration-300 w-[calc(100%-2rem)] md:w-96 rounded-2xl">
           <div className="flex gap-6 items-center">
-            <div className="w-20 h-20 bg-white dark:bg-slate-800 border-4 border-[#6B1D2F] rounded-xl flex items-center justify-center text-slate-900 dark:text-white font-black text-2xl shrink-0 overflow-hidden shadow-lg">
+            <div className="w-20 h-20 bg-white dark:bg-[#1e293b] border-4 border-[#6B1D2F] rounded-xl flex items-center justify-center text-slate-900 dark:text-white font-black text-2xl shrink-0 overflow-hidden shadow-lg">
               {scannedStudent.photoURL ? (
                 <img src={scannedStudent.photoURL} alt={scannedStudent.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               ) : (

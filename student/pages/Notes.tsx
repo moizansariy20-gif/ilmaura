@@ -13,7 +13,7 @@ interface NotesProps {
 }
 
 const COLORS = [
-  { id: 'white', bg: 'bg-[#FCFBF8] dark:bg-slate-800', border: 'border-[#D4AF37]/20' },
+  { id: 'white', bg: 'bg-[#FCFBF8] dark:bg-[#1e293b]', border: 'border-[#D4AF37]/20' },
   { id: 'yellow', bg: 'bg-[#D4AF37]/10 dark:bg-[#D4AF37]/5', border: 'border-[#D4AF37]/40' },
   { id: 'blue', bg: 'bg-[#1e3a8a]/5 dark:bg-[#1e3a8a]/20', border: 'border-[#1e3a8a]/20' },
   { id: 'rose', bg: 'bg-rose-50 dark:bg-rose-900/20', border: 'border-rose-200 dark:border-rose-800/50' },
@@ -91,12 +91,12 @@ const Notes: React.FC<NotesProps> = ({ profile, currentClass }) => {
   };
 
   return (
-    <div className="min-h-full bg-white dark:bg-slate-900 pb-32 font-sans relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-full bg-white dark:bg-[#020617] pb-32 font-sans relative overflow-hidden transition-colors duration-300">
       {/* TOP NAV BAR */}
       <div className="px-6 pt-6 pb-2 flex items-center justify-between relative z-20">
           <button 
               onClick={() => navigate(-1)}
-              className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center border border-slate-100 dark:border-slate-700 active:scale-90 transition-transform"
+              className="w-10 h-10 rounded-xl bg-white dark:bg-[#1e293b] shadow-sm flex items-center justify-center border border-slate-100 dark:border-[#1e293b] active:scale-90 transition-transform"
           >
               <ArrowLeft size={20} className="text-[#1e3a8a] dark:text-[#D4AF37]" />
           </button>
@@ -117,7 +117,7 @@ const Notes: React.FC<NotesProps> = ({ profile, currentClass }) => {
 
       <div className="max-w-4xl mx-auto space-y-8 relative z-10 mt-4">
         {/* Header Section */}
-        <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+        <div className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#1e3a8a] via-[#D4AF37] to-[#1e3a8a]"></div>
           <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
           
@@ -148,9 +148,9 @@ const Notes: React.FC<NotesProps> = ({ profile, currentClass }) => {
               {/* Add New Note Card */}
               <div 
                   onClick={openNew}
-                  className="min-h-[200px] flex flex-col items-center justify-center bg-[#FCFBF8] dark:bg-slate-800/50 rounded-2xl border-2 border-dashed border-[#D4AF37]/30 text-[#1e3a8a]/40 dark:text-white/40 cursor-pointer hover:bg-[#D4AF37]/5 hover:border-[#D4AF37] hover:text-[#1e3a8a] dark:hover:text-[#D4AF37] transition-all group"
+                  className="min-h-[200px] flex flex-col items-center justify-center bg-[#FCFBF8] dark:bg-[#0f172a] rounded-2xl border-2 border-dashed border-[#D4AF37]/30 text-[#1e3a8a]/40 dark:text-white/40 cursor-pointer hover:bg-[#D4AF37]/5 hover:border-[#D4AF37] hover:text-[#1e3a8a] dark:hover:text-[#D4AF37] transition-all group"
               >
-                  <div className="w-12 h-12 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center shadow-sm mb-2 group-hover:scale-110 transition-transform border border-[#D4AF37]/20">
+                  <div className="w-12 h-12 rounded-full bg-white dark:bg-[#1e293b] flex items-center justify-center shadow-sm mb-2 group-hover:scale-110 transition-transform border border-[#D4AF37]/20">
                       <Plus size={24} className="text-[#D4AF37]" />
                   </div>
                   <span className="font-bold text-sm">Create New Note</span>
@@ -163,8 +163,8 @@ const Notes: React.FC<NotesProps> = ({ profile, currentClass }) => {
                           <div className="flex justify-between items-start mb-3">
                               <h3 className="font-black text-[#1e3a8a] dark:text-white text-lg leading-tight">{note.title}</h3>
                               <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                  <button onClick={(e) => { e.stopPropagation(); openEdit(note); }} className="p-1.5 bg-white/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-700 rounded-full text-[#1e3a8a] dark:text-white"><Edit2 size={14}/></button>
-                                  <button onClick={(e) => { e.stopPropagation(); handleDelete(note.id!); }} className="p-1.5 bg-white/50 dark:bg-slate-800/50 hover:bg-rose-100 dark:hover:bg-rose-900/50 rounded-full text-rose-500"><Trash2 size={14}/></button>
+                                  <button onClick={(e) => { e.stopPropagation(); openEdit(note); }} className="p-1.5 bg-white/50 dark:bg-[#0f172a] hover:bg-white dark:hover:bg-slate-700 rounded-full text-[#1e3a8a] dark:text-white"><Edit2 size={14}/></button>
+                                  <button onClick={(e) => { e.stopPropagation(); handleDelete(note.id!); }} className="p-1.5 bg-white/50 dark:bg-[#0f172a] hover:bg-rose-100 dark:hover:bg-rose-900/50 rounded-full text-rose-500"><Trash2 size={14}/></button>
                               </div>
                           </div>
                           <p className="text-sm text-[#1e3a8a]/70 dark:text-white/70 whitespace-pre-wrap flex-1">{note.content}</p>
@@ -183,7 +183,7 @@ const Notes: React.FC<NotesProps> = ({ profile, currentClass }) => {
       {showModal && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setShowModal(false)}></div>
-            <div className={`w-full max-w-lg rounded-[2rem] p-6 relative z-10 shadow-2xl animate-in zoom-in-95 transition-colors duration-300 ${COLORS.find(c => c.id === currentNote.color)?.bg || 'bg-[#FCFBF8] dark:bg-slate-800'} border border-[#D4AF37]/20`}>
+            <div className={`w-full max-w-lg rounded-[2rem] p-6 relative z-10 shadow-2xl animate-in zoom-in-95 transition-colors duration-300 ${COLORS.find(c => c.id === currentNote.color)?.bg || 'bg-[#FCFBF8] dark:bg-[#1e293b]'} border border-[#D4AF37]/20`}>
                 <div className="flex justify-between items-center mb-6">
                     <h3 className="text-xl font-black text-[#1e3a8a] dark:text-white">{isEditing ? 'Edit Note' : 'New Note'}</h3>
                     <button onClick={() => setShowModal(false)} className="p-2 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full text-[#1e3a8a] dark:text-white"><X size={20}/></button>

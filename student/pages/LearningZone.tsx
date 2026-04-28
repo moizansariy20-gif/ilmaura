@@ -65,7 +65,7 @@ const LearningZone: React.FC<LearningZoneProps> = ({ profile, currentClass }) =>
                 <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 2px, transparent 2px)', backgroundSize: '16px 16px' }}></div>
                 
                 <div className="relative z-10 flex-1">
-                    <div className="inline-flex items-center gap-2 bg-white/20 dark:bg-slate-800/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 mb-3 shadow-sm">
+                    <div className="inline-flex items-center gap-2 bg-white/20 dark:bg-[#1e293b]/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 mb-3 shadow-sm">
                         <Sparkles size={12} className="text-white" />
                         <span className="text-[10px] font-black uppercase tracking-widest text-white">Arcade</span>
                     </div>
@@ -75,7 +75,7 @@ const LearningZone: React.FC<LearningZoneProps> = ({ profile, currentClass }) =>
                 
                 {/* Floating 3D Icon */}
                 <div className="relative z-10 transform transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6">
-                    <div className="w-24 h-24 bg-white/10 dark:bg-slate-800/10 backdrop-blur-md rounded-[1.5rem] border border-white/20 flex items-center justify-center shadow-xl">
+                    <div className="w-24 h-24 bg-white/10 dark:bg-[#1e293b]/10 backdrop-blur-md rounded-[1.5rem] border border-white/20 flex items-center justify-center shadow-xl">
                         <GamesThemeIcon className="w-20 h-20 drop-shadow-2xl" />
                     </div>
                 </div>
@@ -84,9 +84,9 @@ const LearningZone: React.FC<LearningZoneProps> = ({ profile, currentClass }) =>
 
         <div className="px-4 lg:px-8">
             {/* --- MAIN BASE CARD --- */}
-            <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-6 border border-slate-200 dark:border-slate-700 shadow-xl relative min-h-[500px] flex flex-col items-center justify-center text-center">
+            <div className="bg-white dark:bg-[#1e293b] rounded-[2.5rem] p-6 border border-slate-200 dark:border-[#1e293b] shadow-xl relative min-h-[500px] flex flex-col items-center justify-center text-center">
                 
-                <div className="w-32 h-32 bg-slate-50 dark:bg-slate-800/50 rounded-full flex items-center justify-center mb-8 border-[6px] border-slate-100 dark:border-slate-800 shadow-inner relative">
+                <div className="w-32 h-32 bg-slate-50 dark:bg-[#0f172a] rounded-full flex items-center justify-center mb-8 border-[6px] border-slate-100 dark:border-[#334155] shadow-inner relative">
                     <Gamepad2 size={64} className="text-slate-300" />
                     <div className="absolute -bottom-2 -right-2 bg-indigo-600 text-white p-3 rounded-full border-4 border-white shadow-lg">
                         <Rocket size={20} />

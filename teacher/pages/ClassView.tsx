@@ -99,12 +99,12 @@ const ClassView: React.FC<ClassViewProps> = ({ profile, school, classes, student
   };
 
   return (
-    <div className="min-h-full bg-white dark:bg-slate-800 pb-32 font-sans relative overflow-hidden">
+    <div className="min-h-full bg-white dark:bg-[#1e293b] pb-32 font-sans relative overflow-hidden">
       
       <div className="max-w-3xl mx-auto space-y-8 relative z-10">
         
         {/* Header & Filters Combined */}
-        <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(107,29,47,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+        <div className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(107,29,47,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#6B1D2F] via-[#D4AF37] to-[#6B1D2F]"></div>
           <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
           
@@ -112,7 +112,7 @@ const ClassView: React.FC<ClassViewProps> = ({ profile, school, classes, student
             <div className="flex-1">
               <h1 className="text-3xl md:text-5xl font-black text-[#6B1D2F] dark:text-white tracking-tight drop-shadow-sm" style={{ textShadow: '0 2px 4px rgba(107,29,47,0.1)' }}>Class View</h1>
               <div className="flex flex-col mt-1 md:mt-2">
-                <p className="text-[10px] md:text-xs text-[#D4AF37] font-bold tracking-widest uppercase">Teacher App • Student Directory</p>
+                <p className="text-[10px] md:text-xs text-[#D4AF37] font-bold tracking-widest uppercase">Teacher App • Student Register</p>
                 <p className="text-[11px] md:text-sm text-[#6B1D2F] dark:text-white font-black mt-0.5 flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]"></span>
                   {selectedClass?.name || 'Select Class'}
@@ -121,7 +121,7 @@ const ClassView: React.FC<ClassViewProps> = ({ profile, school, classes, student
             </div>
             <div className="flex p-1.5 md:p-2 bg-gradient-to-br from-[#6B1D2F] to-[#4A1420] shadow-[0_10px_25px_-5px_rgba(107,29,47,0.4),inset_0_2px_4px_rgba(255,255,255,0.2)] rounded-2xl border-2 border-[#D4AF37]/40 relative group overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-tr from-[#D4AF37]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl overflow-hidden border border-[#D4AF37]/30 bg-white/10 dark:bg-slate-800/10 flex items-center justify-center relative z-10">
+              <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl overflow-hidden border border-[#D4AF37]/30 bg-white/10 dark:bg-[#1e293b]/10 flex items-center justify-center relative z-10">
                 {profile.photoURL ? (
                   <img 
                     src={profile.photoURL} 
@@ -150,7 +150,7 @@ const ClassView: React.FC<ClassViewProps> = ({ profile, school, classes, student
                 <select 
                   value={selectedClassId} 
                   onChange={e => setSelectedClassId(e.target.value)} 
-                  className="w-full p-4 bg-white dark:bg-slate-800 shadow-[inset_0_2px_8px_rgba(107,29,47,0.04),0_1px_2px_rgba(255,255,255,1)] border border-[#E5E0D8] dark:border-slate-700 hover:border-[#D4AF37]/50 rounded-xl text-sm font-bold text-[#6B1D2F] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all appearance-none"
+                  className="w-full p-4 bg-white dark:bg-[#1e293b] shadow-[inset_0_2px_8px_rgba(107,29,47,0.04),0_1px_2px_rgba(255,255,255,1)] border border-[#E5E0D8] dark:border-[#1e293b] hover:border-[#D4AF37]/50 rounded-xl text-sm font-bold text-[#6B1D2F] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all appearance-none"
                 >
                   {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
@@ -167,7 +167,7 @@ const ClassView: React.FC<ClassViewProps> = ({ profile, school, classes, student
                   placeholder="Name or Roll No..."
                   value={searchQuery} 
                   onChange={e => setSearchQuery(e.target.value)} 
-                  className="w-full p-4 pl-12 bg-white dark:bg-slate-800 shadow-[inset_0_2px_8px_rgba(107,29,47,0.04),0_1px_2px_rgba(255,255,255,1)] border border-[#E5E0D8] dark:border-slate-700 hover:border-[#D4AF37]/50 rounded-xl text-sm font-bold text-[#6B1D2F] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all" 
+                  className="w-full p-4 pl-12 bg-white dark:bg-[#1e293b] shadow-[inset_0_2px_8px_rgba(107,29,47,0.04),0_1px_2px_rgba(255,255,255,1)] border border-[#E5E0D8] dark:border-[#1e293b] hover:border-[#D4AF37]/50 rounded-xl text-sm font-bold text-[#6B1D2F] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all" 
                 />
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]" size={18} />
               </div>
@@ -178,9 +178,9 @@ const ClassView: React.FC<ClassViewProps> = ({ profile, school, classes, student
         <div className="px-4 md:px-6 space-y-8">
           {/* Stats */}
           <div className="grid grid-cols-2 gap-4 md:gap-6">
-            <div className="bg-white dark:bg-slate-800 p-5 md:p-6 rounded-3xl flex items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
+            <div className="bg-white dark:bg-[#1e293b] p-5 md:p-6 rounded-3xl flex items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
                 <div className="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full group-hover:scale-150 transition-transform duration-700"></div>
-                <div className="w-14 h-14 bg-gradient-to-br from-[#FCFBF8] to-white shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_4px_10px_rgba(107,29,47,0.05)] border border-[#E5E0D8] dark:border-slate-700 text-[#D4AF37] rounded-2xl flex items-center justify-center shrink-0 relative z-10">
+                <div className="w-14 h-14 bg-gradient-to-br from-[#FCFBF8] to-white shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_4px_10px_rgba(107,29,47,0.05)] border border-[#E5E0D8] dark:border-[#1e293b] text-[#D4AF37] rounded-2xl flex items-center justify-center shrink-0 relative z-10">
                   <Users size={24} className="drop-shadow-sm" />
                 </div>
                 <div className="relative z-10">
@@ -188,9 +188,9 @@ const ClassView: React.FC<ClassViewProps> = ({ profile, school, classes, student
                     <p className="text-[10px] font-bold uppercase text-[#D4AF37] tracking-widest mt-2">Students</p>
                 </div>
             </div>
-            <div className="bg-white dark:bg-slate-800 p-5 md:p-6 rounded-3xl flex items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
+            <div className="bg-white dark:bg-[#1e293b] p-5 md:p-6 rounded-3xl flex items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
                 <div className="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full group-hover:scale-150 transition-transform duration-700"></div>
-                <div className="w-14 h-14 bg-gradient-to-br from-[#FCFBF8] to-white shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_4px_10px_rgba(107,29,47,0.05)] border border-[#E5E0D8] dark:border-slate-700 text-[#D4AF37] rounded-2xl flex items-center justify-center shrink-0 relative z-10">
+                <div className="w-14 h-14 bg-gradient-to-br from-[#FCFBF8] to-white shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_4px_10px_rgba(107,29,47,0.05)] border border-[#E5E0D8] dark:border-[#1e293b] text-[#D4AF37] rounded-2xl flex items-center justify-center shrink-0 relative z-10">
                   <ShieldCheck size={24} className="drop-shadow-sm" />
                 </div>
                 <div className="relative z-10">
@@ -205,19 +205,19 @@ const ClassView: React.FC<ClassViewProps> = ({ profile, school, classes, student
             <div className="flex items-center gap-4">
               <div className="h-px bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-[#D4AF37]/40 flex-1"></div>
               <h2 className="text-[11px] font-black text-[#D4AF37] uppercase tracking-widest px-2 drop-shadow-sm">
-                Student Directory
+                Student Register
               </h2>
               <div className="h-px bg-gradient-to-l from-transparent via-[#D4AF37]/40 to-[#D4AF37]/40 flex-1"></div>
             </div>
-                       {studentsInClass.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+            {studentsInClass.length > 0 ? (
+              <div className="grid grid-cols-1 gap-4">
                 {studentsInClass.map(s => (
-                  <div key={s.id} className="bg-white dark:bg-slate-800 p-4 rounded-[2rem] shadow-[0_10px_30px_-10px_rgba(107,29,47,0.1)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_15px_40px_-12px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group flex flex-col items-center text-center">
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#D4AF37] to-[#6B1D2F] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div key={s.id} className="bg-white dark:bg-[#1e293b] p-4 rounded-3xl shadow-[0_8px_20px_-8px_rgba(107,29,47,0.1)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_25px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group flex flex-row items-center gap-5">
+                    <div className="absolute top-0 left-0 h-full w-1 bg-gradient-to-b from-[#D4AF37] to-[#6B1D2F] opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     
                     {/* Student Photo */}
-                    <div className="relative mb-4">
-                      <div className="w-20 h-20 md:w-24 md:h-24 rounded-[2rem] overflow-hidden border-2 border-[#D4AF37]/20 bg-slate-50 dark:bg-slate-900 shadow-inner flex items-center justify-center group-hover:border-[#D4AF37]/60 transition-all duration-500 group-hover:scale-105">
+                    <div className="relative shrink-0">
+                      <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl overflow-hidden border-2 border-[#D4AF37]/20 bg-slate-50 dark:bg-[#020617] shadow-inner flex items-center justify-center group-hover:border-[#D4AF37]/60 transition-all duration-500 group-hover:scale-105">
                         {s.photoURL ? (
                           <img 
                             src={s.photoURL} 
@@ -226,19 +226,25 @@ const ClassView: React.FC<ClassViewProps> = ({ profile, school, classes, student
                             referrerPolicy="no-referrer"
                           />
                         ) : (
-                          <UserCircle size={48} className="text-[#D4AF37]/30" />
+                          <UserCircle size={28} className="text-[#D4AF37]/30" />
                         )}
                       </div>
                     </div>
 
-                    <div className="w-full">
-                      <h4 className="text-sm md:text-base font-black text-[#6B1D2F] dark:text-white tracking-tight leading-tight line-clamp-2 px-1">{s.name}</h4>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-base md:text-lg font-black text-[#6B1D2F] dark:text-white tracking-tight leading-tight truncate px-1">{s.name}</h4>
+                      <div className="flex items-center gap-2 mt-1 px-1">
+                         <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">ID: {s.rollNumber || 'N/A'}</span>
+                         {s.uid && (
+                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]"></span>
+                         )}
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20 rounded-3xl text-[#D4AF37] bg-white dark:bg-slate-800 shadow-[0_10px_40px_-10px_rgba(107,29,47,0.05)] border-2 border-[#D4AF37]/30 border-dashed">
+              <div className="text-center py-20 rounded-3xl text-[#D4AF37] bg-white dark:bg-[#1e293b] shadow-[0_10px_40px_-10px_rgba(107,29,47,0.05)] border-2 border-[#D4AF37]/30 border-dashed">
                 <div className="w-20 h-20 bg-gradient-to-br from-[#FCFBF8] to-white shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_4px_10px_rgba(107,29,47,0.05)] rounded-2xl flex items-center justify-center mx-auto mb-5 border border-[#D4AF37]/20">
                   <Users size={32} className="text-[#D4AF37]" />
                 </div>
@@ -255,18 +261,18 @@ const ClassView: React.FC<ClassViewProps> = ({ profile, school, classes, student
       {showModal === 'confirm-activate' && studentToActivate && isHeadTeacher && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setShowModal(null)}></div>
-          <div className="bg-gradient-to-b from-white to-[#6B1D2F]/5 w-full max-w-md rounded-[3rem] p-10 relative z-10 animate-in zoom-in-95 shadow-[0_20px_60px_rgba(107,29,47,0.15),inset_0_1px_0_rgba(255,255,255,0.8)] border border-[#6B1D2F]/10 dark:border-slate-700 overflow-hidden">
+          <div className="bg-gradient-to-b from-white to-[#6B1D2F]/5 w-full max-w-md rounded-[3rem] p-10 relative z-10 animate-in zoom-in-95 shadow-[0_20px_60px_rgba(107,29,47,0.15),inset_0_1px_0_rgba(255,255,255,0.8)] border border-[#6B1D2F]/10 dark:border-[#1e293b] overflow-hidden">
             <div className="absolute top-0 right-0 w-48 h-48 bg-[#6B1D2F]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
             
             <div className="flex items-center gap-5 mb-10 relative z-10">
-                <div className="w-16 h-16 bg-[#6B1D2F]/5 text-[#6B1D2F] dark:text-white rounded-[1.5rem] flex items-center justify-center shadow-[inset_0_1px_2px_rgba(0,0,0,0.05)] border border-[#6B1D2F]/10 dark:border-slate-700"><Key size={32}/></div>
+                <div className="w-16 h-16 bg-[#6B1D2F]/5 text-[#6B1D2F] dark:text-white rounded-[1.5rem] flex items-center justify-center shadow-[inset_0_1px_2px_rgba(0,0,0,0.05)] border border-[#6B1D2F]/10 dark:border-[#1e293b]"><Key size={32}/></div>
                 <div>
                   <h3 className="text-2xl font-black text-slate-800 dark:text-slate-100 leading-none">Access Node</h3>
                   <p className="text-xs font-bold text-slate-500 dark:text-slate-400 mt-2">Provisioning portal for {studentToActivate.name}</p>
                 </div>
             </div>
             
-            <div className="bg-white dark:bg-slate-800 p-8 rounded-[2rem] border border-[#6B1D2F]/10 dark:border-slate-700 space-y-6 mb-10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] relative z-10">
+            <div className="bg-white dark:bg-[#1e293b] p-8 rounded-[2rem] border border-[#6B1D2F]/10 dark:border-[#1e293b] space-y-6 mb-10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] relative z-10">
                <div>
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Deployment Email</p>
                   <p className="font-bold text-slate-800 dark:text-slate-100 text-sm">{autoCreds.email}</p>
@@ -296,7 +302,7 @@ const ClassView: React.FC<ClassViewProps> = ({ profile, school, classes, student
       {provisionedCreds && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-md" onClick={() => setProvisionedCreds(null)}></div>
-            <div className="bg-gradient-to-b from-white to-[#6B1D2F]/5 w-full max-w-sm rounded-[3.5rem] shadow-[0_20px_60px_rgba(107,29,47,0.15),inset_0_1px_0_rgba(255,255,255,0.8)] p-12 z-10 text-center animate-in slide-in-from-bottom-10 duration-500 border border-[#6B1D2F]/10 dark:border-slate-700 overflow-hidden">
+            <div className="bg-gradient-to-b from-white to-[#6B1D2F]/5 w-full max-w-sm rounded-[3.5rem] shadow-[0_20px_60px_rgba(107,29,47,0.15),inset_0_1px_0_rgba(255,255,255,0.8)] p-12 z-10 text-center animate-in slide-in-from-bottom-10 duration-500 border border-[#6B1D2F]/10 dark:border-[#1e293b] overflow-hidden">
                 <div className="absolute top-0 right-0 w-48 h-48 bg-[#6B1D2F]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
                 
                 <div className="w-24 h-24 bg-emerald-50 text-emerald-600 rounded-[2.5rem] mx-auto flex items-center justify-center mb-8 border-4 border-emerald-100 shadow-[0_8px_20px_rgba(16,185,129,0.15),inset_0_1px_2px_rgba(255,255,255,0.8)] relative z-10">
@@ -305,7 +311,7 @@ const ClassView: React.FC<ClassViewProps> = ({ profile, school, classes, student
                 <h3 className="text-3xl font-black text-slate-800 dark:text-slate-100 tracking-tight relative z-10">Access Online!</h3>
                 <p className="text-slate-500 dark:text-slate-400 mt-4 text-sm font-medium leading-relaxed relative z-10">Identity node for <span className="font-black text-slate-800 dark:text-slate-100">{provisionedCreds.name}</span> is live.</p>
                 
-                <div className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] mt-10 text-left space-y-6 border border-[#6B1D2F]/10 dark:border-slate-700 relative overflow-hidden group shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
+                <div className="bg-white dark:bg-[#1e293b] p-8 rounded-[2.5rem] mt-10 text-left space-y-6 border border-[#6B1D2F]/10 dark:border-[#1e293b] relative overflow-hidden group shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
                     <div className="relative z-10">
                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Portal Login</p>
                         <p className="font-black text-slate-800 dark:text-slate-100 text-sm">{provisionedCreds.email}</p>
@@ -320,7 +326,7 @@ const ClassView: React.FC<ClassViewProps> = ({ profile, school, classes, student
                             navigator.clipboard.writeText(text);
                             alert("Credentials copied! You can now paste and send to the parents.");
                         }}
-                        className="w-full mt-4 flex items-center justify-center gap-3 py-4 bg-gradient-to-b from-white to-[#6B1D2F]/5 text-slate-700 dark:text-slate-200 rounded-2xl font-black text-xs border border-[#6B1D2F]/10 dark:border-slate-700 hover:bg-[#6B1D2F]/5 transition-all active:scale-95 shadow-[0_4px_10px_rgba(107,29,47,0.05),inset_0_1px_0_rgba(255,255,255,1)] relative z-10"
+                        className="w-full mt-4 flex items-center justify-center gap-3 py-4 bg-gradient-to-b from-white to-[#6B1D2F]/5 text-slate-700 dark:text-slate-200 rounded-2xl font-black text-xs border border-[#6B1D2F]/10 dark:border-[#1e293b] hover:bg-[#6B1D2F]/5 transition-all active:scale-95 shadow-[0_4px_10px_rgba(107,29,47,0.05),inset_0_1px_0_rgba(255,255,255,1)] relative z-10"
                     >
                         <ClipboardCopy size={18}/> Copy for WhatsApp
                     </button>

@@ -41,7 +41,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ students, exams, marks }) => {
         />
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] border border-[#6B1D2F]/10 dark:border-slate-700 shadow-sm">
+        <div className="lg:col-span-2 bg-white dark:bg-[#1e293b] p-8 rounded-[2.5rem] border border-[#6B1D2F]/10 dark:border-[#1e293b] shadow-sm">
           <h3 className="font-black text-slate-900 dark:text-white text-xl mb-8 flex items-center gap-3">
             <div className="w-10 h-10 bg-[#6B1D2F]/5 text-[#6B1D2F] dark:text-white rounded-xl flex items-center justify-center">
                 <UserCheck size={20}/>
@@ -65,7 +65,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ students, exams, marks }) => {
           </div>
         </div>
         
-        <div className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] border border-[#6B1D2F]/10 dark:border-slate-700 shadow-sm">
+        <div className="bg-white dark:bg-[#1e293b] p-8 rounded-[2.5rem] border border-[#6B1D2F]/10 dark:border-[#1e293b] shadow-sm">
            <h3 className="font-black text-slate-900 dark:text-white text-xl mb-8 flex items-center gap-3">
             <div className="w-10 h-10 bg-[#D4AF37]/10 text-[#D4AF37] rounded-xl flex items-center justify-center">
                 <Award size={20} />
@@ -74,9 +74,9 @@ const Analytics: React.FC<AnalyticsProps> = ({ students, exams, marks }) => {
           </h3>
           <div className="space-y-4">
               {topStudents.map((student, i) => (
-                  <div key={i} className="flex items-center justify-between bg-slate-50 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 group hover:bg-white dark:bg-slate-800 hover:shadow-md transition-all">
+                  <div key={i} className="flex items-center justify-between bg-slate-50 p-5 rounded-2xl border border-slate-100 dark:border-[#334155] group hover:bg-white dark:bg-[#1e293b] hover:shadow-md transition-all">
                       <div className="flex items-center gap-4">
-                        <span className={`w-8 h-8 rounded-lg flex items-center justify-center font-black text-xs ${i === 0 ? 'bg-[#D4AF37]/20 text-[#D4AF37]' : i === 1 ? 'bg-slate-200 text-slate-600 dark:text-slate-300' : i === 2 ? 'bg-orange-100 text-orange-600' : 'bg-white dark:bg-slate-800 text-slate-400'}`}>
+                        <span className={`w-8 h-8 rounded-lg flex items-center justify-center font-black text-xs ${i === 0 ? 'bg-[#D4AF37]/20 text-[#D4AF37]' : i === 1 ? 'bg-slate-200 text-slate-600 dark:text-slate-300' : i === 2 ? 'bg-orange-100 text-orange-600' : 'bg-white dark:bg-[#1e293b] text-slate-400'}`}>
                             {i+1}
                         </span>
                         <div>
@@ -91,7 +91,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ students, exams, marks }) => {
                   </div>
               ))}
               {topStudents.length === 0 && (
-                  <div className="text-center py-12 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700">
+                  <div className="text-center py-12 bg-slate-50 dark:bg-[#0f172a] rounded-2xl border border-dashed border-slate-200 dark:border-[#1e293b]">
                       <TrendingUp size={32} className="mx-auto mb-3 text-slate-300 opacity-50"/>
                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">No data available</p>
                   </div>

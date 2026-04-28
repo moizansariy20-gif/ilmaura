@@ -160,12 +160,12 @@ const Homework: React.FC<HomeworkProps> = ({ profile, classes, subjects }) => {
   }, [selectedClassId, classes, subjects]);
 
   return (
-    <div className="min-h-full bg-white dark:bg-slate-800 pb-32 font-sans relative overflow-hidden">
+    <div className="min-h-full bg-white dark:bg-[#1e293b] pb-32 font-sans relative overflow-hidden">
       
       <div className="max-w-3xl mx-auto space-y-8 relative z-10">
         
         {/* Header & Filters Combined - No Roundness, Maroon Text */}
-        <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(107,29,47,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+        <div className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(107,29,47,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#6B1D2F] via-[#D4AF37] to-[#6B1D2F]"></div>
           <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
           
@@ -182,7 +182,7 @@ const Homework: React.FC<HomeworkProps> = ({ profile, classes, subjects }) => {
             </div>
             <div className="flex p-1.5 md:p-2 bg-gradient-to-br from-[#6B1D2F] to-[#4A1420] shadow-[0_10px_25px_-5px_rgba(107,29,47,0.4),inset_0_2px_4px_rgba(255,255,255,0.2)] rounded-2xl border-2 border-[#D4AF37]/40 relative group overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-tr from-[#D4AF37]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl overflow-hidden border border-[#D4AF37]/30 bg-white/10 dark:bg-slate-800/10 flex items-center justify-center relative z-10">
+              <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl overflow-hidden border border-[#D4AF37]/30 bg-white/10 dark:bg-[#1e293b]/10 flex items-center justify-center relative z-10">
                 {profile.photoURL ? (
                   <img 
                     src={profile.photoURL} 
@@ -211,7 +211,7 @@ const Homework: React.FC<HomeworkProps> = ({ profile, classes, subjects }) => {
                 <select 
                   value={selectedClassId} 
                   onChange={e => setSelectedClassId(e.target.value)} 
-                  className="w-full p-4 bg-white dark:bg-slate-800 shadow-[inset_0_2px_8px_rgba(107,29,47,0.04),0_1px_2px_rgba(255,255,255,1)] border border-[#E5E0D8] dark:border-slate-700 hover:border-[#D4AF37]/50 rounded-xl text-sm font-bold text-[#6B1D2F] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all appearance-none"
+                  className="w-full p-4 bg-white dark:bg-[#1e293b] shadow-[inset_0_2px_8px_rgba(107,29,47,0.04),0_1px_2px_rgba(255,255,255,1)] border border-[#E5E0D8] dark:border-[#1e293b] hover:border-[#D4AF37]/50 rounded-xl text-sm font-bold text-[#6B1D2F] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all appearance-none"
                 >
                   {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
@@ -226,7 +226,7 @@ const Homework: React.FC<HomeworkProps> = ({ profile, classes, subjects }) => {
                 type="date" 
                 value={date} 
                 onChange={e => setDate(e.target.value)} 
-                className="w-full p-4 bg-white dark:bg-slate-800 shadow-[inset_0_2px_8px_rgba(107,29,47,0.04),0_1px_2px_rgba(255,255,255,1)] border border-[#E5E0D8] dark:border-slate-700 hover:border-[#D4AF37]/50 rounded-xl text-sm font-bold text-[#6B1D2F] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all" 
+                className="w-full p-4 bg-white dark:bg-[#1e293b] shadow-[inset_0_2px_8px_rgba(107,29,47,0.04),0_1px_2px_rgba(255,255,255,1)] border border-[#E5E0D8] dark:border-[#1e293b] hover:border-[#D4AF37]/50 rounded-xl text-sm font-bold text-[#6B1D2F] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all" 
               />
             </div>
           </div>
@@ -235,9 +235,9 @@ const Homework: React.FC<HomeworkProps> = ({ profile, classes, subjects }) => {
         <div className="px-4 md:px-6 space-y-8">
           {/* Stats */}
           <div className="grid grid-cols-2 gap-4 md:gap-6">
-            <div className="bg-white dark:bg-slate-800 p-5 md:p-6 rounded-3xl flex items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
+            <div className="bg-white dark:bg-[#1e293b] p-5 md:p-6 rounded-3xl flex items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
                 <div className="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full group-hover:scale-150 transition-transform duration-700"></div>
-                <div className="w-14 h-14 bg-gradient-to-br from-[#FCFBF8] to-white shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_4px_10px_rgba(107,29,47,0.05)] border border-[#E5E0D8] dark:border-slate-700 text-[#D4AF37] rounded-2xl flex items-center justify-center shrink-0 relative z-10">
+                <div className="w-14 h-14 bg-gradient-to-br from-[#FCFBF8] to-white shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_4px_10px_rgba(107,29,47,0.05)] border border-[#E5E0D8] dark:border-[#1e293b] text-[#D4AF37] rounded-2xl flex items-center justify-center shrink-0 relative z-10">
                   <Book size={24} className="drop-shadow-sm" />
                 </div>
                 <div className="relative z-10">
@@ -245,9 +245,9 @@ const Homework: React.FC<HomeworkProps> = ({ profile, classes, subjects }) => {
                     <p className="text-[10px] font-bold uppercase text-[#D4AF37] tracking-widest mt-2">Entries</p>
                 </div>
             </div>
-            <div className="bg-white dark:bg-slate-800 p-5 md:p-6 rounded-3xl flex items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
+            <div className="bg-white dark:bg-[#1e293b] p-5 md:p-6 rounded-3xl flex items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
                 <div className="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full group-hover:scale-150 transition-transform duration-700"></div>
-                <div className="w-14 h-14 bg-gradient-to-br from-[#FCFBF8] to-white shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_4px_10px_rgba(107,29,47,0.05)] border border-[#E5E0D8] dark:border-slate-700 text-[#D4AF37] rounded-2xl flex items-center justify-center shrink-0 relative z-10">
+                <div className="w-14 h-14 bg-gradient-to-br from-[#FCFBF8] to-white shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_4px_10px_rgba(107,29,47,0.05)] border border-[#E5E0D8] dark:border-[#1e293b] text-[#D4AF37] rounded-2xl flex items-center justify-center shrink-0 relative z-10">
                   <ImageIcon size={24} className="drop-shadow-sm" />
                 </div>
                 <div className="relative z-10">
@@ -258,7 +258,7 @@ const Homework: React.FC<HomeworkProps> = ({ profile, classes, subjects }) => {
           </div>
 
           {/* Form */}
-          <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 shadow-[0_15px_50px_-12px_rgba(107,29,47,0.1)] border border-[#D4AF37]/20 relative z-10 overflow-hidden">
+          <div className="bg-white dark:bg-[#1e293b] rounded-3xl p-6 md:p-8 shadow-[0_15px_50px_-12px_rgba(107,29,47,0.1)] border border-[#D4AF37]/20 relative z-10 overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-transparent"></div>
             <div className="flex items-center gap-4 mb-8 ml-1">
               <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#6B1D2F] to-[#4A1420] shadow-[inset_0_2px_4px_rgba(255,255,255,0.2),0_4px_10px_rgba(107,29,47,0.3)] flex items-center justify-center text-[#D4AF37]">
@@ -272,7 +272,7 @@ const Homework: React.FC<HomeworkProps> = ({ profile, classes, subjects }) => {
                 <select 
                   value={selectedSubjectId} 
                   onChange={e => setSelectedSubjectId(e.target.value)} 
-                  className="w-full p-4 bg-white dark:bg-slate-800 shadow-[inset_0_2px_8px_rgba(107,29,47,0.04),0_1px_2px_rgba(255,255,255,1)] border border-[#E5E0D8] dark:border-slate-700 hover:border-[#D4AF37]/50 rounded-2xl text-sm font-bold text-[#6B1D2F] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all appearance-none"
+                  className="w-full p-4 bg-white dark:bg-[#1e293b] shadow-[inset_0_2px_8px_rgba(107,29,47,0.04),0_1px_2px_rgba(255,255,255,1)] border border-[#E5E0D8] dark:border-[#1e293b] hover:border-[#D4AF37]/50 rounded-2xl text-sm font-bold text-[#6B1D2F] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all appearance-none"
                 >
                   <option value="" disabled>Select Subject</option>
                   {subjectsForClass.map(subject => <option key={subject.id} value={subject.id}>{subject.name}</option>)}
@@ -286,22 +286,22 @@ const Homework: React.FC<HomeworkProps> = ({ profile, classes, subjects }) => {
                 value={content} 
                 onChange={e => setContent(e.target.value)} 
                 placeholder="Write homework details, page numbers, or instructions here..." 
-                className="w-full p-5 bg-white dark:bg-slate-800 shadow-[inset_0_2px_8px_rgba(107,29,47,0.04),0_1px_2px_rgba(255,255,255,1)] border border-[#E5E0D8] dark:border-slate-700 hover:border-[#D4AF37]/50 rounded-2xl text-sm font-medium text-[#6B1D2F] dark:text-white h-40 focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all resize-none placeholder:text-[#A89F91] placeholder:font-medium leading-relaxed"
+                className="w-full p-5 bg-white dark:bg-[#1e293b] shadow-[inset_0_2px_8px_rgba(107,29,47,0.04),0_1px_2px_rgba(255,255,255,1)] border border-[#E5E0D8] dark:border-[#1e293b] hover:border-[#D4AF37]/50 rounded-2xl text-sm font-medium text-[#6B1D2F] dark:text-white h-40 focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all resize-none placeholder:text-[#A89F91] placeholder:font-medium leading-relaxed"
               />
 
-              <div className="bg-[#FCFBF8] dark:bg-slate-900 p-6 rounded-2xl border-2 border-[#D4AF37]/30 border-dashed shadow-[inset_0_4px_10px_rgba(107,29,47,0.02)]">
+              <div className="bg-[#FCFBF8] dark:bg-[#020617] p-6 rounded-2xl border-2 border-[#D4AF37]/30 border-dashed shadow-[inset_0_4px_10px_rgba(107,29,47,0.02)]">
                 <div className="flex flex-wrap gap-4">
                   {files.map((f, i) => (
                     <div key={i} className="relative group w-24 h-24">
                       <img src={URL.createObjectURL(f)} className="w-full h-full object-cover rounded-xl border-2 border-white shadow-[0_4px_10px_rgba(107,29,47,0.1)]" alt="preview" />
-                      <button onClick={() => removeFile(i)} className="absolute -top-2 -right-2 bg-white dark:bg-slate-800 text-[#6B1D2F] dark:text-white rounded-full p-1.5 shadow-md border border-[#E5E0D8] dark:border-slate-700 hover:bg-[#6B1D2F] hover:text-white transition-all"><X size={14} strokeWidth={3}/></button>
+                      <button onClick={() => removeFile(i)} className="absolute -top-2 -right-2 bg-white dark:bg-[#1e293b] text-[#6B1D2F] dark:text-white rounded-full p-1.5 shadow-md border border-[#E5E0D8] dark:border-[#1e293b] hover:bg-[#6B1D2F] hover:text-white transition-all"><X size={14} strokeWidth={3}/></button>
                     </div>
                   ))}
                   <button 
                     onClick={() => fileInputRef.current?.click()}
-                    className="w-24 h-24 bg-white dark:bg-slate-800 border border-[#E5E0D8] dark:border-slate-700 shadow-[0_2px_8px_rgba(107,29,47,0.05)] rounded-xl flex flex-col items-center justify-center text-[#A89F91] dark:text-slate-400 hover:text-[#D4AF37] hover:border-[#D4AF37] hover:shadow-[0_4px_12px_rgba(212,175,55,0.15)] transition-all group"
+                    className="w-24 h-24 bg-white dark:bg-[#1e293b] border border-[#E5E0D8] dark:border-[#1e293b] shadow-[0_2px_8px_rgba(107,29,47,0.05)] rounded-xl flex flex-col items-center justify-center text-[#A89F91] dark:text-slate-400 hover:text-[#D4AF37] hover:border-[#D4AF37] hover:shadow-[0_4px_12px_rgba(212,175,55,0.15)] transition-all group"
                   >
-                    <div className="w-8 h-8 rounded-full bg-[#FCFBF8] dark:bg-slate-900 group-hover:bg-[#D4AF37]/10 flex items-center justify-center mb-2 transition-colors">
+                    <div className="w-8 h-8 rounded-full bg-[#FCFBF8] dark:bg-[#020617] group-hover:bg-[#D4AF37]/10 flex items-center justify-center mb-2 transition-colors">
                       <Plus size={20} className="text-[#A89F91] dark:text-slate-400 group-hover:text-[#D4AF37]"/>
                     </div>
                     <span className="text-[10px] font-bold uppercase tracking-wider">Add Image</span>
@@ -320,7 +320,7 @@ const Homework: React.FC<HomeworkProps> = ({ profile, classes, subjects }) => {
               </button>
               
               {error && (
-                <div className="bg-white dark:bg-slate-800 border-l-4 border-[#6B1D2F] shadow-sm p-4 rounded-r-xl flex items-center gap-3">
+                <div className="bg-white dark:bg-[#1e293b] border-l-4 border-[#6B1D2F] shadow-sm p-4 rounded-r-xl flex items-center gap-3">
                   <ShieldAlert size={18} className="text-[#6B1D2F] dark:text-white" />
                   <p className="text-[#6B1D2F] dark:text-white text-xs font-bold">{error}</p>
                 </div>
@@ -344,7 +344,7 @@ const Homework: React.FC<HomeworkProps> = ({ profile, classes, subjects }) => {
               filteredLogs.length > 0 ? (
                 <div className="grid grid-cols-1 gap-6">
                   {filteredLogs.map(log => (
-                    <div key={log.id} className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-3xl shadow-[0_10px_40px_-10px_rgba(107,29,47,0.1)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_15px_50px_-12px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
+                    <div key={log.id} className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-3xl shadow-[0_10px_40px_-10px_rgba(107,29,47,0.1)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_15px_50px_-12px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
                       <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-[#D4AF37] to-[#6B1D2F] opacity-90 group-hover:opacity-100 transition-opacity"></div>
                       
                       <div className="flex justify-between items-start gap-4 pl-3">
@@ -353,10 +353,10 @@ const Homework: React.FC<HomeworkProps> = ({ profile, classes, subjects }) => {
                             <span className="px-4 py-1.5 bg-gradient-to-r from-[#6B1D2F] to-[#8B253D] text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-[0_4px_10px_rgba(107,29,47,0.2)] border border-[#4A1420]">
                               {getSubjectName(log.subjectId)}
                             </span>
-                            <span className="px-4 py-1.5 bg-white dark:bg-slate-800 text-[#D4AF37] rounded-xl text-[10px] font-black uppercase tracking-widest border border-[#D4AF37]/30 shadow-sm">
+                            <span className="px-4 py-1.5 bg-white dark:bg-[#1e293b] text-[#D4AF37] rounded-xl text-[10px] font-black uppercase tracking-widest border border-[#D4AF37]/30 shadow-sm">
                               {classes.find(c => c.id === log.classId)?.name || '...'}
                             </span>
-                            <span className="text-[11px] font-bold text-[#D4AF37] ml-2 flex items-center gap-1.5 bg-[#FCFBF8] dark:bg-slate-900 px-3 py-1 rounded-lg border border-[#D4AF37]/20">
+                            <span className="text-[11px] font-bold text-[#D4AF37] ml-2 flex items-center gap-1.5 bg-[#FCFBF8] dark:bg-[#020617] px-3 py-1 rounded-lg border border-[#D4AF37]/20">
                               <Clock size={14} className="text-[#D4AF37]" />
                               {new Date(log.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                             </span>
@@ -370,14 +370,14 @@ const Homework: React.FC<HomeworkProps> = ({ profile, classes, subjects }) => {
                             <div className="mt-5 group/img relative inline-block">
                               <img src={log.b2File.fileName} alt="Homework" className="h-48 w-48 object-cover rounded-2xl border-2 border-white shadow-[0_8px_20px_rgba(107,29,47,0.15)] transition-transform duration-500 group-hover/img:scale-[1.03]" />
                               <a href={log.b2File.fileName} target="_blank" rel="noopener noreferrer" className="absolute inset-0 bg-[#6B1D2F]/30 opacity-0 group-hover/img:opacity-100 transition-opacity rounded-2xl flex items-center justify-center backdrop-blur-[2px]">
-                                <span className="bg-white dark:bg-slate-800 text-[#6B1D2F] dark:text-white px-5 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest shadow-xl transform translate-y-4 group-hover/img:translate-y-0 transition-transform duration-300">View Full</span>
+                                <span className="bg-white dark:bg-[#1e293b] text-[#6B1D2F] dark:text-white px-5 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest shadow-xl transform translate-y-4 group-hover/img:translate-y-0 transition-transform duration-300">View Full</span>
                               </a>
                             </div>
                           )}
                         </div>
                         <button 
                           onClick={() => handleDelete(log)} 
-                          className="p-3 text-[#D4AF37] hover:text-white hover:bg-[#6B1D2F] transition-all rounded-xl border border-[#D4AF37]/20 hover:border-[#4A1420] shadow-sm hover:shadow-[0_4px_12px_rgba(107,29,47,0.2)] bg-white dark:bg-slate-800"
+                          className="p-3 text-[#D4AF37] hover:text-white hover:bg-[#6B1D2F] transition-all rounded-xl border border-[#D4AF37]/20 hover:border-[#4A1420] shadow-sm hover:shadow-[0_4px_12px_rgba(107,29,47,0.2)] bg-white dark:bg-[#1e293b]"
                         >
                           <Trash2 size={20}/>
                         </button>
@@ -386,7 +386,7 @@ const Homework: React.FC<HomeworkProps> = ({ profile, classes, subjects }) => {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-20 rounded-3xl text-[#D4AF37] bg-white dark:bg-slate-800 shadow-[0_10px_40px_-10px_rgba(107,29,47,0.05)] border-2 border-[#D4AF37]/30 border-dashed">
+                <div className="text-center py-20 rounded-3xl text-[#D4AF37] bg-white dark:bg-[#1e293b] shadow-[0_10px_40px_-10px_rgba(107,29,47,0.05)] border-2 border-[#D4AF37]/30 border-dashed">
                   <div className="w-20 h-20 bg-gradient-to-br from-[#FCFBF8] to-white shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_4px_10px_rgba(107,29,47,0.05)] rounded-2xl flex items-center justify-center mx-auto mb-5 border border-[#D4AF37]/20">
                     <Book size={32} className="text-[#D4AF37]" />
                   </div>
@@ -402,7 +402,7 @@ const Homework: React.FC<HomeworkProps> = ({ profile, classes, subjects }) => {
       {/* Delete Confirmation Modal */}
       {confirmDeleteTarget && (
         <div className="fixed inset-0 bg-[#6B1D2F]/40 backdrop-blur-md flex items-center justify-center z-[200] p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-800 p-8 md:p-10 rounded-3xl shadow-[0_20px_60px_-15px_rgba(107,29,47,0.4)] border border-[#D4AF37]/30 w-full max-w-sm transform scale-100 animate-in zoom-in-95 duration-200 relative overflow-hidden">
+          <div className="bg-white dark:bg-[#1e293b] p-8 md:p-10 rounded-3xl shadow-[0_20px_60px_-15px_rgba(107,29,47,0.4)] border border-[#D4AF37]/30 w-full max-w-sm transform scale-100 animate-in zoom-in-95 duration-200 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#6B1D2F] via-[#D4AF37] to-[#6B1D2F]"></div>
             <div className="w-16 h-16 bg-gradient-to-br from-[#FCFBF8] to-white rounded-2xl flex items-center justify-center mb-6 border border-[#D4AF37]/20 shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_4px_10px_rgba(107,29,47,0.05)]">
               <Trash2 size={28} className="text-[#6B1D2F] dark:text-white" />
@@ -410,7 +410,7 @@ const Homework: React.FC<HomeworkProps> = ({ profile, classes, subjects }) => {
             <h2 className="text-3xl font-black text-[#6B1D2F] dark:text-white tracking-tight drop-shadow-sm">Delete Entry?</h2>
             <p className="text-sm text-[#6B1D2F] dark:text-white/80 mt-3 font-bold leading-relaxed">Are you sure you want to delete this homework entry? This action cannot be undone.</p>
             <div className="flex gap-4 mt-8">
-              <button onClick={() => setConfirmDeleteTarget(null)} className="flex-1 py-4 bg-white dark:bg-slate-800 shadow-[0_2px_8px_rgba(107,29,47,0.05)] border border-[#D4AF37]/30 text-[#6B1D2F] dark:text-white rounded-2xl font-black text-sm hover:bg-[#FCFBF8] transition-all">Cancel</button>
+              <button onClick={() => setConfirmDeleteTarget(null)} className="flex-1 py-4 bg-white dark:bg-[#1e293b] shadow-[0_2px_8px_rgba(107,29,47,0.05)] border border-[#D4AF37]/30 text-[#6B1D2F] dark:text-white rounded-2xl font-black text-sm hover:bg-[#FCFBF8] transition-all">Cancel</button>
               <button onClick={executeDelete} className="flex-1 py-4 bg-gradient-to-r from-[#6B1D2F] via-[#8B253D] to-[#6B1D2F] text-white rounded-2xl font-black text-sm hover:from-[#5A1827] hover:to-[#6B1D2F] transition-all shadow-[0_8px_20px_rgba(107,29,47,0.25)] border border-[#4A1420]">Delete</button>
             </div>
           </div>
@@ -420,7 +420,7 @@ const Homework: React.FC<HomeworkProps> = ({ profile, classes, subjects }) => {
       {/* Success Message */}
       {showSuccessModal && (
         <div className="fixed inset-0 bg-[#6B1D2F]/40 backdrop-blur-md flex items-center justify-center z-[200] p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-800 p-10 rounded-3xl shadow-[0_20px_60px_-15px_rgba(107,29,47,0.4)] border border-[#D4AF37]/30 w-full max-w-sm flex flex-col items-center text-center transform scale-100 animate-in zoom-in-95 duration-200 relative overflow-hidden">
+          <div className="bg-white dark:bg-[#1e293b] p-10 rounded-3xl shadow-[0_20px_60px_-15px_rgba(107,29,47,0.4)] border border-[#D4AF37]/30 w-full max-w-sm flex flex-col items-center text-center transform scale-100 animate-in zoom-in-95 duration-200 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#D4AF37] via-[#6B1D2F] to-[#D4AF37]"></div>
             <div className="p-5 bg-gradient-to-br from-[#FCFBF8] to-white border border-[#D4AF37]/30 shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_4px_10px_rgba(107,29,47,0.05)] rounded-2xl mb-6">
               <CheckCircle size={48} className="text-[#D4AF37]" />

@@ -99,7 +99,7 @@ const Assignments: React.FC<AssignmentsProps> = ({ assignments, subjects, profil
       <div className="px-6 pt-6 pb-2 flex items-center justify-between relative z-20">
           <button 
               onClick={() => navigate(-1)}
-              className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center border border-slate-100 dark:border-slate-700 active:scale-90 transition-transform"
+              className="w-10 h-10 rounded-xl bg-white dark:bg-[#1e293b] shadow-sm flex items-center justify-center border border-slate-100 dark:border-[#1e293b] active:scale-90 transition-transform"
           >
               <ArrowLeft size={20} className="text-slate-600 dark:text-slate-300" />
           </button>
@@ -119,7 +119,7 @@ const Assignments: React.FC<AssignmentsProps> = ({ assignments, subjects, profil
       </div>
 
       {/* Header Section - Matches Attendance/Fees Page */}
-      <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+      <div className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#1e3a8a] via-[#D4AF37] to-[#1e3a8a]"></div>
         <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
         
@@ -144,7 +144,7 @@ const Assignments: React.FC<AssignmentsProps> = ({ assignments, subjects, profil
       <div className="max-w-4xl mx-auto px-4 md:px-6 mt-8 space-y-10">
         
         {/* Header Section - Premium Style (Like Date Navigator) */}
-        <div className="bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/10 rounded-3xl p-6 shadow-sm flex items-center justify-between">
+        <div className="bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/10 rounded-3xl p-6 shadow-sm flex items-center justify-between">
             <div className="flex items-center gap-4">
                 <div className="w-12 h-12 shrink-0">
                     <div className="w-full h-full bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center text-amber-500 rounded-2xl border border-amber-100 dark:border-amber-800 shadow-sm">
@@ -181,7 +181,7 @@ const Assignments: React.FC<AssignmentsProps> = ({ assignments, subjects, profil
                                 transition={{ delay: index * 0.1 }}
                                 className="group"
                             >
-                                <div className="bg-[#FCFBF8] dark:bg-slate-800/50 rounded-[2.5rem] overflow-hidden shadow-sm border border-[#D4AF37]/10">
+                                <div className="bg-[#FCFBF8] dark:bg-[#0f172a] rounded-[2.5rem] overflow-hidden shadow-sm border border-[#D4AF37]/10">
                                     
                                     {/* Subject Header */}
                                     <div className="bg-gradient-to-r from-[#1e3a8a] to-[#1e40af] p-6 relative overflow-hidden h-24 flex flex-col justify-center shrink-0">
@@ -213,7 +213,7 @@ const Assignments: React.FC<AssignmentsProps> = ({ assignments, subjects, profil
                                             style={PAPER_STYLE}
                                         >
                                             <div className="space-y-4">
-                                                <h3 className="font-black text-xl text-slate-800 dark:text-slate-100 leading-tight border-b-2 border-slate-100 dark:border-slate-800 pb-2">
+                                                <h3 className="font-black text-xl text-slate-800 dark:text-slate-100 leading-tight border-b-2 border-slate-100 dark:border-[#334155] pb-2">
                                                     {assignment.title}
                                                 </h3>
                                                 <div className="whitespace-pre-wrap leading-relaxed">
@@ -242,9 +242,9 @@ const Assignments: React.FC<AssignmentsProps> = ({ assignments, subjects, profil
                 <motion.div 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="text-center py-24 bg-[#FCFBF8] dark:bg-slate-800/50 rounded-[3rem] border border-dashed border-[#D4AF37]/30"
+                    className="text-center py-24 bg-[#FCFBF8] dark:bg-[#0f172a] rounded-[3rem] border border-dashed border-[#D4AF37]/30"
                 >
-                    <div className="w-24 h-24 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl border border-[#D4AF37]/10">
+                    <div className="w-24 h-24 bg-white dark:bg-[#1e293b] rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl border border-[#D4AF37]/10">
                         <CheckCircle2 size={40} className="text-emerald-400" />
                     </div>
                     <p className="font-black text-[#1e3a8a] dark:text-white text-2xl mb-2">All caught up!</p>

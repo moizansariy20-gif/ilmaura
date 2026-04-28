@@ -64,7 +64,7 @@ const Home: React.FC<HomeProps> = ({ announcements, assignments, timetable, subj
             return (
               <div key={sub.id} className="flex flex-col items-center gap-2 min-w-[72px] cursor-pointer group">
                 <div className="w-16 h-16 rounded-full p-[3px] bg-gradient-to-tr from-[#D4AF37] via-[#1E3A8A] to-[#D4AF37] shadow-md group-hover:scale-105 transition-transform duration-300">
-                  <div className="w-full h-full rounded-full border-2 border-white dark:border-slate-900 overflow-hidden bg-white dark:bg-slate-800 flex items-center justify-center relative">
+                  <div className="w-full h-full rounded-full border-2 border-white dark:border-slate-900 overflow-hidden bg-white dark:bg-[#1e293b] flex items-center justify-center relative">
                     <ClassAvatar className={sub.name} classId={sub.id} size={32} />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
                   </div>
@@ -161,7 +161,7 @@ const Home: React.FC<HomeProps> = ({ announcements, assignments, timetable, subj
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {stats.map((stat, i) => (
-              <div key={stat.label} className="bg-white dark:bg-slate-800 p-6 rounded-[2.5rem] border-t-2 border-white border-b-4 border-slate-100 dark:border-slate-700 shadow-[0_15px_30px_rgba(30,58,138,0.1)] relative overflow-hidden group hover:border-[#D4AF37] transition-all duration-300 active:translate-y-1 active:border-b-2">
+              <div key={stat.label} className="bg-white dark:bg-[#1e293b] p-6 rounded-[2.5rem] border-t-2 border-white border-b-4 border-slate-100 dark:border-[#1e293b] shadow-[0_15px_30px_rgba(30,58,138,0.1)] relative overflow-hidden group hover:border-[#D4AF37] transition-all duration-300 active:translate-y-1 active:border-b-2">
                   <div className="flex items-center justify-between text-[#1E3A8A] dark:text-[#D4AF37] mb-6 relative z-10">
                     <p className="text-xs font-black uppercase tracking-widest text-slate-400">{stat.label}</p>
                     <div className="p-3 bg-gradient-to-br from-[#1E3A8A] to-[#1E40AF] rounded-2xl text-[#D4AF37] shadow-[0_8px_15px_rgba(30,58,138,0.3)] border-t border-white/20">
@@ -189,7 +189,7 @@ const Home: React.FC<HomeProps> = ({ announcements, assignments, timetable, subj
                <button onClick={() => navigate('/notifications')} className="relative z-10 text-xs font-black text-[#1E3A8A] bg-[#D4AF37] px-6 py-3 rounded-xl hover:bg-white transition-colors shadow-lg">View All</button>
             </div>
             
-            <div className="bg-white dark:bg-slate-800 border-2 border-slate-50 dark:border-slate-700 p-8 rounded-[2.5rem] flex items-center gap-6 shadow-[0_15px_30px_rgba(0,0,0,0.05)] relative overflow-hidden group transition-colors duration-300">
+            <div className="bg-white dark:bg-[#1e293b] border-2 border-slate-50 dark:border-[#1e293b] p-8 rounded-[2.5rem] flex items-center gap-6 shadow-[0_15px_30px_rgba(0,0,0,0.05)] relative overflow-hidden group transition-colors duration-300">
                 <div className="w-16 h-16 bg-rose-50 dark:bg-rose-900/20 text-rose-500 rounded-2xl flex items-center justify-center shadow-inner border-2 border-rose-100 dark:border-rose-800 relative z-10">
                     <AlertCircleIcon size={32} />
                 </div>
@@ -201,7 +201,7 @@ const Home: React.FC<HomeProps> = ({ announcements, assignments, timetable, subj
         </div>
         
         <div className="lg:col-span-1">
-          <div className="bg-white dark:bg-slate-800 p-8 rounded-[3rem] border-2 border-slate-50 dark:border-slate-700 shadow-[0_20px_40px_rgba(0,0,0,0.05)] relative overflow-hidden h-full transition-colors duration-300">
+          <div className="bg-white dark:bg-[#1e293b] p-8 rounded-[3rem] border-2 border-slate-50 dark:border-[#1e293b] shadow-[0_20px_40px_rgba(0,0,0,0.05)] relative overflow-hidden h-full transition-colors duration-300">
             <h2 className="text-xl font-black text-[#1E3A8A] dark:text-[#D4AF37] mb-8 flex items-center gap-4 relative z-10">
               <div className="p-3 bg-[#1E3A8A] rounded-2xl text-[#D4AF37] shadow-lg">
                 <Clock01Icon size={24} />
@@ -212,7 +212,7 @@ const Home: React.FC<HomeProps> = ({ announcements, assignments, timetable, subj
             <div className="space-y-4 relative z-10">
               {todaysSlots.length > 0 ? (
                   todaysSlots.map((slot) => (
-                    <div key={slot.id} className="p-5 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center justify-between border-2 border-transparent hover:border-[#D4AF37] hover:bg-white dark:hover:bg-slate-700 shadow-sm hover:shadow-xl transition-all group active:scale-[0.98]">
+                    <div key={slot.id} className="p-5 bg-slate-50 dark:bg-[#020617] rounded-2xl flex items-center justify-between border-2 border-transparent hover:border-[#D4AF37] hover:bg-white dark:hover:bg-slate-700 shadow-sm hover:shadow-xl transition-all group active:scale-[0.98]">
                        <div>
                           <p className="font-black text-[#1E3A8A] dark:text-white text-base group-hover:text-[#1E3A8A] transition-colors">{getSubjectName(slot.subjectId)}</p>
                           <p className="text-xs text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest mt-1">{slot.room || 'Classroom'}</p>
@@ -223,7 +223,7 @@ const Home: React.FC<HomeProps> = ({ announcements, assignments, timetable, subj
                     </div>
                   ))
               ) : (
-                <div className="text-center py-16 text-slate-400 dark:text-slate-600 bg-slate-50 dark:bg-slate-900 rounded-[2.5rem] border-2 border-dashed border-slate-200 dark:border-slate-700">
+                <div className="text-center py-16 text-slate-400 dark:text-slate-600 bg-slate-50 dark:bg-[#020617] rounded-[2.5rem] border-2 border-dashed border-slate-200 dark:border-[#1e293b]">
                   <Clock01Icon size={40} className="mx-auto mb-4 opacity-20" />
                   <p className="font-black uppercase tracking-widest text-xs">No Classes Scheduled</p>
                 </div>

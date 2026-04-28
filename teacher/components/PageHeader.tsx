@@ -17,7 +17,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle, icon }) => {
         
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 dark:bg-slate-800/10 border border-white/10 backdrop-blur-md mb-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 dark:bg-[#1e293b]/10 border border-white/10 backdrop-blur-md mb-2">
               <Sparkles size={14} className="text-[#D4AF37]" />
               <span className="text-[10px] font-black text-[#FCFBF8] uppercase tracking-widest">Faculty Hub</span>
             </div>
@@ -34,7 +34,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle, icon }) => {
               <p className="text-[10px] font-black text-[#D4AF37] uppercase tracking-widest leading-none mb-1">{today}</p>
               <p className="text-xl font-bold text-white drop-shadow-md">{new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}</p>
             </div>
-            <div className="w-16 h-16 md:w-20 md:h-20 bg-white/10 dark:bg-slate-800/10 backdrop-blur-xl rounded-3xl border border-white/20 flex items-center justify-center shadow-2xl shadow-black/20 group-hover:scale-105 transition-transform duration-500">
+            <div className="w-16 h-16 md:w-20 md:h-20 bg-white/10 dark:bg-[#1e293b]/10 backdrop-blur-xl rounded-3xl border border-white/20 flex items-center justify-center shadow-2xl shadow-black/20 group-hover:scale-105 transition-transform duration-500">
               {icon || <CalendarCheck size={32} className="text-[#D4AF37] drop-shadow-md" />}
             </div>
           </div>

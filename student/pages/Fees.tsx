@@ -74,7 +74,41 @@ const Fees: React.FC<FeesProps> = ({ profile, school, currentClass }) => {
   }, [profile.schoolId, profile.studentDocId]);
 
   // Filter logic
-  const pendingBills = feeLedger.filter((t) => t.status === 'Pending');
+  const dbPendingBills = feeLedger.filter((t) => t.status === 'Pending');
+  
+  // Virtual Bill Logic: If student status is 'Unpaid', generate a virtual bill for the current month
+  // if it's not already in the ledger
+  const now = new Date();
+  const currentMonthName = now.toLocaleString('default', { month: 'long', year: 'numeric' });
+  const hasCurrentMonthInLedger = feeLedger.some(t => {
+      if (!t.month) return false;
+      // Normalizing comparison to avoid issues with extra spaces/case
+      return t.month.toLowerCase().trim() === currentMonthName.toLowerCase().trim();
+  });
+  
+  const pendingBills: FeeTransaction[] = [...dbPendingBills];
+  
+  const studentProfile = profile as any;
+  if (studentProfile.feeStatus === 'Unpaid' && !hasCurrentMonthInLedger) {
+    const studentFee = studentProfile.monthlyFee || school.feeConfig?.classFees[studentProfile.classId!] || 0;
+    pendingBills.push({
+      id: 'virtual-current',
+      studentId: studentProfile.studentDocId!,
+      studentName: studentProfile.name,
+      classId: studentProfile.classId!,
+      month: currentMonthName,
+      amountPaid: studentFee,
+      fineAmount: 0,
+      discountAmount: studentProfile.discountAmount || 0,
+      paymentMethod: 'Challan',
+      receiptNo: 'NEW',
+      status: 'Pending',
+      recordedBy: 'System Virtual',
+      timestamp: new Date(),
+      type: 'challan'
+    });
+  }
+  
   const paymentHistory = feeLedger.filter((t) => t.status === 'Success');
   
   const easyPaisaConfig = school.easyPaisaConfig;
@@ -164,13 +198,13 @@ const Fees: React.FC<FeesProps> = ({ profile, school, currentClass }) => {
   const pendingCount = pendingBills.length;
 
   return (
-    <div className="min-h-full bg-white dark:bg-slate-900 pb-32 font-sans relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-full bg-white dark:bg-[#020617] pb-32 font-sans relative overflow-hidden transition-colors duration-300">
       
       {/* TOP NAV BAR */}
       <div className="px-6 pt-6 pb-2 flex items-center justify-between relative z-20">
           <button 
               onClick={() => navigate(-1)}
-              className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center border border-slate-100 dark:border-slate-700 active:scale-90 transition-transform"
+              className="w-10 h-10 rounded-xl bg-white dark:bg-[#1e293b] shadow-sm flex items-center justify-center border border-slate-100 dark:border-[#1e293b] active:scale-90 transition-transform"
           >
               <ArrowLeft size={20} className="text-slate-600 dark:text-slate-300" />
           </button>
@@ -190,7 +224,7 @@ const Fees: React.FC<FeesProps> = ({ profile, school, currentClass }) => {
       </div>
 
       {/* Header Section - Matches Settings Page */}
-      <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+      <div className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#1e3a8a] via-[#D4AF37] to-[#1e3a8a]"></div>
         <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
         
@@ -222,7 +256,7 @@ const Fees: React.FC<FeesProps> = ({ profile, school, currentClass }) => {
             { label: 'Last Payment', value: `₨${lastPayment.toLocaleString()}`, icon: <History size={18} />, color: 'text-[#D4AF37]' },
             { label: 'Unpaid Bills', value: pendingCount, icon: <Receipt size={18} />, color: 'text-[#1e3a8a] dark:text-[#D4AF37]' }
           ].map((stat, i) => (
-            <div key={i} className="p-5 bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/10 rounded-2xl shadow-sm flex flex-col items-center text-center">
+            <div key={i} className="p-5 bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/10 rounded-2xl shadow-sm flex flex-col items-center text-center">
               <div className={`${stat.color} mb-3`}>{stat.icon}</div>
               <p className="text-lg font-black text-[#1e3a8a] dark:text-white tracking-tighter">{stat.value}</p>
               <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mt-1">{stat.label}</p>
@@ -240,7 +274,7 @@ const Fees: React.FC<FeesProps> = ({ profile, school, currentClass }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {loading ? (
               [1, 2].map((i) => (
-                <div key={i} className="p-6 bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/10 rounded-2xl shadow-sm space-y-6 animate-pulse">
+                <div key={i} className="p-6 bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/10 rounded-2xl shadow-sm space-y-6 animate-pulse">
                   <div className="flex justify-between items-start">
                     <div className="space-y-2">
                       <div className="w-16 h-4 bg-slate-200 dark:bg-slate-700 rounded"></div>
@@ -253,7 +287,7 @@ const Fees: React.FC<FeesProps> = ({ profile, school, currentClass }) => {
               ))
             ) : pendingBills.length > 0 ? (
               pendingBills.map((bill) => (
-                <div key={bill.id} className="p-6 bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/10 rounded-2xl shadow-sm space-y-6 relative overflow-hidden group">
+                <div key={bill.id} className="p-6 bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/10 rounded-2xl shadow-sm space-y-6 relative overflow-hidden group">
                   <div className="flex justify-between items-start relative z-10">
                     <div>
                       <div className="flex items-center gap-2 mb-2">
@@ -286,7 +320,7 @@ const Fees: React.FC<FeesProps> = ({ profile, school, currentClass }) => {
                 </div>
               ))
             ) : (
-              <div className="col-span-full p-12 bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/10 rounded-2xl text-center">
+              <div className="col-span-full p-12 bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/10 rounded-2xl text-center">
                 <CheckCircle2 size={40} className="text-emerald-500 mx-auto mb-4" />
                 <p className="text-sm font-black text-[#1e3a8a] dark:text-white uppercase tracking-widest">All Cleared!</p>
                 <p className="text-[10px] text-slate-400 font-bold mt-2 uppercase tracking-widest">No pending dues at the moment.</p>
@@ -305,7 +339,7 @@ const Fees: React.FC<FeesProps> = ({ profile, school, currentClass }) => {
           <div className="space-y-3">
             {loading ? (
               [1, 2, 3].map((i) => (
-                <div key={i} className="p-4 bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/10 rounded-2xl shadow-sm flex items-center justify-between animate-pulse">
+                <div key={i} className="p-4 bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/10 rounded-2xl shadow-sm flex items-center justify-between animate-pulse">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-slate-200 dark:bg-slate-700 rounded-xl"></div>
                     <div className="space-y-2">
@@ -318,7 +352,7 @@ const Fees: React.FC<FeesProps> = ({ profile, school, currentClass }) => {
               ))
             ) : paymentHistory.length > 0 ? (
               paymentHistory.map((t) => (
-                <div key={t.id} className="p-4 bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/10 rounded-2xl shadow-sm flex items-center justify-between group hover:border-[#1e3a8a]/20 transition-all">
+                <div key={t.id} className="p-4 bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/10 rounded-2xl shadow-sm flex items-center justify-between group hover:border-[#1e3a8a]/20 transition-all">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-white dark:bg-slate-700 rounded-xl flex items-center justify-center border border-[#D4AF37]/10 shadow-sm">
                       <CheckCircle2 size={20} className="text-emerald-500" />
@@ -341,7 +375,7 @@ const Fees: React.FC<FeesProps> = ({ profile, school, currentClass }) => {
                 </div>
               ))
             ) : (
-              <div className="p-10 bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/10 rounded-2xl text-center">
+              <div className="p-10 bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/10 rounded-2xl text-center">
                 <History size={32} className="text-slate-200 mx-auto mb-3" />
                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">No history available</p>
               </div>
@@ -358,7 +392,7 @@ const Fees: React.FC<FeesProps> = ({ profile, school, currentClass }) => {
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white dark:bg-slate-800 w-full max-w-md rounded-3xl shadow-2xl relative z-10 overflow-hidden border border-[#D4AF37]/20"
+            className="bg-white dark:bg-[#1e293b] w-full max-w-md rounded-3xl shadow-2xl relative z-10 overflow-hidden border border-[#D4AF37]/20"
           >
             <div className="p-6 border-b border-[#D4AF37]/10 flex justify-between items-center">
               <div className="flex items-center gap-3">
@@ -375,7 +409,7 @@ const Fees: React.FC<FeesProps> = ({ profile, school, currentClass }) => {
             <div className="p-8">
               {paymentStep === 'confirm' && (
                 <div className="space-y-6">
-                  <div className="text-center p-6 bg-[#FCFBF8] dark:bg-slate-900/50 rounded-2xl border border-[#D4AF37]/10">
+                  <div className="text-center p-6 bg-[#FCFBF8] dark:bg-[#020617]/50 rounded-2xl border border-[#D4AF37]/10">
                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Amount for {selectedBill.month}</p>
                     <h3 className="text-3xl font-black text-[#1e3a8a] dark:text-white tracking-tighter">₨ {selectedBill.amountPaid.toLocaleString()}</h3>
                   </div>
@@ -385,14 +419,14 @@ const Fees: React.FC<FeesProps> = ({ profile, school, currentClass }) => {
                       <label className="text-[10px] font-black text-[#1e3a8a]/60 dark:text-[#D4AF37]/60 uppercase tracking-widest ml-1">Account Number</label>
                       <div className="relative">
                         <Smartphone className="absolute left-5 top-1/2 -translate-y-1/2 text-[#D4AF37]" size={18} />
-                        <input type="text" defaultValue="03001234567" className="w-full pl-14 pr-6 py-4 bg-white dark:bg-slate-800 border border-[#1e3a8a]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#1e3a8a]/30 outline-none transition-all" />
+                        <input type="text" defaultValue="03001234567" className="w-full pl-14 pr-6 py-4 bg-white dark:bg-[#1e293b] border border-[#1e3a8a]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#1e3a8a]/30 outline-none transition-all" />
                       </div>
                     </div>
                     <div className="space-y-2">
                       <label className="text-[10px] font-black text-[#1e3a8a]/60 dark:text-[#D4AF37]/60 uppercase tracking-widest ml-1">Secret PIN</label>
                       <div className="relative">
                         <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-[#D4AF37]" size={18} />
-                        <input type="password" placeholder="•••••" className="w-full pl-14 pr-6 py-4 bg-white dark:bg-slate-800 border border-[#1e3a8a]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#1e3a8a]/30 outline-none transition-all" />
+                        <input type="password" placeholder="•••••" className="w-full pl-14 pr-6 py-4 bg-white dark:bg-[#1e293b] border border-[#1e3a8a]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#1e3a8a]/30 outline-none transition-all" />
                       </div>
                     </div>
                   </div>

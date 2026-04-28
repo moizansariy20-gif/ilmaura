@@ -157,18 +157,18 @@ const TeacherMessenger: React.FC = () => {
                 <input 
                     type="text" 
                     placeholder="Search conversations..." 
-                    className="w-full pl-12 pr-4 py-4 bg-white dark:bg-slate-800 border border-[#6B1D2F]/10 dark:border-slate-700 rounded-2xl text-sm font-bold text-slate-900 dark:text-white focus:ring-4 focus:ring-[#6B1D2F]/5 outline-none transition-all shadow-sm"
+                    className="w-full pl-12 pr-4 py-4 bg-white dark:bg-[#1e293b] border border-[#6B1D2F]/10 dark:border-[#1e293b] rounded-2xl text-sm font-bold text-slate-900 dark:text-white focus:ring-4 focus:ring-[#6B1D2F]/5 outline-none transition-all shadow-sm"
                 />
             </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-800 rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-[#1e293b] rounded-[3rem] border border-slate-100 dark:border-[#334155] shadow-sm overflow-hidden">
             <div className="divide-y divide-slate-50">
                 {MOCK_TEACHER_CONTACTS.map((contact) => (
                     <div 
                         key={contact.id}
                         onClick={() => setActiveChatId(contact.id)}
-                        className="p-6 flex items-center gap-6 hover:bg-slate-50 dark:bg-slate-800/50 transition-all cursor-pointer group"
+                        className="p-6 flex items-center gap-6 hover:bg-slate-50 dark:bg-[#0f172a] transition-all cursor-pointer group"
                     >
                         <div className="relative shrink-0">
                             <div className={`w-16 h-16 rounded-[1.5rem] flex items-center justify-center text-white text-2xl font-black shadow-lg transition-transform group-hover:scale-105 ${
@@ -207,7 +207,7 @@ const TeacherMessenger: React.FC = () => {
             </div>
             {MOCK_TEACHER_CONTACTS.length === 0 && (
                 <div className="py-20 flex flex-col items-center justify-center text-center">
-                    <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800/50 rounded-[2rem] flex items-center justify-center mb-6">
+                    <div className="w-20 h-20 bg-slate-50 dark:bg-[#0f172a] rounded-[2rem] flex items-center justify-center mb-6">
                         <MessageSquare size={40} className="text-slate-200"/>
                     </div>
                     <h3 className="font-black text-xl text-slate-900 dark:text-white tracking-tight">No Messages Yet</h3>
@@ -223,11 +223,11 @@ const TeacherMessenger: React.FC = () => {
 
   // --- RENDER CHAT ROOM ---
   return (
-    <div className="flex flex-col h-[calc(100vh-140px)] bg-white dark:bg-slate-800 rounded-[3rem] overflow-hidden border border-slate-100 dark:border-slate-800 shadow-2xl relative animate-in slide-in-from-right duration-500">
+    <div className="flex flex-col h-[calc(100vh-140px)] bg-white dark:bg-[#1e293b] rounded-[3rem] overflow-hidden border border-slate-100 dark:border-[#334155] shadow-2xl relative animate-in slide-in-from-right duration-500">
         
         {/* Header */}
-        <div className="bg-white dark:bg-slate-800 p-6 flex items-center gap-6 border-b border-slate-100 dark:border-slate-800 shadow-sm z-10">
-            <button onClick={() => setActiveChatId(null)} className="p-3 bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 rounded-2xl hover:bg-slate-100 transition-all active:scale-90">
+        <div className="bg-white dark:bg-[#1e293b] p-6 flex items-center gap-6 border-b border-slate-100 dark:border-[#334155] shadow-sm z-10">
+            <button onClick={() => setActiveChatId(null)} className="p-3 bg-slate-50 dark:bg-[#0f172a] text-slate-500 dark:text-slate-400 rounded-2xl hover:bg-slate-100 transition-all active:scale-90">
                 <ArrowLeft size={20} />
             </button>
             <div className="relative">
@@ -251,9 +251,9 @@ const TeacherMessenger: React.FC = () => {
         </div>
 
         {/* Chat Body */}
-        <div className="flex-1 overflow-y-auto p-8 space-y-6 bg-slate-50 dark:bg-slate-800/50 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-8 space-y-6 bg-slate-50 dark:bg-[#0f172a] custom-scrollbar">
             <div className="text-center my-8">
-                <span className="bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-800 text-slate-400 text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-sm">Today</span>
+                <span className="bg-white dark:bg-[#1e293b] border border-slate-100 dark:border-[#334155] text-slate-400 text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-sm">Today</span>
             </div>
             {activeMessages.map((msg) => {
                 const isMe = msg.sender === 'me';
@@ -281,9 +281,9 @@ const TeacherMessenger: React.FC = () => {
         </div>
 
         {/* Input */}
-        <div className="p-6 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-800">
+        <div className="p-6 bg-white dark:bg-[#1e293b] border-t border-slate-100 dark:border-[#334155]">
             <div className="flex gap-4 items-center">
-                <button className="p-4 bg-slate-50 dark:bg-slate-800/50 text-slate-400 rounded-2xl hover:bg-slate-100 transition-all">
+                <button className="p-4 bg-slate-50 dark:bg-[#0f172a] text-slate-400 rounded-2xl hover:bg-slate-100 transition-all">
                     <Smile size={24} />
                 </button>
                 <input 
@@ -292,7 +292,7 @@ const TeacherMessenger: React.FC = () => {
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                     placeholder="Type your message here..." 
-                    className="flex-1 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-[1.5rem] px-6 py-4 text-sm font-bold text-slate-900 dark:text-white placeholder:text-slate-300 focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-200 outline-none transition-all"
+                    className="flex-1 bg-slate-50 dark:bg-[#0f172a] border border-slate-100 dark:border-[#334155] rounded-[1.5rem] px-6 py-4 text-sm font-bold text-slate-900 dark:text-white placeholder:text-slate-300 focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-200 outline-none transition-all"
                 />
                 <button 
                     onClick={handleSendMessage}

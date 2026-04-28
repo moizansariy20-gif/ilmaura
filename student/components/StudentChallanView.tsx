@@ -23,7 +23,7 @@ const StudentChallanView: React.FC<StudentChallanViewProps> = ({ challanData, sc
   });
 
   return (
-    <div className="w-[360px] min-h-[750px] bg-white dark:bg-slate-800 p-3 flex flex-col font-sans text-[10px] text-black border-r border-dashed border-gray-400 relative">
+    <div className="w-[360px] min-h-[750px] bg-white dark:bg-[#1e293b] p-3 flex flex-col font-sans text-[10px] text-black border-r border-dashed border-gray-400 relative">
       
       {/* Outer Solid Border for the Traditional Look */}
       <div className="border-2 border-black flex flex-col h-full p-2">

@@ -3,10 +3,11 @@ import { createClient } from '@supabase/supabase-js';
 import { supabase, uploadFileToSupabase, deleteFileFromSupabase, extractPathFromSupabaseUrl, SUPABASE_URL, SUPABASE_ANON_KEY } from './supabase.ts';
 import { sendPushNotification } from './firebaseService.ts';
 import { 
-  UserProfile, UserPreferences, FeeTransaction, School, ClassLog, LiveQuiz, QuizSubmission, 
+  PlanRequest,
+  School, ClassLog, LiveQuiz, QuizSubmission, 
   StudentNote, TimetableSlot, SavedAcademicPlan, Resource, Student, Teacher, 
   Class, Subject, Assignment, Announcement, Exam, SchoolStatus, Enquiry, StudentDocument,
-  Expense, TeacherAttendanceRecord, AttendanceRecord, ActivityLog, StaffPermission
+  Expense, TeacherAttendanceRecord, AttendanceRecord, ActivityLog, StaffPermission, Course, SyllabusChapter, FeeTransaction, UserPreferences
 } from '../types.ts';
 
 // --- Shared Helpers ---
@@ -80,6 +81,68 @@ export const getSchoolLogo = async (schoolId: string): Promise<string | null> =>
 
 // --- Registration Requests ---
 
+export const onboardNewSchool = async (data: any) => {
+    // 1. Create School Doc
+    const schoolPayload = {
+      name: data.schoolName,
+      city: data.city || '',
+      state: data.state || '',
+      country: data.country || '',
+      address: data.address || '',
+      phone: data.mobile || '',
+      whatsapp: data.whatsapp || '',
+      email: data.email || '',
+      contactName: data.contactName || '',
+      actualStudents: 0,
+      logoURL: data.logoUrl || '',
+      themeColor: '#1e3a8a',
+      licenseStatus: true,
+      status: 'Active',
+      isAccessLocked: false,
+      plan: 'free', // Default to free plan for direct signup
+      subdomain: data.subdomain?.toLowerCase()
+    };
+    
+    const createdSchool = await addSchoolFirestore(schoolPayload);
+    const newSchoolId = createdSchool.id;
+    const newSchoolCode = createdSchool.school_code;
+
+    if (!newSchoolId) throw new Error("School creation failed (No ID returned).");
+
+    // 2. Create Principal Account
+    // Generate a unique email if not provided or to avoid collisions
+    const principalData = {
+        name: data.contactName,
+        email: data.email.toLowerCase().trim(),
+        password: data.password,
+        schoolId: newSchoolId
+    };
+
+    let principalUid = null;
+    try {
+        const result = await createPrincipalAccount(principalData);
+        principalUid = (result as any).id || (result as any).uid;
+    } catch (authErr: any) {
+        console.error("Auth creation failed during onboarding:", authErr);
+        // If auth fails, we probably should delete the school doc? 
+        // For now, just throw the error
+        throw authErr;
+    }
+
+    if (!principalUid) {
+        throw new Error("User created but no ID returned from Auth provider.");
+    }
+
+    // 3. Link Principal to School
+    await updateSchoolFirestore(newSchoolId, { principalId: principalUid });
+
+    return {
+        schoolId: newSchoolId,
+        schoolCode: newSchoolCode,
+        principalId: principalUid
+    };
+};
+
 export const submitRegistrationRequest = async (data: any) => {
   const payload = {
     school_name: data.schoolName,
@@ -92,14 +155,18 @@ export const submitRegistrationRequest = async (data: any) => {
     state: data.state,
     city: data.city,
     address: data.address,
-    logo_url: data.logoUrl,
-    status: 'pending',
-    created_at: new Date().toISOString()
+    logo_url: data.logoUrl
+    // status and created_at should be handled by DB defaults to avoid RLS conflicts
   };
 
-  const { data: request, error } = await supabase.from('registration_requests').insert(payload).select().single();
-  if (error) throw error;
-  return request;
+  const { error } = await supabase.from('registration_requests').insert(payload);
+  if (error) {
+    console.error("Supabase Registration Error:", error);
+    throw error;
+  }
+  
+  // Return a dummy success indicating it's done since we can't reliably select without permissions
+  return { id: 'PENDING_APPROVAL' };
 };
 
 export const checkSchoolStatus = async (requestId: string) => {
@@ -170,6 +237,44 @@ export const updateRegistrationRequestStatus = async (requestId: string, status:
   if (error) throw error;
 };
 
+// --- Plan Requests ---
+
+export const submitPlanRequest = async (schoolId: string, schoolName: string, type: 'trial' | 'upgrade') => {
+    const payload = {
+        school_id: schoolId,
+        school_name: schoolName,
+        type,
+        status: 'pending',
+        request_date: new Date().toISOString()
+    };
+    const { error } = await supabase.from('plan_requests').insert(payload);
+    if (error) throw error;
+};
+
+export const subscribeToPlanRequests = (callback: (requests: PlanRequest[]) => void) => {
+    const fetch = async () => {
+        const { data, error } = await supabase.from('plan_requests').select('*').order('request_date', { ascending: false });
+        if (!error && data) {
+            callback(data.map(d => ({
+                id: d.id,
+                schoolId: d.school_id,
+                schoolName: d.school_name,
+                type: d.type,
+                status: d.status,
+                requestDate: d.request_date
+            })));
+        }
+    };
+    fetch();
+    const channel = supabase.channel('plan_requests').on('postgres_changes', { event: '*', schema: 'public', table: 'plan_requests' }, fetch).subscribe();
+    return () => supabase.removeChannel(channel);
+};
+
+export const updatePlanRequestStatus = async (requestId: string, status: 'approved' | 'rejected') => {
+    const { error } = await supabase.from('plan_requests').update({ status }).eq('id', requestId);
+    if (error) throw error;
+};
+
 // --- Schools Management ---
 
 export const subscribeToSchools = (callback: (schools: School[]) => void, onError?: (err: any) => void) => {
@@ -186,7 +291,9 @@ export const subscribeToSchools = (callback: (schools: School[]) => void, onErro
         licenseStatus: s.license_status,
         principalId: s.principal_id,
         isAccessLocked: s.is_access_locked,
-        isLearningHubEnabled: s.is_learning_hub_enabled,
+        plan: s.plan,
+        trialStartDate: s.trial_start_date,
+        trialEndDate: s.trial_end_date,
         studentFieldConfig: s.student_field_config,
         teacherFieldConfig: s.teacher_field_config,
         idCardConfig: s.id_card_config,
@@ -223,7 +330,9 @@ export const subscribeToSchoolDetails = (schoolId: string, callback: (school: Sc
             licenseStatus: data.license_status,
             principalId: data.principal_id,
             isAccessLocked: data.is_access_locked,
-            isLearningHubEnabled: data.is_learning_hub_enabled,
+            plan: data.plan,
+            trialStartDate: data.trial_start_date,
+            trialEndDate: data.trial_end_date,
             studentFieldConfig: data.student_field_config,
             teacherFieldConfig: data.teacher_field_config,
             idCardConfig: data.id_card_config,
@@ -269,13 +378,13 @@ export const getSchoolBranding = async (schoolId: string) => {
   } as School;
 };
 
-export const resolveSchoolId = async (inputCode: string): Promise<string | null> => {
-  const { data: codeMatch } = await supabase.from('schools').select('id').eq('school_code', inputCode).maybeSingle();
-  if (codeMatch) return codeMatch.id;
-  const { data: idMatch } = await supabase.from('schools').select('id').eq('id', inputCode).maybeSingle();
-  if (idMatch) return idMatch.id;
-  const { data: subMatch } = await supabase.from('schools').select('id').eq('subdomain', inputCode.toLowerCase()).maybeSingle();
-  if (subMatch) return subMatch.id;
+export const resolveSchoolId = async (inputCode: string): Promise<{id: string, status: string} | null> => {
+  const { data: codeMatch } = await supabase.from('schools').select('id, status').eq('school_code', inputCode).maybeSingle();
+  if (codeMatch) return { id: codeMatch.id, status: codeMatch.status };
+  const { data: idMatch } = await supabase.from('schools').select('id, status').eq('id', inputCode).maybeSingle();
+  if (idMatch) return { id: idMatch.id, status: idMatch.status };
+  const { data: subMatch } = await supabase.from('schools').select('id, status').eq('subdomain', inputCode.toLowerCase()).maybeSingle();
+  if (subMatch) return { id: subMatch.id, status: subMatch.status };
   return null;
 };
 
@@ -290,51 +399,44 @@ export const resolveSchoolBySubdomain = async (subdomain: string): Promise<strin
   return data.id;
 };
 
-export const addSchoolFirestore = async (data: any) => {
-  const prefix = data.name ? data.name.charAt(0).toUpperCase() : 'S';
-  const randomNum = Math.floor(10000000 + Math.random() * 90000000);
-  const schoolCode = `${prefix}-${randomNum}`;
+export const checkSchoolIdExists = async (schoolCode: string): Promise<boolean> => {
+    const { data } = await supabase
+        .from('schools')
+        .select('id')
+        .eq('school_code', schoolCode)
+        .maybeSingle();
+    return !!data;
+};
+
+export const createPendingSchool = async (data: any) => {
+  // Use provided custom school code if available
+  const schoolCode = data.schoolId || `${data.schoolName ? data.schoolName.charAt(0).toUpperCase() : 'S'}-${Math.floor(10000000 + Math.random() * 90000000)}`;
 
   const payload = {
-      name: data.name,
-      city: data.city,
-      address: data.address,
-      phone: data.phone,
-      email: data.email,
-      actual_students: data.actualStudents,
-      logo_url: data.logoURL,
-      theme_color: data.themeColor,
-      license_status: data.licenseStatus,
-      principal_id: data.principalId || null, 
-      status: data.status,
-      is_access_locked: data.isAccessLocked,
-      is_learning_hub_enabled: data.isLearningHubEnabled,
+      name: data.schoolName || 'Untitled School',
+      city: data.city || '',
+      state: data.state || '',
+      country: data.country || '',
+      address: data.address || '',
+      phone: data.mobile || '',
+      whatsapp: data.whatsapp || '',
+      email: data.email || '',
+      contact_name: data.contactName || '',
+      status: 'pending', // Mark as pending until email verification
       school_code: schoolCode,
-      subdomain: data.subdomain?.toLowerCase(),
-      student_field_config: data.studentFieldConfig,
-      teacher_field_config: data.teacherFieldConfig,
-      id_card_config: data.idCardConfig,
-      smart_id_config: data.smartIdConfig,
-      admission_form_config: data.admissionFormConfig,
-      admission_form_overlay_config: data.admissionFormOverlayConfig,
-      fee_config: data.feeConfig,
-      social_media_config: data.socialMediaConfig,
-      timetable_config: data.timetableConfig
+      subdomain: data.subdomain?.toLowerCase() || `school-${Math.floor(10000000 + Math.random() * 90000000)}`,
+      plan: 'free',
+      logo_url: data.logoUrl || null
   };
 
-  const { data: newSchool, error } = await supabase.from('schools').insert(payload).select().single();
-  
-  if (error) {
-      console.error("Supabase Insert Error:", error);
-      throw error;
-  }
-  
-  return { 
-      ...newSchool, 
-      school_code: schoolCode, 
-      schoolCode: schoolCode,
-      id: newSchool.id
-  };
+  const { data: newSchool, error } = await supabase.from('schools').insert(payload).select().maybeSingle();
+  if (error) throw error;
+  return newSchool;
+};
+
+// Wrapper for backward compatibility
+export const addSchoolFirestore = async (data: any) => {
+    return await createPendingSchool(data);
 };
 
 export const updateSchoolFirestore = async (id: string, data: any) => {
@@ -355,7 +457,9 @@ export const updateSchoolFirestore = async (id: string, data: any) => {
   
   if (data.status !== undefined) payload.status = data.status;
   if (data.isAccessLocked !== undefined) payload.is_access_locked = data.isAccessLocked;
-  if (data.isLearningHubEnabled !== undefined) payload.is_learning_hub_enabled = data.isLearningHubEnabled;
+  if (data.plan !== undefined) payload.plan = data.plan;
+  if (data.trialStartDate !== undefined) payload.trial_start_date = data.trialStartDate;
+  if (data.trialEndDate !== undefined) payload.trial_end_date = data.trialEndDate;
 
   if (data.studentFieldConfig !== undefined) payload.student_field_config = data.studentFieldConfig;
   if (data.teacherFieldConfig !== undefined) payload.teacher_field_config = data.teacherFieldConfig;
@@ -420,6 +524,8 @@ export const getSchoolDetails = async (id: string) => {
         logoURL: data.logo_url,
         bannerURLs: data.banner_urls || (data.banner_url ? [data.banner_url] : []),
         themeColor: data.theme_color,
+        plan: data.plan || 'free',
+        contactName: data.contact_name || '', // Defensive
         actualStudents: data.actual_students,
         studentFieldConfig: data.student_field_config,
         teacherFieldConfig: data.teacher_field_config,
@@ -447,8 +553,13 @@ export const updateSchoolBranding = async (schoolId: string, data: any) => {
   if (data.bannerURLs !== undefined) payload.banner_urls = data.bannerURLs;
   if (data.themeColor !== undefined) payload.theme_color = data.themeColor;
   if (data.address !== undefined) payload.address = data.address;
+  if (data.city !== undefined) payload.city = data.city;
+  if (data.state !== undefined) payload.state = data.state;
+  if (data.country !== undefined) payload.country = data.country;
   if (data.phone !== undefined) payload.phone = data.phone;
+  if (data.whatsapp !== undefined) payload.whatsapp = data.whatsapp;
   if (data.email !== undefined) payload.email = data.email;
+  // if (data.contactName !== undefined) payload.contact_name = data.contactName; // Disabled due to schema mismatch error
   
   // Configurations (JSON Columns)
   if (data.studentFieldConfig !== undefined) payload.student_field_config = data.studentFieldConfig;
@@ -785,10 +896,12 @@ export const deleteParent = async (schoolId: string, parentId: string) => {
 };
 
 // --- Students ---
-export const subscribeToStudents = (schoolId: string, callback: (data: any[]) => void, onError?: (err: any) => void, columns: string = '*') => {
+export const subscribeToStudents = (schoolId: string, callback: (data: any[]) => void, onError?: (err: any) => void, columns: string = '*', limit?: number) => {
   const fetch = () => {
-    supabase.from('students').select(columns).eq('school_id', schoolId)
-      .then(({ data, error }) => {
+    let query = supabase.from('students').select(columns).eq('school_id', schoolId);
+    if (limit) query = query.limit(limit);
+    
+    query.then(({ data, error }) => {
         if (error) onError?.(error);
         else callback((data as any[])?.map(d => {
             const extra = (d as any).custom_data || {};
@@ -1018,22 +1131,34 @@ export const provisionStudentPortalAccount = async (schoolId: string, studentId:
     
     console.log(`Provisioning complete for ${studentData.name}`);
 };
-export const verifyLoginId = async (schoolId: string, role: 'teacher' | 'student' | 'principal', loginId: string) => {
+export const verifyLoginId = async (schoolId: string, role: 'teacher' | 'student' | 'principal' | 'staff', loginId: string) => {
     if (role === 'principal') {
-        const { data, error } = await supabase
+        const { data: principal, error: pError } = await supabase
             .from('user_profiles')
             .select('*')
             .eq('school_id', schoolId)
             .eq('role', 'principal')
             .eq('login_id', loginId)
-            .single();
-        if (error || !data) return null;
-        return data;
+            .maybeSingle();
+
+        if (principal) return { ...principal, detectedRole: 'principal' };
+
+        // If not a principal, check if it's a staff member
+        const { data: staff, error: sError } = await supabase
+            .from('staff')
+            .select('*')
+            .eq('school_id', schoolId)
+            .eq('login_id', loginId)
+            .maybeSingle();
+        
+        if (staff) return { ...staff, detectedRole: 'staff', loginId: staff.login_id };
+        
+        return null;
     }
-    const table = role === 'teacher' ? 'teachers' : 'students';
+    const table = role === 'teacher' ? 'teachers' : role === 'student' ? 'students' : 'staff';
     const { data, error } = await supabase.from(table).select('*').eq('school_id', schoolId).eq('login_id', loginId).single();
     if (error || !data) return null;
-    return data;
+    return { ...data, loginId: data.login_id };
 };
 
 export const signInWithGoogle = async (redirectTo?: string) => {
@@ -1070,15 +1195,9 @@ export const linkSocialAccount = async (uid: string, email: string, schoolId: st
     }
 };
 
-export const completeUserAccess = async (schoolId: string, role: 'teacher' | 'student' | 'principal', loginId: string, email: string, password: string) => {
+export const completeUserAccess = async (schoolId: string, role: 'teacher' | 'student' | 'principal' | 'staff', loginId: string, email: string, password: string) => {
     const userRecord = await verifyLoginId(schoolId, role, loginId);
     if (!userRecord) throw new Error("Invalid Login ID");
-    
-    // For principal, we check if they already have a UID (they always do since Mother Admin creates them)
-    // But maybe we allow them to "reset" or "claim" it?
-    // Actually, if they are already in user_profiles, they have a UID.
-    // The user said "create your access" for principal too.
-    // This is tricky because principal already has an account.
     
     if (role !== 'principal' && userRecord.uid) throw new Error("Access already created for this ID");
 
@@ -1100,37 +1219,33 @@ export const completeUserAccess = async (schoolId: string, role: 'teacher' | 'st
     if (authError) throw authError;
     if (!authData.user) throw new Error("Failed to create account");
 
-    const table = role === 'teacher' ? 'teachers' : 'students';
+    const table = role === 'teacher' ? 'teachers' : role === 'student' ? 'students' : role === 'staff' ? 'staff' : null;
     
-    // Preserve existing custom_data and add mirror_password
-    const customData = {
-        ...(userRecord.custom_data || {}),
-        mirror_password: password
-    };
-
-    const updatePayload: any = {
-        uid: authData.user.id,
-        email: email,
-        auth_status: 'active',
-        custom_data: customData
-    };
-
-    const { error: updateError } = await supabase.from(table).update(updatePayload).eq('id', userRecord.id);
-    if (updateError) throw updateError;
-
+    // Sync to user_profiles
     const profilePayload: any = {
         id: authData.user.id,
         role,
         school_id: schoolId,
         name: userRecord.name,
         email: email,
-        photo_url: userRecord.photo_url || null
+        login_id: loginId
     };
-    if (role === 'teacher') profilePayload.teacher_id = userRecord.id;
-    else profilePayload.student_id = userRecord.id;
+
+    if (role === 'staff') {
+        profilePayload.staff_permissions = (userRecord as any).staff_permissions || {};
+        profilePayload.designation = (userRecord as any).designation;
+    }
 
     const { error: profileError } = await supabase.from('user_profiles').upsert(profilePayload);
     if (profileError) throw profileError;
+
+    // Update original record with UID and status
+    if (table) {
+        await supabase.from(table).update({ 
+            uid: authData.user.id,
+            auth_status: 'active'
+        }).eq('id', userRecord.id);
+    }
 
     return authData.user;
 };
@@ -1258,8 +1373,33 @@ export const addSubject = async (schoolId: string, data: any) => {
     };
 };
 export const deleteSubject = async (schoolId: string, subjectId: string) => {
+    // Manually delete dependent records to simulate cascade delete and avoid FK constraint errors
+    const tables = ['timetable', 'assignments', 'resources', 'exams', 'quizzes', 'academic_plans', 'class_logs'];
+    for (const table of tables) {
+        const { error } = await supabase.from(table).delete().eq('subject_id', subjectId).eq('school_id', schoolId);
+        if (error) {
+            console.error(`Error deleting from ${table}:`, error);
+            throw new Error(`Could not delete linked data in ${table}. Please try again.`);
+        }
+    }
+    
+    const { error: syllabusError } = await supabase.from('syllabus_chapters').delete().eq('subject_id', subjectId);
+    if (syllabusError) {
+        console.error('Error deleting from syllabus_chapters:', syllabusError);
+        throw new Error(`Could not delete linked syllabus chapters. Please try again.`);
+    }
+
+    // Notice we do NOT delete attendance records here intentionally to retain historical attendance!
+    // Wait, if historical attendance requires a subject, it might throw a FK error.
+    // If it does, we will handle it below.
+
     const { error } = await supabase.from('subjects').delete().eq('id', subjectId).eq('school_id', schoolId);
-    if (error) throw error;
+    if (error) {
+        if (error.message.includes('Foreign Key') || error.message.includes('FOREIGN KEY') || error.code === '23503') {
+            throw new Error(`Cannot delete subject. It's still in use by other records (e.g., Attendance or Courses). DB Error: ${error.message}`);
+        }
+        throw error;
+    }
 };
 // --- Timetable ---
 export const subscribeToTimetable = (schoolId: string, classId: string, callback: (data: any[]) => void, onError?: (err: any) => void) => {
@@ -1413,18 +1553,148 @@ export const saveTeacherAttendance = async (schoolId: string, date: string, atte
     }
 };
 
-// --- Fees ---
-export const subscribeToFeeLedger = (schoolId: string, callback: (data: FeeTransaction[]) => void, onError?: (err: any) => void) => {
-    const fetch = () => {
-        supabase.from('fee_transactions').select('*').eq('school_id', schoolId).order('timestamp', { ascending: false })
-            .then(({ data, error }) => { if (error) onError?.(error); else callback(data?.map(t => ({ ...t, studentId: t.student_id, studentName: t.student_name, classId: t.class_id, amountPaid: t.amount_paid, fineAmount: t.fine_amount, discountAmount: t.discount_amount, paymentMethod: t.payment_method, receiptNo: t.receipt_no, recordedBy: t.recorded_by, easyPaisaPaymentUrl: t.easypaisa_url, easyPaisaOrderId: t.easypaisa_order_id })) as FeeTransaction[] || []); });
+// --- Dashboard Stats ---
+export const fetchDashboardStats = async (schoolId: string) => {
+    const { data, error } = await supabase
+        .from('dashboard_stats')
+        .select('*')
+        .eq('school_id', schoolId)
+        .maybeSingle();
+    
+    if (error) {
+        console.warn('Dashboard stats fetch error:', error);
+        return null;
+    }
+    return data;
+};
+
+export const subscribeToDashboardStats = (schoolId: string, onUpdate: (data: any) => void) => {
+    const refresh = async () => {
+        const stats = await fetchDashboardStats(schoolId);
+        if (stats) onUpdate(stats);
     };
-    fetch();
-    const channel = supabase.channel(`fees:${schoolId}`).on('postgres_changes', { event: '*', schema: 'public', table: 'fee_transactions', filter: `school_id=eq.${schoolId}` }, fetch).subscribe();
+
+    refresh();
+
+    const channel = supabase.channel(`dashboard_stats:${schoolId}`)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'students', filter: `school_id=eq.${schoolId}` }, refresh)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'teachers', filter: `school_id=eq.${schoolId}` }, refresh)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'staff', filter: `school_id=eq.${schoolId}` }, refresh)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'expenses', filter: `school_id=eq.${schoolId}` }, refresh)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'enquiries', filter: `school_id=eq.${schoolId}` }, refresh)
+        .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+};
+
+// --- Fee Helpers ---
+export const mapFeeTransactionRow = (t: any) => {
+    const timestamp = t.timestamp;
+    let normalizedDate = '';
+    if (timestamp) {
+        try {
+            normalizedDate = new Date(timestamp).toISOString().split('T')[0];
+        } catch (e) {
+            normalizedDate = '';
+        }
+    }
+
+    return {
+        ...t,
+        studentId: t.student_id,
+        studentName: t.student_name,
+        classId: t.class_id,
+        amountPaid: t.amount_paid,
+        balanceAmount: t.balance_amount,
+        fineAmount: t.fine_amount,
+        discountAmount: t.discount_amount,
+        paymentMethod: t.payment_method,
+        receiptNo: t.receipt_no,
+        recordedBy: t.recorded_by,
+        easyPaisaPaymentUrl: t.easypaisa_url,
+        easyPaisaOrderId: t.easypaisa_order_id,
+        normalizedDate // Pre-calculated for fast filtering
+    } as FeeTransaction;
+};
+
+// --- Fees ---
+export const fetchFeeLedger = async (schoolId: string, limit?: number, offset?: number) => {
+    let query = supabase.from('fee_transactions').select('*').eq('school_id', schoolId).order('timestamp', { ascending: false });
+    
+    if (limit) {
+        const from = offset || 0;
+        const to = from + limit - 1;
+        query = query.range(from, to);
+    }
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return data?.map(mapFeeTransactionRow);
+};
+
+export const fetchFeeLedgerCount = async (schoolId: string) => {
+    const { count, error } = await supabase
+        .from('fee_transactions')
+        .select('*', { count: 'exact', head: true })
+        .eq('school_id', schoolId);
+    if (error) throw error;
+    return count || 0;
+};
+
+export const subscribeToFeeLedger = (schoolId: string, onUpdate: (data: FeeTransaction[], delta?: { event: string, new?: any, old?: any }) => void, onError?: (err: any) => void, limit: number = 1000) => {
+    let currentData: FeeTransaction[] = [];
+    
+    const initialFetch = async () => {
+        try {
+            const data = await fetchFeeLedger(schoolId, limit);
+            currentData = data;
+            onUpdate(currentData);
+        } catch (error) {
+            onError?.(error);
+        }
+    };
+
+    initialFetch();
+
+    const channel = supabase.channel(`fees:${schoolId}`)
+        .on('postgres_changes', { 
+            event: '*', 
+            schema: 'public', 
+            table: 'fee_transactions', 
+            filter: `school_id=eq.${schoolId}` 
+        }, (payload) => {
+            if (payload.eventType === 'INSERT') {
+                const newItem = mapFeeTransactionRow(payload.new);
+                currentData = [newItem, ...currentData];
+            } else if (payload.eventType === 'UPDATE') {
+                const updatedItem = mapFeeTransactionRow(payload.new);
+                currentData = currentData.map(item => item.id === updatedItem.id ? updatedItem : item);
+            } else if (payload.eventType === 'DELETE') {
+                currentData = currentData.filter(item => item.id !== payload.old.id);
+            }
+            onUpdate([...currentData]);
+        })
+        .subscribe();
+
     return () => { supabase.removeChannel(channel); };
 };
 export const recordFeeTransaction = async (schoolId: string, data: FeeTransaction) => {
-    const payload = { school_id: schoolId, student_id: data.studentId, student_name: data.studentName, class_id: data.classId, month: data.month, amount_paid: data.amountPaid, fine_amount: data.fineAmount, discount_amount: data.discountAmount, payment_method: data.paymentMethod, receipt_no: data.receiptNo, status: data.status, recorded_by: data.recordedBy, remarks: data.remarks, timestamp: new Date().toISOString() };
+    const payload = { 
+        school_id: schoolId, 
+        student_id: data.studentId, 
+        student_name: data.studentName, 
+        class_id: data.classId, 
+        month: data.month, 
+        amount_paid: data.amountPaid, 
+        fine_amount: data.fineAmount, 
+        discount_amount: data.discountAmount, 
+        payment_method: data.paymentMethod, 
+        receipt_no: data.receiptNo, 
+        status: data.status, 
+        recorded_by: data.recordedBy, 
+        remarks: data.remarks, 
+        timestamp: new Date().toISOString() 
+    };
     const { error } = await supabase.from('fee_transactions').insert(payload);
     if (error) throw error;
 };
@@ -1433,14 +1703,65 @@ export const updateFeeTransaction = async (schoolId: string, id: string, data: P
     if (data.status) payload.status = data.status;
     if (data.paymentMethod) payload.payment_method = data.paymentMethod;
     if (data.recordedBy) payload.recorded_by = data.recordedBy;
+    if (data.amountPaid !== undefined) payload.amount_paid = data.amountPaid;
     if (data.timestamp) payload.timestamp = new Date().toISOString();
     const { error } = await supabase.from('fee_transactions').update(payload).eq('id', id).eq('school_id', schoolId);
     if (error) throw error;
 };
+export const bulkRecordFeeStatus = async (schoolId: string, records: any[], recordedBy: string = 'System') => {
+    // Treat status records as pending transactions in fee_transactions table to show in ledger table
+    const payload = records.map(r => ({ 
+        school_id: schoolId, 
+        student_id: r.studentId, 
+        student_name: r.studentName, 
+        class_id: r.classId, 
+        month: r.month, 
+        amount_paid: r.amount || 0, // Legacy behavior: store expected amount for Pending
+        fine_amount: 0,
+        discount_amount: 0,
+        payment_method: 'Challan',
+        receipt_no: r.challanNo, 
+        status: 'Pending', 
+        recorded_by: recordedBy,
+        remarks: (r.amount || 0).toString(),
+        timestamp: new Date().toISOString() 
+    }));
+    const { data: insertedData, error } = await supabase.from('fee_transactions').insert(payload).select();
+    if (error) {
+        console.error("BULK RECORD ERROR:", error);
+        throw error;
+    }
+};
+
 export const bulkRecordFeeTransactions = async (schoolId: string, transactions: any[]) => {
-    const payload = transactions.map(t => ({ school_id: schoolId, student_id: t.studentId, student_name: t.studentName, class_id: t.classId, month: t.month, amount_paid: t.amountPaid, fine_amount: t.fineAmount, discount_amount: t.discountAmount, payment_method: t.paymentMethod, receipt_no: t.receiptNo, status: t.status, recorded_by: t.recordedBy, remarks: t.remarks, timestamp: new Date().toISOString() }));
+    const payload = transactions.map(t => ({ 
+        school_id: schoolId, 
+        student_id: t.studentId, 
+        student_name: t.studentName, 
+        class_id: t.classId, 
+        month: t.month, 
+        amount_paid: t.amountPaid, 
+        fine_amount: t.fineAmount, 
+        discount_amount: t.discountAmount, 
+        payment_method: t.paymentMethod, 
+        receipt_no: t.receiptNo, 
+        status: t.status, 
+        recorded_by: t.recordedBy, 
+        remarks: t.remarks, 
+        timestamp: new Date().toISOString() 
+    }));
     const { error } = await supabase.from('fee_transactions').insert(payload);
     if (error) throw error;
+};
+
+export const getExistingPendingFeeRecords = async (schoolId: string, month: string) => {
+    const { data, error } = await supabase.from('fee_transactions')
+        .select('student_id')
+        .eq('school_id', schoolId)
+        .eq('month', month)
+        .eq('status', 'Pending');
+    if (error) throw error;
+    return data;
 };
 // --- Expenses ---
 export const subscribeToExpenses = (schoolId: string, callback: (data: Expense[]) => void, onError?: (err: any) => void) => {
@@ -1939,73 +2260,94 @@ export const removeStudentDocument = async (schoolId: string, studentId: string,
 
 // --- Staff Management ---
 
-export const subscribeToStaff = (schoolId: string, callback: (staff: UserProfile[]) => void, onError?: (err: any) => void) => {
+export const subscribeToStaff = (schoolId: string, callback: (data: any[]) => void, onError?: (err: any) => void) => {
     const fetch = async () => {
+        // Fetch from staff table (all pending/active staff)
         const { data, error } = await supabase
-            .from('user_profiles')
+            .from('staff')
             .select('*')
-            .eq('school_id', schoolId)
-            .eq('role', 'staff');
-        
+            .eq('school_id', schoolId);
+            
         if (error) {
             console.error("api: subscribeToStaff fetch error:", error);
             onError?.(error);
-        } else {
+            return;
+        }
+
+        if (data) {
             callback(data.map(d => ({
-                uid: d.id,
+                uid: d.uid || d.id, // Fallback to record ID if no UID
+                id: d.id,
                 name: d.name,
                 email: d.email,
-                role: d.role,
-                schoolId: d.school_id,
                 phone: d.phone,
-                photoURL: d.photo_url,
-                staffPermissions: d.staff_permissions,
-                designation: d.designation
-            })) as UserProfile[]);
+                designation: d.designation,
+                loginId: d.login_id,
+                authStatus: d.auth_status || 'pending',
+                staffPermissions: d.staff_permissions || {}
+            })));
         }
     };
     fetch();
     const channel = supabase.channel(`staff_${schoolId}`).on('postgres_changes', { 
         event: '*', 
         schema: 'public', 
-        table: 'user_profiles',
+        table: 'staff',
         filter: `school_id=eq.${schoolId}`
     }, fetch).subscribe();
     return () => { supabase.removeChannel(channel); };
 };
 
-export const createStaffUser = async (staffData: Partial<UserProfile>) => {
-    // Note: This only creates the profile. The actual auth user must be created via Supabase Auth.
-    // In a real app, you'd use a Supabase Edge Function or a custom backend to create the auth user.
-    // For this demo, we'll assume the user is created elsewhere or we'll use a mock approach if needed.
+export const addStaffMember = async (schoolId: string, data: any) => {
+    const loginId = `S-${Math.floor(1000 + Math.random() * 9000)}`;
     const payload = {
-        id: staffData.uid,
-        name: staffData.name,
-        email: staffData.email,
-        role: 'staff',
-        school_id: staffData.schoolId,
-        phone: staffData.phone,
-        designation: staffData.designation,
-        staff_permissions: staffData.staffPermissions
+        school_id: schoolId,
+        name: data.name,
+        designation: data.designation,
+        phone: data.phone || null,
+        login_id: loginId,
+        auth_status: 'pending',
+        staff_permissions: data.permissions || {}
     };
-    const { error } = await supabase.from('user_profiles').insert(payload);
+    const { data: newStaff, error } = await supabase.from('staff').insert(payload).select().single();
     if (error) throw error;
+    return newStaff;
 };
 
-export const updateStaffPermissions = async (uid: string, permissions: Record<string, StaffPermission>, designation: string) => {
-    const { error } = await supabase
-        .from('user_profiles')
+export const updateStaffPermissions = async (staffId: string, permissions: Record<string, StaffPermission>, designation: string, uid?: string) => {
+    // 1. Update Staff Table (The Source)
+    const { error: staffError } = await supabase
+        .from('staff')
         .update({ 
             staff_permissions: permissions,
             designation: designation
         })
-        .eq('id', uid);
-    if (error) throw error;
+        .eq('id', staffId);
+    if (staffError) throw staffError;
+
+    // 2. Sync to User Profile if active
+    if (uid) {
+        const { error: profileError } = await supabase
+            .from('user_profiles')
+            .update({ 
+                staff_permissions: permissions,
+                designation: designation
+            })
+            .eq('id', uid);
+        if (profileError) throw profileError;
+    }
 };
 
-export const deleteStaffUser = async (uid: string) => {
-    const { error } = await supabase.from('user_profiles').delete().eq('id', uid);
-    if (error) throw error;
+export const deleteStaffUser = async (id: string, uid?: string) => {
+    // 1. Delete from Staff table
+    const { error: staffError } = await supabase.from('staff').delete().eq('id', id);
+    if (staffError) throw staffError;
+
+    // 2. Delete from User Profiles if active
+    if (uid) {
+        const { error: profileError } = await supabase.from('user_profiles').delete().eq('id', uid);
+        if (profileError) throw profileError;
+    }
 };
 
 // --- Activity Logs ---
@@ -2286,4 +2628,198 @@ export const addTicketMessage = async (data: { ticketId: string, senderId: strin
     
     // Update ticket updated_at
     await supabase.from('support_tickets').update({ updated_at: new Date().toISOString() }).eq('id', data.ticketId);
+};
+
+// --- Course Management ---
+export const subscribeToCourses = (schoolId: string, callback: (data: Course[]) => void) => {
+    const fetch = () => {
+        supabase.from('courses').select('*').eq('school_id', schoolId).order('created_at', { ascending: false })
+            .then(({ data, error }) => {
+                if (!error) callback(data?.map(c => ({
+                    ...c,
+                    schoolId: c.school_id,
+                    subjectIds: c.subject_ids || [],
+                    batchIds: c.batch_ids || [],
+                    thumbnailUrl: c.thumbnail_url,
+                    createdAt: c.created_at
+                })) as Course[] || []);
+            });
+    };
+    fetch();
+    const channel = supabase.channel(`courses:${schoolId}`).on('postgres_changes', { event: '*', schema: 'public', table: 'courses', filter: `school_id=eq.${schoolId}` }, fetch).subscribe();
+    return () => { supabase.removeChannel(channel); };
+};
+
+export const addCourse = async (course: any) => {
+    const payload = {
+        school_id: course.schoolId,
+        title: course.title,
+        code: course.code,
+        description: course.description,
+        department: course.department,
+        level: course.level,
+        duration: course.duration,
+        subject_ids: course.subjectIds,
+        status: course.status || 'Active'
+    };
+    const { error } = await supabase.from('courses').insert(payload);
+    if (error) throw error;
+};
+
+export const updateCourse = async (id: string, course: any) => {
+    const payload = {
+        title: course.title,
+        code: course.code,
+        description: course.description,
+        department: course.department,
+        level: course.level,
+        duration: course.duration,
+        subject_ids: course.subjectIds,
+        status: course.status
+    };
+    const { error } = await supabase.from('courses').update(payload).eq('id', id);
+    if (error) throw error;
+};
+
+export const deleteCourse = async (id: string) => {
+    const { error } = await supabase.from('courses').delete().eq('id', id);
+    if (error) throw error;
+};
+
+// --- Syllabus & Curriculum Management ---
+export const subscribeToSyllabusChapters = (subjectId: string, callback: (data: SyllabusChapter[]) => void) => {
+    const fetch = () => {
+        supabase.from('syllabus_chapters').select('*').eq('subject_id', subjectId).order('order', { ascending: true })
+            .then(({ data, error }) => {
+                if (!error) callback(data?.map(c => ({
+                    ...c,
+                    subjectId: c.subject_id,
+                    expectedCompletionDate: c.expected_completion_date,
+                    isCompleted: c.is_completed,
+                    completedAt: c.completed_at
+                })) as SyllabusChapter[] || []);
+            });
+    };
+    fetch();
+    const channel = supabase.channel(`syllabus_chapters:${subjectId}`).on('postgres_changes', { event: '*', schema: 'public', table: 'syllabus_chapters', filter: `subject_id=eq.${subjectId}` }, fetch).subscribe();
+    return () => { supabase.removeChannel(channel); };
+};
+
+export const addSyllabusChapter = async (chapter: any) => {
+    const payload = {
+        school_id: chapter.schoolId,
+        subject_id: chapter.subjectId,
+        name: chapter.name,
+        description: chapter.description,
+        order: chapter.order,
+        expected_completion_date: chapter.expectedCompletionDate,
+        is_completed: false
+    };
+    const { error } = await supabase.from('syllabus_chapters').insert(payload);
+    if (error) throw error;
+};
+
+// --- Student Curriculum Progress Management ---
+export const subscribeToStudentChapterProgress = (schoolId: string, classId: string, subjectId: string, callback: (data: any[]) => void) => {
+    const fetch = () => {
+        supabase.from('student_chapter_progress')
+            .select('*')
+            .eq('school_id', schoolId)
+            .eq('class_id', classId)
+            .eq('subject_id', subjectId)
+            .then(({ data, error }) => {
+                if (!error) {
+                    callback(data || []);
+                } else if (error.code === 'PGRST205') {
+                    // Fallback if table doesn't exist yet (mock behavior for AI Studio previews)
+                    const localData = localStorage.getItem(`student_prog_${classId}_${subjectId}`);
+                    if (localData) {
+                        try { callback(JSON.parse(localData)); } catch(e) { callback([]); }
+                    } else {
+                        callback([]);
+                    }
+                }
+            });
+    };
+    fetch();
+    const channel = supabase.channel(`sc_prog:${subjectId}`).on('postgres_changes', { event: '*', schema: 'public', table: 'student_chapter_progress', filter: `subject_id=eq.${subjectId}` }, fetch).subscribe();
+    return () => { supabase.removeChannel(channel); };
+};
+
+export const updateStudentChapterProgress = async (payload: { school_id: string; class_id: string; subject_id: string; student_id: string; chapter_id: string; is_completed: boolean }) => {
+    // Attempt against Supabase table
+    const { error } = await supabase.from('student_chapter_progress')
+        .upsert({ ...payload, updated_at: new Date().toISOString() }, { onConflict: 'student_id, chapter_id' });
+    
+    if (error && error.code === 'PGRST205') {
+        console.warn("Supabase table 'student_chapter_progress' missing. Falling back to localStorage.");
+        // Fallback to local storage for seamless preview
+        const key = `student_prog_${payload.class_id}_${payload.subject_id}`;
+        let localData: any[] = [];
+        try { localData = JSON.parse(localStorage.getItem(key) || '[]'); } catch(e) {}
+        
+        const existingIdx = localData.findIndex(item => item.student_id === payload.student_id && item.chapter_id === payload.chapter_id);
+        if (existingIdx >= 0) {
+            localData[existingIdx].is_completed = payload.is_completed;
+        } else {
+            localData.push(payload);
+        }
+        localStorage.setItem(key, JSON.stringify(localData));
+        return; // success local
+    }
+    
+    if (error) throw error;
+};
+
+// Service to handle bulk syllabus chapter creation for quick timeline generation
+export const addSyllabusChaptersBulk = async (chapters: any[]) => {
+    const payload = chapters.map(c => ({
+        school_id: c.schoolId,
+        subject_id: c.subjectId,
+        name: c.name,
+        description: c.description || '',
+        order: c.order,
+        expected_completion_date: c.expectedCompletionDate || null,
+        is_completed: false
+    }));
+    const { error } = await supabase.from('syllabus_chapters').insert(payload);
+    if (error) throw error;
+};
+
+export const subscribeToAllSyllabusChapters = (schoolId: string, callback: (data: SyllabusChapter[]) => void) => {
+    const fetch = () => {
+        supabase.from('syllabus_chapters').select('*').eq('school_id', schoolId)
+            .then(({ data, error }) => {
+                if (!error) callback(data?.map(c => ({
+                    ...c,
+                    schoolId: c.school_id,
+                    subjectId: c.subject_id,
+                    expectedCompletionDate: c.expected_completion_date,
+                    isCompleted: c.is_completed,
+                    completedAt: c.completed_at
+                })) as SyllabusChapter[] || []);
+            });
+    };
+    fetch();
+    const channel = supabase.channel(`all_syllabus_chapters:${schoolId}`).on('postgres_changes', { event: '*', schema: 'public', table: 'syllabus_chapters', filter: `school_id=eq.${schoolId}` }, fetch).subscribe();
+    return () => { supabase.removeChannel(channel); };
+};
+
+export const updateSyllabusChapter = async (id: string, data: any) => {
+    const payload: any = {};
+    if (data.name !== undefined) payload.name = data.name;
+    if (data.description !== undefined) payload.description = data.description;
+    if (data.order !== undefined) payload.order = data.order;
+    if (data.expectedCompletionDate !== undefined) payload.expected_completion_date = data.expectedCompletionDate;
+    if (data.isCompleted !== undefined) {
+        payload.is_completed = data.isCompleted;
+        payload.completed_at = data.isCompleted ? new Date().toISOString() : null;
+    }
+    const { error } = await supabase.from('syllabus_chapters').update(payload).eq('id', id);
+    if (error) throw error;
+};
+
+export const deleteSyllabusChapter = async (id: string) => {
+    const { error } = await supabase.from('syllabus_chapters').delete().eq('id', id);
+    if (error) throw error;
 };

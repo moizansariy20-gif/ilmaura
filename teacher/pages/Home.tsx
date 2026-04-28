@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Carousel } from '@/components/Carousel.tsx';
 // Fix: Import `GraduationCap` icon from lucide-react.
-import { Book, Clock, Users, Bell, AlertTriangle, CheckCircle, FileText, ArrowRight, GraduationCap, Sparkles, CalendarCheck, FilePen } from 'lucide-react';
+import { Book, Clock, Users, Bell, AlertTriangle, CheckCircle, FileText, ArrowRight, GraduationCap, Sparkles, CalendarCheck, FilePen, BookCheck, ChevronRight, PenTool, BrainCircuit } from 'lucide-react';
 import ClassAvatar from '../../components/ClassAvatar.tsx';
 
 interface HomeProps {
@@ -54,7 +54,7 @@ const Home: React.FC<HomeProps> = ({ profile, classes, students, timetable, subj
             return (
               <div key={cls.id} onClick={() => navigate('/class_view')} className="flex flex-col items-center gap-2 min-w-[72px] cursor-pointer group">
                 <div className="w-16 h-16 rounded-full p-[3px] bg-gradient-to-tr from-[#D4AF37] via-[#6B1D2F] to-[#D4AF37] shadow-md group-hover:scale-105 transition-transform duration-300">
-                  <div className="w-full h-full rounded-full border-2 border-white dark:border-slate-900 overflow-hidden bg-white dark:bg-slate-800 flex items-center justify-center relative">
+                  <div className="w-full h-full rounded-full border-2 border-white dark:border-slate-900 overflow-hidden bg-white dark:bg-[#1e293b] flex items-center justify-center relative">
                     {cls.image ? (
                       <img src={cls.image} alt={displayName} className="w-full h-full object-cover" />
                     ) : (
@@ -155,7 +155,7 @@ const Home: React.FC<HomeProps> = ({ profile, classes, students, timetable, subj
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {stats.map((stat, i) => (
-              <div key={stat.label} className="bg-white dark:bg-slate-800 p-6 rounded-[2rem] border border-[#6B1D2F]/10 dark:border-slate-700 shadow-[0_10px_20px_rgba(107,29,47,0.05),inset_0_2px_0_rgba(255,255,255,1)] dark:shadow-none relative overflow-hidden group hover:shadow-[0_15px_25px_rgba(107,29,47,0.1)] transition-all duration-300 active:scale-95">
+              <div key={stat.label} className="bg-white dark:bg-[#1e293b] p-6 rounded-[2rem] border border-[#6B1D2F]/10 dark:border-[#1e293b] shadow-[0_10px_20px_rgba(107,29,47,0.05),inset_0_2px_0_rgba(255,255,255,1)] dark:shadow-none relative overflow-hidden group hover:shadow-[0_15px_25px_rgba(107,29,47,0.1)] transition-all duration-300 active:scale-95">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-[#6B1D2F]/5 dark:bg-[#D4AF37]/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 pointer-events-none transition-transform group-hover:scale-110"></div>
                   <div className="flex items-center justify-between text-[#6B1D2F] dark:text-[#D4AF37] mb-4 relative z-10">
                     <p className="text-[10px] font-black uppercase tracking-widest text-[#6B1D2F]/60 dark:text-[#D4AF37]/60">{stat.label}</p>
@@ -166,6 +166,83 @@ const Home: React.FC<HomeProps> = ({ profile, classes, students, timetable, subj
                   <p className="text-4xl font-black text-slate-900 dark:text-white relative z-10 drop-shadow-sm">{stat.value}</p>
               </div>
           ))}
+      </div>
+
+      <div 
+         onClick={() => navigate('/curriculum_insight')}
+         className="w-full bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-[2rem] border border-emerald-100 dark:border-emerald-800/50 p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 cursor-pointer group hover:shadow-[0_15px_30px_rgba(16,185,129,0.1)] transition-all duration-300 active:scale-[0.98]"
+      >
+         <div className="flex items-center gap-5">
+            <div className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-[0_8px_15px_rgba(16,185,129,0.3)] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+               <BookCheck size={28} />
+            </div>
+            <div>
+               <h3 className="text-xl font-black text-emerald-900 dark:text-emerald-400 tracking-tight">Curriculum Insight</h3>
+               <p className="text-sm font-semibold text-emerald-700/80 dark:text-emerald-500 mt-1">Manage syllabus chapters and class progress.</p>
+            </div>
+         </div>
+         <div className="hidden md:flex items-center gap-2 px-5 py-3 bg-white dark:bg-[#1e293b] rounded-xl font-bold text-emerald-600 dark:text-emerald-400 shadow-sm group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300">
+            Access Portal
+            <ChevronRight size={18} />
+         </div>
+      </div>
+
+      <div className="w-full bg-white dark:bg-[#1e293b] rounded-[2.5rem] border border-[#6B1D2F]/10 dark:border-[#1e293b] p-6 md:p-8 shadow-[0_20px_50px_rgba(107,29,47,0.05)] relative overflow-hidden group">
+         <div className="absolute top-0 right-0 w-64 h-64 bg-[#D4AF37]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+         
+         <div className="relative z-10 space-y-6">
+            <div className="flex items-center justify-between">
+               <div className="flex items-center gap-5">
+                  <div className="w-12 h-12 bg-[#6B1D2F]/5 dark:bg-[#D4AF37]/5 rounded-2xl flex items-center justify-center text-[#6B1D2F] dark:text-[#D4AF37] border border-[#6B1D2F]/10">
+                     <PenTool size={24} />
+                  </div>
+                  <div>
+                     <h3 className="text-xl font-black text-[#6B1D2F] dark:text-white tracking-tight">Teaching Tools</h3>
+                     <p className="text-[10px] font-black text-[#D4AF37] uppercase tracking-widest">Faculty Hub • Live Tracking</p>
+                  </div>
+               </div>
+            </div>
+
+            {/* Primary Action Button - Prominent Card Style like "My Tools" */}
+            <button 
+               onClick={() => navigate('/student_curriculum')}
+               className="w-full group/btn flex items-center gap-6 bg-gradient-to-br from-white to-slate-50 dark:from-slate-900/50 dark:to-slate-900 p-5 md:p-6 rounded-3xl border border-[#D4AF37]/30 shadow-[0_10px_25px_rgba(107,29,47,0.05)] hover:shadow-[0_15px_40px_rgba(212,175,55,0.15)] hover:border-[#D4AF37] transition-all active:scale-[0.98]"
+            >
+               <div className="w-14 h-14 bg-gradient-to-br from-[#6B1D2F] to-[#4A1421] rounded-2xl flex items-center justify-center text-white shadow-lg group-hover/btn:rotate-6 transition-transform">
+                  <CheckCircle size={30} />
+               </div>
+               <div className="text-left flex-1">
+                  <p className="text-[10px] font-black text-[#D4AF37] uppercase tracking-[0.2em] leading-none mb-1.5">Learning Milestones</p>
+                  <p className="text-xl font-black text-[#6B1D2F] dark:text-white leading-tight">Student Progress Tracker</p>
+                  <p className="text-xs font-bold text-slate-400 mt-1">Live curriculum checkpoints per student.</p>
+               </div>
+               <ChevronRight size={20} className="text-[#D4AF37] group-hover/btn:translate-x-1 transition-transform" />
+            </button>
+
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+               <button 
+                  onClick={() => navigate('/teaching_tools')}
+                  className="flex items-center justify-center gap-3 p-4 bg-[#6B1D2F]/5 dark:bg-white/5 text-[#6B1D2F] dark:text-white rounded-2xl font-black text-xs uppercase tracking-widest border border-[#6B1D2F]/10 hover:bg-[#6B1D2F] hover:text-white transition-all shadow-sm group/ai"
+               >
+                  <Sparkles size={16} className="text-[#D4AF37] group-hover/ai:text-white"/>
+                  AI Lesson Tools
+               </button>
+               <button 
+                  onClick={() => navigate('/quizzes')}
+                  className="flex items-center justify-center gap-3 p-4 bg-[#6B1D2F]/5 dark:bg-white/5 text-[#6B1D2F] dark:text-white rounded-2xl font-black text-xs uppercase tracking-widest border border-[#6B1D2F]/10 hover:bg-[#6B1D2F] hover:text-white transition-all shadow-sm group/quiz"
+               >
+                  <BrainCircuit size={16} className="text-[#D4AF37] group-hover/quiz:text-white"/>
+                  Smart Quizzes
+               </button>
+               <button 
+                  onClick={() => navigate('/curriculum_insight')}
+                  className="flex items-center justify-center gap-3 p-4 bg-[#6B1D2F]/5 dark:bg-white/5 text-[#6B1D2F] dark:text-white rounded-2xl font-black text-xs uppercase tracking-widest border border-[#6B1D2F]/10 hover:bg-[#6B1D2F] hover:text-white transition-all shadow-sm group/curr"
+               >
+                  <BookCheck size={16} className="text-[#D4AF37] group-hover/curr:text-white"/>
+                  Syllabus
+               </button>
+            </div>
+         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -184,7 +261,7 @@ const Home: React.FC<HomeProps> = ({ profile, classes, students, timetable, subj
                <button className="relative z-10 text-xs font-black text-white bg-white/10 px-4 py-2 rounded-xl hover:bg-white/20 transition-colors border border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">{t.viewAll}</button>
             </div>
             
-            <div className="bg-white dark:bg-slate-800 border border-[#6B1D2F]/10 dark:border-slate-700 p-6 rounded-[2rem] flex items-center gap-5 shadow-[0_10px_25px_rgba(107,29,47,0.03),inset_0_2px_0_rgba(255,255,255,1)] dark:shadow-none relative overflow-hidden group transition-colors duration-300">
+            <div className="bg-white dark:bg-[#1e293b] border border-[#6B1D2F]/10 dark:border-[#1e293b] p-6 rounded-[2rem] flex items-center gap-5 shadow-[0_10px_25px_rgba(107,29,47,0.03),inset_0_2px_0_rgba(255,255,255,1)] dark:shadow-none relative overflow-hidden group transition-colors duration-300">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#6B1D2F]/5 dark:bg-[#D4AF37]/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
                 <div className="w-14 h-14 bg-[#6B1D2F]/5 dark:bg-[#D4AF37]/5 text-[#6B1D2F] dark:text-[#D4AF37] rounded-2xl flex items-center justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)] border border-[#6B1D2F]/10 dark:border-[#D4AF37]/10 relative z-10">
                     <AlertTriangle size={28} className="text-[#D4AF37]" />
@@ -197,7 +274,7 @@ const Home: React.FC<HomeProps> = ({ profile, classes, students, timetable, subj
         </div>
         
         <div className="lg:col-span-1">
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-[2.5rem] border border-[#6B1D2F]/10 dark:border-slate-700 shadow-[0_15px_35px_rgba(107,29,47,0.05),inset_0_2px_0_rgba(255,255,255,1)] dark:shadow-none relative overflow-hidden h-full transition-colors duration-300">
+          <div className="bg-white dark:bg-[#1e293b] p-6 rounded-[2.5rem] border border-[#6B1D2F]/10 dark:border-[#1e293b] shadow-[0_15px_35px_rgba(107,29,47,0.05),inset_0_2px_0_rgba(255,255,255,1)] dark:shadow-none relative overflow-hidden h-full transition-colors duration-300">
             <div className="absolute top-0 right-0 w-48 h-48 bg-[#6B1D2F]/5 dark:bg-[#D4AF37]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
             
             <h2 className="text-lg font-black text-[#6B1D2F] dark:text-[#D4AF37] mb-6 flex items-center gap-3 relative z-10">
@@ -210,18 +287,18 @@ const Home: React.FC<HomeProps> = ({ profile, classes, students, timetable, subj
             <div className="space-y-3 relative z-10">
               {todaysSlots.length > 0 ? (
                   todaysSlots.map((slot) => (
-                    <div key={slot.id} className="p-4 bg-[#6B1D2F]/5 dark:bg-slate-900/50 rounded-2xl flex items-center justify-between border border-[#6B1D2F]/10 dark:border-slate-700 shadow-sm hover:bg-white dark:hover:bg-slate-700 hover:shadow-md hover:border-[#6B1D2F]/20 transition-all group active:scale-[0.98]">
+                    <div key={slot.id} className="p-4 bg-[#6B1D2F]/5 dark:bg-[#020617]/50 rounded-2xl flex items-center justify-between border border-[#6B1D2F]/10 dark:border-[#1e293b] shadow-sm hover:bg-white dark:hover:bg-slate-700 hover:shadow-md hover:border-[#6B1D2F]/20 transition-all group active:scale-[0.98]">
                        <div>
                           <p className="font-black text-slate-900 dark:text-white text-sm group-hover:text-[#6B1D2F] dark:group-hover:text-[#D4AF37] transition-colors">{getSubjectName(slot.subjectId)}</p>
                           <p className="text-[10px] text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest mt-1">{getClassName(slot.classId)}</p>
                        </div>
-                       <div className="px-3 py-1.5 bg-white dark:bg-slate-800 rounded-xl border border-[#6B1D2F]/10 dark:border-slate-700 shadow-sm">
+                       <div className="px-3 py-1.5 bg-white dark:bg-[#1e293b] rounded-xl border border-[#6B1D2F]/10 dark:border-[#1e293b] shadow-sm">
                           <p className="font-mono text-xs font-black text-[#6B1D2F] dark:text-[#D4AF37]">{slot.timeSlot}</p>
                        </div>
                     </div>
                   ))
               ) : (
-                <div className="text-center py-12 text-slate-400 dark:text-slate-600 bg-[#6B1D2F]/5 dark:bg-slate-900/50 rounded-3xl border border-dashed border-[#6B1D2F]/10 dark:border-slate-700">
+                <div className="text-center py-12 text-slate-400 dark:text-slate-600 bg-[#6B1D2F]/5 dark:bg-[#020617]/50 rounded-3xl border border-dashed border-[#6B1D2F]/10 dark:border-[#1e293b]">
                   <Clock size={32} className="mx-auto mb-3 text-[#6B1D2F]/20 dark:text-[#D4AF37]/20" />
                   <p className="font-bold">{t.noClassesScheduled}</p>
                 </div>

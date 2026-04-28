@@ -83,11 +83,11 @@ const Notifications: React.FC<NotificationsProps> = ({ profile }) => {
   ];
 
   return (
-    <div className="min-h-full bg-white dark:bg-slate-800 pb-32 font-sans relative overflow-hidden">
+    <div className="min-h-full bg-white dark:bg-[#1e293b] pb-32 font-sans relative overflow-hidden">
       <div className="max-w-3xl mx-auto space-y-8 relative z-10">
         
         {/* Header & Filters Combined */}
-        <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-none shadow-[0_10px_40_rgba(107,29,47,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+        <div className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-none shadow-[0_10px_40_rgba(107,29,47,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#6B1D2F] via-[#D4AF37] to-[#6B1D2F]"></div>
           <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
           
@@ -104,7 +104,7 @@ const Notifications: React.FC<NotificationsProps> = ({ profile }) => {
             </div>
             <div className="flex p-1.5 md:p-2 bg-gradient-to-br from-[#6B1D2F] to-[#4A1420] shadow-[0_10px_25px_-5px_rgba(107,29,47,0.4),inset_0_2px_4px_rgba(255,255,255,0.2)] rounded-2xl border-2 border-[#D4AF37]/40 relative group overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-tr from-[#D4AF37]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl overflow-hidden border border-[#D4AF37]/30 bg-white/10 dark:bg-slate-800/10 flex items-center justify-center relative z-10">
+              <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl overflow-hidden border border-[#D4AF37]/30 bg-white/10 dark:bg-[#1e293b]/10 flex items-center justify-center relative z-10">
                 {profile.photoURL ? (
                   <img src={profile.photoURL} alt={profile.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                 ) : (
@@ -129,9 +129,9 @@ const Notifications: React.FC<NotificationsProps> = ({ profile }) => {
         <div className="px-4 md:px-6 space-y-8">
           {/* Stats Section */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-            <div className="bg-white dark:bg-slate-800 p-5 md:p-6 rounded-3xl flex items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
+            <div className="bg-white dark:bg-[#1e293b] p-5 md:p-6 rounded-3xl flex items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
               <div className="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-[#6B1D2F]/10 to-transparent rounded-full group-hover:scale-150 transition-transform duration-700"></div>
-              <div className="w-14 h-14 bg-gradient-to-br from-[#FCFBF8] to-white shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_4px_10px_rgba(107,29,47,0.05)] border border-[#E5E0D8] dark:border-slate-700 text-[#6B1D2F] dark:text-white rounded-2xl flex items-center justify-center shrink-0 relative z-10">
+              <div className="w-14 h-14 bg-gradient-to-br from-[#FCFBF8] to-white shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_4px_10px_rgba(107,29,47,0.05)] border border-[#E5E0D8] dark:border-[#1e293b] text-[#6B1D2F] dark:text-white rounded-2xl flex items-center justify-center shrink-0 relative z-10">
                 <Bell size={24} className="drop-shadow-sm" />
               </div>
               <div className="relative z-10">
@@ -139,7 +139,7 @@ const Notifications: React.FC<NotificationsProps> = ({ profile }) => {
                 <p className="text-[10px] font-bold uppercase text-[#D4AF37] tracking-widest mt-2">Urgent</p>
               </div>
             </div>
-            <div className="bg-white dark:bg-slate-800 p-5 md:p-6 rounded-3xl flex items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
+            <div className="bg-white dark:bg-[#1e293b] p-5 md:p-6 rounded-3xl flex items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
               <div className="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-indigo-500/10 to-transparent rounded-full group-hover:scale-150 transition-transform duration-700"></div>
               <div className="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center shrink-0 shadow-sm border border-indigo-100 relative z-10">
                 <CheckCircle size={24} className="drop-shadow-sm" />
@@ -149,9 +149,9 @@ const Notifications: React.FC<NotificationsProps> = ({ profile }) => {
                 <p className="text-[10px] font-bold uppercase text-indigo-600 tracking-widest mt-2">Total</p>
               </div>
             </div>
-            <div className="hidden md:flex bg-white dark:bg-slate-800 p-5 md:p-6 rounded-3xl items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
+            <div className="hidden md:flex bg-white dark:bg-[#1e293b] p-5 md:p-6 rounded-3xl items-center gap-5 shadow-[0_8px_30px_-6px_rgba(107,29,47,0.08)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_12px_40px_-8px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group">
               <div className="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full group-hover:scale-150 transition-transform duration-700"></div>
-              <div className="w-14 h-14 bg-gradient-to-br from-[#FCFBF8] to-white shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_4px_10px_rgba(107,29,47,0.05)] border border-[#E5E0D8] dark:border-slate-700 text-[#D4AF37] rounded-2xl flex items-center justify-center shrink-0 relative z-10">
+              <div className="w-14 h-14 bg-gradient-to-br from-[#FCFBF8] to-white shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_4px_10px_rgba(107,29,47,0.05)] border border-[#E5E0D8] dark:border-[#1e293b] text-[#D4AF37] rounded-2xl flex items-center justify-center shrink-0 relative z-10">
                 <Sparkles size={24} className="drop-shadow-sm" />
               </div>
               <div className="relative z-10">
@@ -175,7 +175,7 @@ const Notifications: React.FC<NotificationsProps> = ({ profile }) => {
               <div 
                 key={note.id}
                 onClick={() => setSelectedNote(note)}
-                className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-3xl shadow-[0_10px_40px_-10px_rgba(107,29,47,0.1)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_15px_50px_-12px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group cursor-pointer active:scale-[0.98]"
+                className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-3xl shadow-[0_10px_40px_-10px_rgba(107,29,47,0.1)] border border-[#D4AF37]/20 transition-all hover:shadow-[0_15px_50px_-12px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/50 relative overflow-hidden group cursor-pointer active:scale-[0.98]"
               >
                 <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-[#D4AF37] to-[#6B1D2F] opacity-90 group-hover:opacity-100 transition-opacity"></div>
                 
@@ -185,7 +185,7 @@ const Notifications: React.FC<NotificationsProps> = ({ profile }) => {
                       <span className={`px-4 py-1.5 ${note.color} text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-md border border-black/10`}>
                         {note.type}
                       </span>
-                      <span className="text-[11px] font-bold text-[#D4AF37] ml-2 flex items-center gap-1.5 bg-[#FCFBF8] dark:bg-slate-900 px-3 py-1 rounded-lg border border-[#D4AF37]/20">
+                      <span className="text-[11px] font-bold text-[#D4AF37] ml-2 flex items-center gap-1.5 bg-[#FCFBF8] dark:bg-[#020617] px-3 py-1 rounded-lg border border-[#D4AF37]/20">
                         <Clock size={14} className="text-[#D4AF37]" />
                         {note.time}
                       </span>
@@ -193,7 +193,7 @@ const Notifications: React.FC<NotificationsProps> = ({ profile }) => {
                     
                     <div className="bg-gradient-to-br from-[#FCFBF8] to-white p-5 rounded-2xl border border-[#D4AF37]/20 shadow-[inset_0_2px_4px_rgba(107,29,47,0.02)]">
                       <div className="flex items-start gap-4">
-                        <div className={`w-12 h-12 rounded-xl ${note.lightColor} ${note.textColor} shadow-sm border border-[#E5E0D8] dark:border-slate-700 flex items-center justify-center shrink-0`}>
+                        <div className={`w-12 h-12 rounded-xl ${note.lightColor} ${note.textColor} shadow-sm border border-[#E5E0D8] dark:border-[#1e293b] flex items-center justify-center shrink-0`}>
                           {note.icon}
                         </div>
                         <div>
@@ -203,7 +203,7 @@ const Notifications: React.FC<NotificationsProps> = ({ profile }) => {
                       </div>
                     </div>
                   </div>
-                  <div className="p-3 text-[#D4AF37] group-hover:text-white group-hover:bg-[#6B1D2F] transition-all rounded-xl border border-[#D4AF37]/20 group-hover:border-[#4A1420] shadow-sm bg-white dark:bg-slate-800">
+                  <div className="p-3 text-[#D4AF37] group-hover:text-white group-hover:bg-[#6B1D2F] transition-all rounded-xl border border-[#D4AF37]/20 group-hover:border-[#4A1420] shadow-sm bg-white dark:bg-[#1e293b]">
                     <ChevronRight size={20}/>
                   </div>
                 </div>
@@ -211,7 +211,7 @@ const Notifications: React.FC<NotificationsProps> = ({ profile }) => {
             ))}
 
             {notifications.length === 0 && (
-              <div className="text-center py-20 rounded-3xl text-[#D4AF37] bg-white dark:bg-slate-800 shadow-[0_10px_40px_-10px_rgba(107,29,47,0.05)] border-2 border-[#D4AF37]/30 border-dashed">
+              <div className="text-center py-20 rounded-3xl text-[#D4AF37] bg-white dark:bg-[#1e293b] shadow-[0_10px_40px_-10px_rgba(107,29,47,0.05)] border-2 border-[#D4AF37]/30 border-dashed">
                 <div className="w-20 h-20 bg-gradient-to-br from-[#FCFBF8] to-white shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_4px_10px_rgba(107,29,47,0.05)] rounded-2xl flex items-center justify-center mx-auto mb-5 border border-[#D4AF37]/20">
                   <Bell size={32} className="text-[#D4AF37]" />
                 </div>
@@ -226,11 +226,11 @@ const Notifications: React.FC<NotificationsProps> = ({ profile }) => {
       {/* Notification Detail Modal */}
       {selectedNote && (
         <div className="fixed inset-0 bg-[#6B1D2F]/40 backdrop-blur-md flex items-center justify-center z-[200] p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-800 p-8 md:p-10 rounded-3xl shadow-[0_20px_60px_-15px_rgba(107,29,47,0.4)] border border-[#D4AF37]/30 w-full max-w-sm transform scale-100 animate-in zoom-in-95 duration-200 relative overflow-hidden">
+          <div className="bg-white dark:bg-[#1e293b] p-8 md:p-10 rounded-3xl shadow-[0_20px_60px_-15px_rgba(107,29,47,0.4)] border border-[#D4AF37]/30 w-full max-w-sm transform scale-100 animate-in zoom-in-95 duration-200 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#6B1D2F] via-[#D4AF37] to-[#6B1D2F]"></div>
             <button 
               onClick={() => setSelectedNote(null)} 
-              className="absolute top-6 right-6 w-10 h-10 bg-[#FCFBF8] dark:bg-slate-900 rounded-xl text-[#D4AF37] flex items-center justify-center shadow-md border border-[#D4AF37]/20 active:scale-90 transition-all hover:bg-[#D4AF37]/10"
+              className="absolute top-6 right-6 w-10 h-10 bg-[#FCFBF8] dark:bg-[#020617] rounded-xl text-[#D4AF37] flex items-center justify-center shadow-md border border-[#D4AF37]/20 active:scale-90 transition-all hover:bg-[#D4AF37]/10"
             >
               <X size={20} />
             </button>
@@ -245,7 +245,7 @@ const Notifications: React.FC<NotificationsProps> = ({ profile }) => {
               <p className="text-[10px] font-black uppercase tracking-widest text-[#D4AF37]">{selectedNote.time}</p>
             </div>
             
-            <div className="bg-[#FCFBF8] dark:bg-slate-900 p-6 rounded-2xl border border-[#D4AF37]/20 shadow-[inset_0_2px_4px_rgba(107,29,47,0.02)] mb-8">
+            <div className="bg-[#FCFBF8] dark:bg-[#020617] p-6 rounded-2xl border border-[#D4AF37]/20 shadow-[inset_0_2px_4px_rgba(107,29,47,0.02)] mb-8">
               <p className="text-sm text-[#6B1D2F] dark:text-white font-bold leading-relaxed italic">"{selectedNote.message}"</p>
             </div>
             

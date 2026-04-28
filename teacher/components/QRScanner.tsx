@@ -71,10 +71,10 @@ const QRScanner: React.FC<QRScannerProps> = ({ onScan, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
-      <div className="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-md shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden relative animate-in zoom-in-95 duration-300 flex flex-col">
+      <div className="bg-white dark:bg-[#1e293b] rounded-3xl w-full max-w-md shadow-2xl border border-slate-200 dark:border-[#1e293b] overflow-hidden relative animate-in zoom-in-95 duration-300 flex flex-col">
         
         {/* Header */}
-        <div className="p-6 border-b border-slate-100 dark:border-slate-700/50 flex items-center justify-between">
+        <div className="p-6 border-b border-slate-100 dark:border-[#1e293b]/50 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <QrCode className="text-[#6B1D2F] dark:text-[#D4AF37]" size={24} />
             <h3 className="text-xl font-black text-[#6B1D2F] dark:text-white tracking-tight">QR Attendance</h3>
@@ -101,7 +101,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ onScan, onClose }) => {
         <div className="p-6 flex-1 flex flex-col">
           {hasPermission === null ? (
             <div className="flex flex-col items-center text-center py-6">
-              <div className="w-16 h-16 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center justify-center mb-6 border border-slate-100 dark:border-slate-700">
+              <div className="w-16 h-16 bg-slate-50 dark:bg-[#020617] rounded-2xl flex items-center justify-center mb-6 border border-slate-100 dark:border-[#1e293b]">
                 <Camera className="text-slate-400" size={32} />
               </div>
               
@@ -141,7 +141,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ onScan, onClose }) => {
             </div>
           ) : (
             <div className="flex flex-col items-center">
-              <div className="relative w-full rounded-2xl overflow-hidden border-2 border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 aspect-square">
+              <div className="relative w-full rounded-2xl overflow-hidden border-2 border-slate-100 dark:border-[#1e293b] bg-slate-50 dark:bg-[#020617] aspect-square">
                 <div id="qr-reader" className="w-full h-full"></div>
                 
                 {/* Minimal Scanner Overlay */}

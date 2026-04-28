@@ -145,11 +145,11 @@ const LiveQuizzes: React.FC<LiveQuizzesProps> = ({ quizzes, quizSubmissions = []
   });
 
   return (
-    <div className="min-h-full bg-white dark:bg-slate-900 pb-32 font-sans relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-full bg-white dark:bg-[#020617] pb-32 font-sans relative overflow-hidden transition-colors duration-300">
       <div className="max-w-5xl mx-auto space-y-8 relative z-10">
         
         {/* Header Section */}
-        <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+        <div className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#1e3a8a] via-[#D4AF37] to-[#1e3a8a]"></div>
           <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
           
@@ -190,7 +190,7 @@ const LiveQuizzes: React.FC<LiveQuizzesProps> = ({ quizzes, quizSubmissions = []
         <div className="px-4 md:px-6 space-y-8">
           
           {/* Date Navigator - Premium Style */}
-          <div className="bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/10 rounded-3xl p-6 shadow-sm flex items-center justify-between">
+          <div className="bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/10 rounded-3xl p-6 shadow-sm flex items-center justify-between">
               <button onClick={handlePrevDay} className="w-12 h-12 flex items-center justify-center bg-white dark:bg-slate-700 text-[#1e3a8a] dark:text-white rounded-2xl border border-[#D4AF37]/20 shadow-sm active:scale-95 transition-all">
                   <ChevronLeft size={24} strokeWidth={2.5} />
               </button>
@@ -235,7 +235,7 @@ const LiveQuizzes: React.FC<LiveQuizzesProps> = ({ quizzes, quizSubmissions = []
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.95 }}
                       transition={{ delay: index * 0.05 }}
-                      className="p-6 bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/10 rounded-2xl shadow-sm space-y-6 relative overflow-hidden group hover:border-[#D4AF37]/30 transition-all duration-300"
+                      className="p-6 bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/10 rounded-2xl shadow-sm space-y-6 relative overflow-hidden group hover:border-[#D4AF37]/30 transition-all duration-300"
                     >
                       {isLive && (
                         <div className="absolute top-0 right-0 bg-[#D4AF37] text-[#1e3a8a] px-4 py-1 text-[10px] font-black uppercase tracking-widest rounded-bl-xl shadow-md animate-pulse z-20">
@@ -319,7 +319,7 @@ const LiveQuizzes: React.FC<LiveQuizzesProps> = ({ quizzes, quizSubmissions = []
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="col-span-full text-center py-24 bg-[#FCFBF8] dark:bg-slate-800/50 rounded-3xl border-2 border-dashed border-[#D4AF37]/20"
+                className="col-span-full text-center py-24 bg-[#FCFBF8] dark:bg-[#0f172a] rounded-3xl border-2 border-dashed border-[#D4AF37]/20"
               >
                 <div className="w-20 h-20 bg-white dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-[#D4AF37]/10">
                   <AiBrain01Icon size={32} className="text-[#D4AF37]/40" />
@@ -351,7 +351,7 @@ const LiveQuizzes: React.FC<LiveQuizzesProps> = ({ quizzes, quizSubmissions = []
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ delay: index * 0.05 }}
-                        className="p-6 bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#1e3a8a]/20 rounded-2xl shadow-sm space-y-6 relative overflow-hidden group hover:border-[#1e3a8a]/40 transition-all duration-300 opacity-90 hover:opacity-100"
+                        className="p-6 bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#1e3a8a]/20 rounded-2xl shadow-sm space-y-6 relative overflow-hidden group hover:border-[#1e3a8a]/40 transition-all duration-300 opacity-90 hover:opacity-100"
                       >
                         <div className="absolute top-0 right-0 bg-[#1e3a8a] text-white px-4 py-1 text-[10px] font-black uppercase tracking-widest rounded-bl-xl shadow-md z-20 flex items-center gap-1">
                           <CheckmarkCircle01Icon size={12} /> Completed
@@ -396,7 +396,7 @@ const LiveQuizzes: React.FC<LiveQuizzesProps> = ({ quizzes, quizSubmissions = []
                           </div>
                           <button 
                             onClick={() => handleViewLeaderboard(quiz.id!)}
-                            className="w-full py-3 bg-white dark:bg-slate-800 text-[#1e3a8a] dark:text-[#D4AF37] rounded-xl text-[10px] font-black uppercase tracking-widest border border-[#1e3a8a]/20 hover:bg-[#1e3a8a]/5 transition-all flex items-center justify-center gap-2"
+                            className="w-full py-3 bg-white dark:bg-[#1e293b] text-[#1e3a8a] dark:text-[#D4AF37] rounded-xl text-[10px] font-black uppercase tracking-widest border border-[#1e3a8a]/20 hover:bg-[#1e3a8a]/5 transition-all flex items-center justify-center gap-2"
                           >
                             <Ranking01Icon size={14} /> View Leaderboard
                           </button>
@@ -410,7 +410,7 @@ const LiveQuizzes: React.FC<LiveQuizzesProps> = ({ quizzes, quizSubmissions = []
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="col-span-full text-center py-12 bg-[#FCFBF8] dark:bg-slate-800/50 rounded-3xl border-2 border-dashed border-[#1e3a8a]/10"
+                className="col-span-full text-center py-12 bg-[#FCFBF8] dark:bg-[#0f172a] rounded-3xl border-2 border-dashed border-[#1e3a8a]/10"
               >
                 <div className="w-16 h-16 bg-white dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-[#1e3a8a]/10">
                   <CheckmarkCircle01Icon size={24} className="text-[#1e3a8a]/40" />
@@ -424,7 +424,7 @@ const LiveQuizzes: React.FC<LiveQuizzesProps> = ({ quizzes, quizSubmissions = []
       ) : (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
           {/* Leaderboard Selection */}
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-[#D4AF37]/20 shadow-xl space-y-4">
+          <div className="bg-white dark:bg-[#1e293b] p-6 rounded-3xl border border-[#D4AF37]/20 shadow-xl space-y-4">
             <div className="flex items-center gap-3 mb-2">
               <Ranking01Icon size={24} className="text-[#D4AF37]" />
               <h2 className="text-xl font-black text-[#1e3a8a] dark:text-white uppercase tracking-tight">Select Quiz</h2>
@@ -442,7 +442,7 @@ const LiveQuizzes: React.FC<LiveQuizzesProps> = ({ quizzes, quizSubmissions = []
                     <button
                       key={quiz.id}
                       onClick={() => setSelectedQuizId(quiz.id!)}
-                      className={`p-4 rounded-2xl border-2 transition-all text-left flex items-center justify-between group ${selectedQuizId === quiz.id ? 'border-[#D4AF37] bg-[#D4AF37]/5' : 'border-slate-100 dark:border-slate-700 hover:border-[#D4AF37]/40'}`}
+                      className={`p-4 rounded-2xl border-2 transition-all text-left flex items-center justify-between group ${selectedQuizId === quiz.id ? 'border-[#D4AF37] bg-[#D4AF37]/5' : 'border-slate-100 dark:border-[#1e293b] hover:border-[#D4AF37]/40'}`}
                     >
                       <div className="flex items-center gap-4">
                         <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${selectedQuizId === quiz.id ? 'bg-[#D4AF37] text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-400 group-hover:bg-[#D4AF37]/20 group-hover:text-[#D4AF37]'}`}>
@@ -492,7 +492,7 @@ const LiveQuizzes: React.FC<LiveQuizzesProps> = ({ quizzes, quizSubmissions = []
                     {leaderboardData.map((entry, idx) => (
                       <div 
                         key={entry.id} 
-                        className={`py-4 px-3 md:py-6 md:px-6 flex flex-col sm:flex-row items-center justify-between transition-all border-b border-slate-100 dark:border-slate-800 last:border-0 gap-4 sm:gap-0 ${entry.student_id === profile?.studentDocId ? 'bg-[#D4AF37]/10 rounded-3xl border-transparent shadow-sm' : 'hover:bg-slate-50/50 dark:hover:bg-slate-800/30'}`}
+                        className={`py-4 px-3 md:py-6 md:px-6 flex flex-col sm:flex-row items-center justify-between transition-all border-b border-slate-100 dark:border-[#334155] last:border-0 gap-4 sm:gap-0 ${entry.student_id === profile?.studentDocId ? 'bg-[#D4AF37]/10 rounded-3xl border-transparent shadow-sm' : 'hover:bg-slate-50/50 dark:hover:bg-slate-800/30'}`}
                       >
                         <div className="flex items-center gap-4 w-full sm:w-auto">
                           <span className={`w-10 text-center font-black text-xl md:text-2xl ${idx < 3 ? 'scale-125' : 'text-slate-300 text-lg'}`}>
@@ -533,7 +533,7 @@ const LiveQuizzes: React.FC<LiveQuizzesProps> = ({ quizzes, quizSubmissions = []
                             </div>
                           </div>
                         </div>
-                        <div className="flex items-center justify-between w-full sm:w-auto sm:block text-right border-t sm:border-0 border-slate-100 dark:border-slate-800 pt-3 sm:pt-0">
+                        <div className="flex items-center justify-between w-full sm:w-auto sm:block text-right border-t sm:border-0 border-slate-100 dark:border-[#334155] pt-3 sm:pt-0">
                           <p className="sm:hidden text-[9px] font-black text-slate-400 uppercase tracking-widest">Total Points</p>
                           <div>
                             <p className={`font-black text-2xl md:text-3xl leading-none ${entry.notAttempted ? 'text-slate-200' : 'text-[#1e3a8a] dark:text-[#D4AF37]'}`}>
@@ -547,7 +547,7 @@ const LiveQuizzes: React.FC<LiveQuizzesProps> = ({ quizzes, quizSubmissions = []
                   </div>
                 </div>
               ) : (
-                <div className="text-center py-20 bg-white dark:bg-slate-800 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-700">
+                <div className="text-center py-20 bg-white dark:bg-[#1e293b] rounded-3xl border-2 border-dashed border-slate-200 dark:border-[#1e293b]">
                   <div className="w-16 h-16 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Ranking01Icon size={24} className="text-slate-300" />
                   </div>
@@ -557,7 +557,7 @@ const LiveQuizzes: React.FC<LiveQuizzesProps> = ({ quizzes, quizSubmissions = []
               )}
             </div>
           ) : (
-            <div className="text-center py-20 bg-white dark:bg-slate-800 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-700">
+            <div className="text-center py-20 bg-white dark:bg-[#1e293b] rounded-3xl border-2 border-dashed border-slate-200 dark:border-[#1e293b]">
               <div className="w-16 h-16 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
                 <FlashIcon size={24} className="text-slate-300" />
               </div>

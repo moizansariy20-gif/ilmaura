@@ -205,12 +205,12 @@ Date: ${currentDate}`;
   });
 
   return (
-    <div className="min-h-full bg-white dark:bg-slate-900 pb-32 font-sans relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-full bg-white dark:bg-[#020617] pb-32 font-sans relative overflow-hidden transition-colors duration-300">
       {/* TOP NAV BAR */}
       <div className="px-6 pt-6 pb-2 flex items-center justify-between relative z-20">
           <button 
               onClick={() => navigate(-1)}
-              className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center border border-slate-100 dark:border-slate-700 active:scale-90 transition-transform"
+              className="w-10 h-10 rounded-xl bg-white dark:bg-[#1e293b] shadow-sm flex items-center justify-center border border-slate-100 dark:border-[#1e293b] active:scale-90 transition-transform"
           >
               <ArrowLeft size={20} className="text-[#1e3a8a] dark:text-[#D4AF37]" />
           </button>
@@ -232,7 +232,7 @@ Date: ${currentDate}`;
       <div className="max-w-3xl mx-auto space-y-8 relative z-10 mt-4">
         
         {/* Header Section */}
-        <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+        <div className="bg-white dark:bg-[#1e293b] p-6 md:p-8 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#1e3a8a] via-[#D4AF37] to-[#1e3a8a]"></div>
           <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
           
@@ -274,7 +274,7 @@ Date: ${currentDate}`;
                 <div className="h-px bg-gradient-to-r from-[#D4AF37]/40 to-transparent flex-1"></div>
               </div>
 
-              <form onSubmit={handleSubmit} className="p-5 md:p-6 bg-[#FCFBF8] dark:bg-slate-800/50 border border-[#D4AF37]/10 rounded-2xl shadow-sm space-y-6">
+              <form onSubmit={handleSubmit} className="p-5 md:p-6 bg-[#FCFBF8] dark:bg-[#0f172a] border border-[#D4AF37]/10 rounded-2xl shadow-sm space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-[10px] font-black text-[#1e3a8a]/60 dark:text-[#D4AF37]/60 uppercase tracking-widest ml-1">Start Date</label>
@@ -283,7 +283,7 @@ Date: ${currentDate}`;
                       required
                       value={formData.startDate}
                       onChange={(e) => handleDateChange('startDate', e.target.value)}
-                      className="w-full px-4 py-4 bg-white dark:bg-slate-800 border border-[#1e3a8a]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#1e3a8a]/30 focus:ring-2 focus:ring-[#1e3a8a]/10 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-all"
+                      className="w-full px-4 py-4 bg-white dark:bg-[#1e293b] border border-[#1e3a8a]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#1e3a8a]/30 focus:ring-2 focus:ring-[#1e3a8a]/10 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-all"
                     />
                   </div>
                   <div className="space-y-2">
@@ -293,7 +293,7 @@ Date: ${currentDate}`;
                       required
                       value={formData.endDate}
                       onChange={(e) => handleDateChange('endDate', e.target.value)}
-                      className="w-full px-4 py-4 bg-white dark:bg-slate-800 border border-[#1e3a8a]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#1e3a8a]/30 focus:ring-2 focus:ring-[#1e3a8a]/10 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-all"
+                      className="w-full px-4 py-4 bg-white dark:bg-[#1e293b] border border-[#1e3a8a]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#1e3a8a]/30 focus:ring-2 focus:ring-[#1e3a8a]/10 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-all"
                     />
                   </div>
                 </div>
@@ -323,14 +323,14 @@ Date: ${currentDate}`;
                     value={formData.reason}
                     onChange={(e) => setFormData({...formData, reason: e.target.value})}
                     placeholder="Please explain why you need leave..."
-                    className="w-full px-4 py-4 bg-white dark:bg-slate-800 border border-[#1e3a8a]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#1e3a8a]/30 focus:ring-2 focus:ring-[#1e3a8a]/10 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-all resize-none"
+                    className="w-full px-4 py-4 bg-white dark:bg-[#1e293b] border border-[#1e3a8a]/10 dark:border-[#D4AF37]/20 rounded-2xl text-sm font-bold text-slate-700 dark:text-white focus:border-[#1e3a8a]/30 focus:ring-2 focus:ring-[#1e3a8a]/10 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-all resize-none"
                   ></textarea>
                 </div>
                 <div className="flex gap-3 pt-2">
                   <button
                     type="button"
                     onClick={() => setShowForm(false)}
-                    className="flex-1 py-4 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 active:scale-95 transition-all"
+                    className="flex-1 py-4 bg-white dark:bg-[#1e293b] text-slate-600 dark:text-slate-300 text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-sm border border-slate-200 dark:border-[#1e293b] hover:bg-slate-50 dark:hover:bg-slate-700/50 active:scale-95 transition-all"
                   >
                     Cancel
                   </button>
@@ -359,12 +359,12 @@ Date: ${currentDate}`;
                   type="date"
                   value={filterDate}
                   onChange={(e) => setFilterDate(e.target.value)}
-                  className="px-4 py-2 bg-white dark:bg-slate-800 border border-[#1e3a8a]/10 dark:border-[#D4AF37]/20 rounded-xl text-xs font-bold text-slate-700 dark:text-white focus:border-[#1e3a8a]/30 focus:ring-2 focus:ring-[#1e3a8a]/10 outline-none shadow-sm transition-all flex-1 sm:flex-none"
+                  className="px-4 py-2 bg-white dark:bg-[#1e293b] border border-[#1e3a8a]/10 dark:border-[#D4AF37]/20 rounded-xl text-xs font-bold text-slate-700 dark:text-white focus:border-[#1e3a8a]/30 focus:ring-2 focus:ring-[#1e3a8a]/10 outline-none shadow-sm transition-all flex-1 sm:flex-none"
                 />
                 {filterDate && (
                   <button 
                     onClick={() => setFilterDate('')}
-                    className="p-2 bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-rose-500 rounded-xl transition-colors"
+                    className="p-2 bg-slate-100 dark:bg-[#1e293b] text-slate-500 hover:text-rose-500 rounded-xl transition-colors"
                   >
                     <Cancel01Icon size={16} />
                   </button>
@@ -377,7 +377,7 @@ Date: ${currentDate}`;
                 <Loading01Icon className="animate-spin text-[#D4AF37]" size={32} />
               </div>
             ) : filteredLeaves.length === 0 ? (
-              <div className="text-center py-16 bg-[#FCFBF8] dark:bg-slate-800/50 rounded-3xl border border-[#D4AF37]/10 shadow-sm">
+              <div className="text-center py-16 bg-[#FCFBF8] dark:bg-[#0f172a] rounded-3xl border border-[#D4AF37]/10 shadow-sm">
                 <File01Icon className="w-16 h-16 text-[#D4AF37]/40 mx-auto mb-4" />
                 <p className="text-[#1e3a8a] dark:text-white font-black text-lg">No leave applications</p>
                 <p className="text-slate-500 text-sm font-medium mt-1">
@@ -387,7 +387,7 @@ Date: ${currentDate}`;
             ) : (
               <div className="grid grid-cols-1 gap-4">
                 {filteredLeaves.map((leave) => (
-                  <div key={leave.id} className="bg-white dark:bg-slate-800 p-5 md:p-6 rounded-2xl border border-[#D4AF37]/20 shadow-[0_4px_15px_rgba(0,0,0,0.03)] flex flex-col gap-4 group hover:border-[#D4AF37]/50 transition-all">
+                  <div key={leave.id} className="bg-white dark:bg-[#1e293b] p-5 md:p-6 rounded-2xl border border-[#D4AF37]/20 shadow-[0_4px_15px_rgba(0,0,0,0.03)] flex flex-col gap-4 group hover:border-[#D4AF37]/50 transition-all">
                     <div className="flex justify-between items-start">
                       <div>
                         <p className="text-[10px] font-black text-[#1e3a8a]/60 dark:text-[#D4AF37]/60 uppercase tracking-widest mb-1">Date Range</p>
@@ -400,7 +400,7 @@ Date: ${currentDate}`;
                         {getStatusBadge(leave.status)}
                         <button
                           onClick={() => setLeaveToDelete(leave.id)}
-                          className="p-1.5 rounded-lg transition-all bg-slate-100 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:bg-slate-800 dark:text-slate-500 dark:hover:bg-rose-900/20 dark:hover:text-rose-400"
+                          className="p-1.5 rounded-lg transition-all bg-slate-100 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:bg-[#1e293b] dark:text-slate-500 dark:hover:bg-rose-900/20 dark:hover:text-rose-400"
                           title="Delete application"
                         >
                           <Delete02Icon size={16} />
@@ -408,7 +408,7 @@ Date: ${currentDate}`;
                       </div>
                     </div>
                     
-                    <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+                    <div className="bg-slate-50 dark:bg-[#020617]/50 p-4 rounded-xl border border-slate-100 dark:border-[#334155]">
                       <p className="text-[10px] font-black text-[#1e3a8a]/60 dark:text-[#D4AF37]/60 uppercase tracking-widest mb-1">Reason</p>
                       <p className="text-slate-700 dark:text-slate-300 text-sm font-medium whitespace-pre-wrap">{leave.reason}</p>
                     </div>
@@ -428,7 +428,7 @@ Date: ${currentDate}`;
       {/* Delete Confirmation Modal */}
       {leaveToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-200 dark:border-slate-800 animate-in zoom-in-95 duration-200">
+          <div className="bg-white dark:bg-[#020617] rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-200 dark:border-[#334155] animate-in zoom-in-95 duration-200">
             <div className="w-12 h-12 rounded-full bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center mb-4 mx-auto">
               <Delete02Icon className="text-rose-600 dark:text-rose-400" size={24} />
             </div>
@@ -440,7 +440,7 @@ Date: ${currentDate}`;
               <button
                 onClick={() => setLeaveToDelete(null)}
                 disabled={isDeleting}
-                className="flex-1 py-3 px-4 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
+                className="flex-1 py-3 px-4 bg-slate-100 dark:bg-[#1e293b] text-slate-700 dark:text-slate-300 text-xs font-bold rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>
