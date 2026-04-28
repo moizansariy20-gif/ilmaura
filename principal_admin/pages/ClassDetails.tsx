@@ -16,7 +16,7 @@ const ClassDetails: React.FC = () => {
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Class Details: {classId}</h1>
       
-      <div className="flex border-b border-slate-200 dark:border-slate-700 mb-6">
+      <div className="flex border-b border-slate-200 dark:border-[#1e293b] mb-6">
         {tabs.map(tab => (
           <button
             key={tab.id}
@@ -29,7 +29,7 @@ const ClassDetails: React.FC = () => {
         ))}
       </div>
 
-      <div className="bg-white dark:bg-slate-800 p-6 border border-slate-200 dark:border-slate-700 rounded-lg">
+      <div className="bg-white dark:bg-[#1e293b] p-6 border border-slate-200 dark:border-[#1e293b] rounded-lg">
         {activeTab === 'students' && <p>Student list for {classId}</p>}
         {activeTab === 'timetable' && <p>Timetable for {classId}</p>}
         {activeTab === 'attendance' && <p>Attendance for {classId}</p>}

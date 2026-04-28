@@ -43,7 +43,7 @@ const PrintAdmissionFormView: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-slate-100 pb-8 print:py-0 print:bg-white dark:bg-slate-800">
+        <div className="min-h-screen bg-slate-100 pb-8 print:py-0 print:bg-white dark:bg-[#1e293b]">
             <style>
                 {`
                     @media print {
@@ -52,7 +52,7 @@ const PrintAdmissionFormView: React.FC = () => {
                     }
                 `}
             </style>
-            <div className="sticky top-0 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4 flex justify-between items-center z-10 print:hidden shadow-sm mb-8">
+            <div className="sticky top-0 bg-white dark:bg-[#1e293b] border-b border-slate-200 dark:border-[#1e293b] p-4 flex justify-between items-center z-10 print:hidden shadow-sm mb-8">
                 <h2 className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-widest flex items-center gap-2">
                     <Printer size={24} weight="fill" className="text-blue-600" />
                     Print View
@@ -73,7 +73,7 @@ const PrintAdmissionFormView: React.FC = () => {
                 </div>
             </div>
             <div className="flex flex-col items-center gap-8">
-                <div className="bg-white dark:bg-slate-800 shadow-2xl print:shadow-none">
+                <div className="bg-white dark:bg-[#1e293b] shadow-2xl print:shadow-none">
                     <PrintableAdmissionForm 
                         school={data.school} 
                         config={data.formConfig || []} 

@@ -19,13 +19,30 @@ const FeeChallan: React.FC<FeeChallanProps> = ({ student, school, transaction, c
   const primaryColor = school.feeConfig?.masterTemplate?.primaryColor || '#001D4D';
   const secondaryColor = school.feeConfig?.masterTemplate?.secondaryColor || '#003366';
 
+  const formatDueDate = (dateStr?: string) => {
+    if (dateStr) {
+        // If it's YYYY-MM-DD from an input type=date, format it
+        if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+            const [y, m, d] = dateStr.split('-');
+            return new Date(parseInt(y), parseInt(m) - 1, parseInt(d)).toLocaleDateString('default', { day: '2-digit', month: 'short', year: 'numeric' });
+        }
+        return dateStr;
+    }
+    const dueDay = school.feeConfig?.feeDueDay || 10;
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), dueDay).toLocaleDateString('default', { day: '2-digit', month: 'short', year: 'numeric' });
+  };
+
+  const customBreakdown = school.feeConfig?.classFeeBreakdown?.[student.classId] || [];
+  const extraFeesTotal = customBreakdown.reduce((acc, item) => acc + item.amount, 0);
+
   const challanData = {
     receiptNo: transaction.receiptNo || `REC-${Date.now().toString().slice(-6)}`,
-    month: transaction.month || new Date().toLocaleString('default', { month: 'long' }),
-    issueDate: new Date().toLocaleDateString(),
-    dueDate: transaction.dueDate || new Date(new Date().getFullYear(), new Date().getMonth(), 10).toLocaleDateString(),
+    month: transaction.month || new Date().toLocaleString('default', { month: 'long', year: 'numeric' }),
+    issueDate: new Date().toLocaleDateString('default', { day: '2-digit', month: 'short', year: 'numeric' }),
+    dueDate: formatDueDate(transaction.dueDate),
     validityDate: new Date(new Date().getFullYear(), new Date().getMonth(), 28).toLocaleDateString(),
-    tuitionFee: transaction.amountPaid || 0,
+    tuitionFee: Math.max(0, (transaction.amountPaid || 0) - extraFeesTotal),
     admissionFee: 0,
     annualFee: 0,
     labFee: 0,
@@ -37,7 +54,7 @@ const FeeChallan: React.FC<FeeChallanProps> = ({ student, school, transaction, c
     fine: transaction.fineAmount || 0,
   };
 
-  const totalDues = challanData.tuitionFee + challanData.admissionFee + challanData.annualFee + challanData.labFee + challanData.securityCharges + challanData.sportsFee + challanData.arrears;
+  const totalDues = challanData.tuitionFee + extraFeesTotal + challanData.admissionFee + challanData.annualFee + challanData.labFee + challanData.securityCharges + challanData.sportsFee + challanData.arrears;
   const totalByDueDate = totalDues - challanData.discount + challanData.tax;
   const totalAfterDueDate = totalByDueDate + challanData.fine;
   
@@ -67,198 +84,170 @@ const FeeChallan: React.FC<FeeChallanProps> = ({ student, school, transaction, c
       <style>{`
         .copy-section {
             width: ${singleCopy ? '100%' : '33.33%'};
-            padding: 25px;
-            border-right: ${singleCopy ? 'none' : '1.5px dashed #000'};
+            padding: 15px;
+            border-right: ${singleCopy ? 'none' : '1px dashed #000'};
             display: flex;
             flex-direction: column;
             background: white;
             min-height: 842px;
             position: relative;
             box-sizing: border-box;
+            font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+            color: #000;
         }
         .copy-section:last-child { border-right: none; }
         
         .header { 
           display: flex; 
-          justify-content: space-between; 
-          align-items: center; 
-          margin-bottom: 20px;
-          border-bottom: 3px solid ${primaryColor};
-          padding-bottom: 12px;
+          flex-direction: column;
+          margin-bottom: 10px;
+          border-bottom: 1px solid #000;
+          padding-bottom: 10px;
         }
         
-        .logo-section { display: flex; align-items: center; gap: 12px; }
+        .logo-section { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px; }
         .logo-box { 
-          width: 55px; 
-          height: 55px; 
-          border: 1px solid #eee; 
-          border-radius: 10px; 
+          width: 50px; 
+          height: 50px; 
           display: flex; 
           align-items: center; 
           justify-content: center; 
           overflow: hidden;
-          background: #f8fafc;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
-        .logo-box img { width: 100%; height: 100%; object-fit: contain; }
+        .logo-box img { width: 100%; height: 100%; object-fit: contain; filter: grayscale(100%); }
         
-        .school-info-header { flex: 1; }
-        .school-name { font-size: 15px; font-weight: 900; color: ${primaryColor}; text-transform: uppercase; line-height: 1.1; letter-spacing: -0.02em; }
-        .school-address { font-size: 9px; color: #64748b; font-weight: 500; margin-top: 2px; }
+        .school-info-header { text-align: left; }
+        .school-name { font-size: 16px; font-weight: bold; text-transform: uppercase; color: #000; }
+        .school-address { font-size: 10px; margin-top: 2px; color: #000; }
 
-        .receipt-info { text-align: right; }
-        .receipt-no { font-size: 13px; font-weight: 800; color: #0f172a; }
-        .month-year { font-size: 11px; font-weight: 700; color: ${secondaryColor}; text-transform: uppercase; letter-spacing: 0.05em; }
+        .receipt-info { 
+          display: flex; 
+          justify-content: space-between; 
+          width: 100%; 
+          font-size: 11px; 
+          margin-top: 5px; 
+          font-weight: bold;
+        }
 
         .copy-badge { 
-          position: absolute;
-          top: 0;
-          right: 25px;
-          background: ${primaryColor};
-          color: white;
-          font-size: 9px;
-          padding: 3px 12px;
-          border-radius: 0 0 6px 6px;
-          font-weight: 800;
+          text-align: center;
+          font-size: 12px;
+          font-weight: bold;
           text-transform: uppercase;
-          letter-spacing: 0.05em;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          border: 1px solid #000;
+          padding: 3px;
+          margin-bottom: 10px;
+          color: #000;
+          background-color: transparent;
         }
 
         .student-details { 
-          background: #f8fafc;
-          border: 1px solid #e2e8f0;
-          border-radius: 8px;
-          padding: 12px;
-          margin-bottom: 20px;
+          border: 1px solid #000;
+          padding: 8px;
+          margin-bottom: 10px;
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 10px;
+          gap: 6px;
         }
         
-        .detail-item { display: flex; flex-direction: column; }
-        .detail-label { font-size: 8px; color: #94a3b8; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
-        .detail-value { font-size: 11px; color: #1e293b; font-weight: 700; }
+        .detail-item { display: flex; font-size: 11px; color: #000; }
+        .detail-label { font-weight: bold; margin-right: 5px; min-width: 60px; }
+        .detail-value { font-weight: normal; border-bottom: 1px solid #000; flex-grow: 1; text-transform: uppercase; }
 
-        .fee-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        .fee-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; border: 1px solid #000; }
+        .fee-table th, .fee-table td { 
+          border: 1px solid #000;
+          padding: 4px 6px;
+          font-size: 11px;
+          color: #000;
+        }
         .fee-table th { 
           text-align: left; 
-          font-size: 10px; 
-          background: #f1f5f9; 
-          padding: 8px 12px;
-          color: #475569;
-          border-bottom: 2px solid #cbd5e1;
-          font-weight: 800;
-          text-transform: uppercase;
+          font-weight: bold;
+          background-color: transparent;
         }
-        .fee-table td { 
-          font-size: 11px; 
-          padding: 10px 12px; 
-          border-bottom: 1px solid #f1f5f9;
-          color: #334155;
-          font-weight: 500;
-        }
-        .text-right { text-align: right; }
+        .text-right { text-align: right !important; }
 
         .summary-section {
           margin-left: auto;
           width: 100%;
-          max-width: 240px;
+          border: 1px solid #000;
+          border-top: none;
         }
         
-        .summary-row { 
+        .summary-row, .total-payable, .after-due { 
           display: flex; 
           justify-content: space-between; 
-          padding: 5px 0;
+          padding: 4px 6px;
           font-size: 11px;
+          border-bottom: 1px solid #000;
         }
-        .summary-label { color: #64748b; font-weight: 500; }
-        .summary-value { font-weight: 700; color: #1e293b; }
+        .summary-row:last-child { border-bottom: none; }
+        .summary-label { font-weight: bold; }
+        .summary-value { font-weight: bold; }
 
         .total-payable {
-          background: ${primaryColor};
-          color: white;
-          padding: 12px;
-          border-radius: 8px;
-          margin-top: 12px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+          font-weight: bold;
+          border-bottom: 1px solid #000;
+          background-color: #f0f0f0 !important; /* Slight grey for total print contrast */
         }
-        .total-label { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
-        .total-amount { font-size: 16px; font-weight: 900; }
+        .total-amount { font-weight: bold; }
 
         .after-due {
-          font-size: 10px;
-          color: #dc2626;
-          font-weight: 800;
-          text-align: right;
-          margin-top: 6px;
-          padding-right: 4px;
+          font-weight: bold;
         }
 
         .words-section {
-          margin-top: 15px;
-          font-size: 9px;
-          color: #64748b;
-          font-style: italic;
-          border-top: 1px solid #f1f5f9;
-          padding-top: 8px;
-          font-weight: 600;
+          font-size: 10px;
+          font-weight: bold;
+          padding: 4px 6px;
+          border-bottom: 1px solid #000;
         }
 
         .bank-info-box {
-          margin-top: 25px;
-          border: 1px solid #e2e8f0;
-          border-radius: 8px;
-          padding: 12px;
-          background: #f8fafc;
+          border: 1px solid #000;
+          padding: 8px;
+          margin-top: 10px;
         }
-        .bank-title { font-size: 10px; font-weight: 900; color: ${primaryColor}; margin-bottom: 8px; border-bottom: 2px solid #e2e8f0; padding-bottom: 4px; text-transform: uppercase; }
-        .bank-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-        .bank-item { font-size: 9px; color: #475569; }
-        .bank-item strong { color: #0f172a; font-weight: 700; }
+        .bank-title { font-size: 11px; font-weight: bold; margin-bottom: 4px; text-decoration: underline; color: #000; }
+        .bank-grid { display: grid; grid-template-columns: 1fr; gap: 4px; font-size: 10px; }
+        .bank-item { color: #000; }
+        .bank-item strong { font-weight: bold; }
 
         .qr-section {
           display: flex;
           justify-content: space-between;
           align-items: flex-end;
-          margin-top: auto;
-          padding-top: 25px;
-          border-top: 1px solid #f1f5f9;
+          margin-top: 20px;
         }
         
         .qr-container {
-          padding: 8px;
-          border: 1px solid #e2e8f0;
-          border-radius: 8px;
-          background: white;
-          box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+          padding: 4px;
+          border: 1px solid #000;
         }
 
         .signature-section {
           display: flex;
-          gap: 50px;
+          flex-grow: 1;
+          justify-content: space-around;
+          margin-left: 20px;
         }
         .sig-box {
           text-align: center;
-          border-top: 1.5px solid #94a3b8;
-          width: 90px;
-          padding-top: 6px;
-          font-size: 9px;
-          font-weight: 800;
-          color: #475569;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
+          border-top: 1px solid #000;
+          width: 80px;
+          padding-top: 4px;
+          font-size: 10px;
+          font-weight: bold;
+          color: #000;
         }
         
         .footer-note {
           text-align: center;
-          font-size: 8px;
-          color: #94a3b8;
-          margin-top: 20px;
-          font-weight: 600;
+          font-size: 9px;
+          color: #000;
+          margin-top: 10px;
+          font-style: italic;
         }
       `}</style>
 
@@ -266,17 +255,19 @@ const FeeChallan: React.FC<FeeChallanProps> = ({ student, school, transaction, c
       
       <div className="header">
         <div className="logo-section">
-          <div className="logo-box">
-            {school.logoURL ? <img src={school.logoURL} alt="Logo" referrerPolicy="no-referrer" /> : <span className="text-[8px] font-bold">LOGO</span>}
-          </div>
+          {school.logoURL && (
+            <div className="logo-box">
+              <img src={school.logoURL} alt="Logo" referrerPolicy="no-referrer" />
+            </div>
+          )}
           <div className="school-info-header">
             <div className="school-name">{school.name}</div>
             <div className="school-address line-clamp-1">{school.address}</div>
           </div>
         </div>
         <div className="receipt-info">
-          <div className="receipt-no">Challan # {challanData.receiptNo}</div>
-          <div className="month-year">{challanData.month} {new Date().getFullYear()}</div>
+          <div>Challan #: {challanData.receiptNo}</div>
+          <div>Month: {challanData.month}</div>
         </div>
       </div>
 
@@ -285,17 +276,13 @@ const FeeChallan: React.FC<FeeChallanProps> = ({ student, school, transaction, c
           <span className="detail-label">Student Name</span>
           <span className="detail-value">{student.name}</span>
         </div>
-        <div className="detail-item">
-          <span className="detail-label">G.R. No</span>
-          <span className="detail-value">{student.rollNo}</span>
+        <div className="detail-item" style={{ gridColumn: 'span 2' }}>
+          <span className="detail-label">Father Name</span>
+          <span className="detail-value">{student.fatherName || student.customData?.fatherName || ''}</span>
         </div>
         <div className="detail-item">
           <span className="detail-label">Class</span>
           <span className="detail-value">{getClassName(student.classId)}</span>
-        </div>
-        <div className="detail-item">
-          <span className="detail-label">Reg. ID</span>
-          <span className="detail-value">{student.id ? student.id.slice(-6).toUpperCase() : 'N/A'}</span>
         </div>
         <div className="detail-item">
           <span className="detail-label">Due Date</span>
@@ -312,6 +299,9 @@ const FeeChallan: React.FC<FeeChallanProps> = ({ student, school, transaction, c
         </thead>
         <tbody>
           <tr><td>Tuition Fee</td><td className="text-right">{challanData.tuitionFee.toLocaleString()}</td></tr>
+          {customBreakdown.map((item, idx) => (
+              <tr key={idx}><td>{item.name}</td><td className="text-right">{item.amount.toLocaleString()}</td></tr>
+          ))}
           {challanData.admissionFee > 0 && <tr><td>Admission Fee</td><td className="text-right">{challanData.admissionFee.toLocaleString()}</td></tr>}
           {challanData.annualFee > 0 && <tr><td>Annual Fee</td><td className="text-right">{challanData.annualFee.toLocaleString()}</td></tr>}
           {challanData.labFee > 0 && <tr><td>Lab Fee</td><td className="text-right">{challanData.labFee.toLocaleString()}</td></tr>}
@@ -328,7 +318,7 @@ const FeeChallan: React.FC<FeeChallanProps> = ({ student, school, transaction, c
         {challanData.discount > 0 && (
           <div className="summary-row">
             <span className="summary-label">Discount</span>
-            <span className="summary-value text-green-600">- Rs. {challanData.discount.toLocaleString()}</span>
+            <span className="summary-value">- Rs. {challanData.discount.toLocaleString()}</span>
           </div>
         )}
         <div className="total-payable">
@@ -358,25 +348,25 @@ const FeeChallan: React.FC<FeeChallanProps> = ({ student, school, transaction, c
           <QRCodeSVG value={qrValue} size={60} level="L" />
         </div>
         <div className="signature-section">
-          <div className="sig-box">Depositor</div>
-          <div className="sig-box">Authorized</div>
+          <div className="sig-box">{school.feeConfig?.masterTemplate?.signatureLeftLabel || 'Depositor'}</div>
+          <div className="sig-box">{school.feeConfig?.masterTemplate?.signatureRightLabel || 'Authorized'}</div>
         </div>
       </div>
       
-      <div className="footer-note">This is a system generated challan. No signature required.</div>
+      <div className="footer-note">{school.feeConfig?.masterTemplate?.footerNote || `This official fee receipt is issued by ${school.name}.`}</div>
     </div>
   );
 
   if (singleCopy) {
     return (
-      <div className={`challan-preview-single ${className}`} style={{ width: '450px', margin: 'auto', background: '#fff', boxShadow: '0 20px 50px -12px rgba(0,0,0,0.15)', borderRadius: '16px', overflow: 'hidden', border: '1px solid #e2e8f0' }}>
+      <div className={`challan-preview-single ${className}`} style={{ width: '400px', margin: 'auto', background: '#fff', border: '1px solid #000' }}>
         <Copy title="Preview Copy" />
       </div>
     );
   }
 
   return (
-    <div className={`challan-print-wrapper ${className}`} style={{ display: 'flex', width: '1120px', margin: 'auto', background: '#fff', minHeight: '800px', border: '1px solid #eee' }}>
+    <div className={`challan-print-wrapper ${className}`} style={{ display: 'flex', width: '100%', maxWidth: '1100px', margin: 'auto', background: '#fff', border: '1px solid #000' }}>
       <Copy title="Bank Copy" />
       <Copy title="School Copy" />
       <Copy title="Student Copy" />

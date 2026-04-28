@@ -210,14 +210,13 @@ const SchoolsList: React.FC<SchoolsListProps> = ({ schools, onAddSchool, onDelet
               <tr className="bg-slate-50 text-xs font-semibold text-slate-500 uppercase tracking-wider border-b border-slate-200">
                 <th className="px-6 py-4">School Details</th>
                 <th className="px-6 py-4">Total Students</th>
-                <th className="px-6 py-4">Features</th>
+                <th className="px-6 py-4">Plan</th>
                 <th className="px-6 py-4">Status</th>
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {schools.map((school) => {
-                const isHubEnabled = school.isLearningHubEnabled !== false;
                 const displayCode = school.schoolCode || school.id; 
                 
                 return (
@@ -247,13 +246,27 @@ const SchoolsList: React.FC<SchoolsListProps> = ({ schools, onAddSchool, onDelet
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <FeatureToggle 
-                        enabled={isHubEnabled}
-                        onToggle={() => onUpdateSchool(school.id, { isLearningHubEnabled: !isHubEnabled })}
-                      />
-                      <span className="text-xs text-slate-500">Learning Hub</span>
-                    </div>
+                    <select 
+                      value={school.plan || 'free'} 
+                      onChange={(e) => {
+                        const newPlan = e.target.value;
+                        const updateData: any = { plan: newPlan };
+                        if (newPlan === 'trial') {
+                          updateData.trialStartDate = new Date().toISOString();
+                          updateData.trialEndDate = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString();
+                        }
+                        onUpdateSchool(school.id, updateData);
+                      }}
+                      className={`text-xs font-bold px-2 py-1 rounded border outline-none transition-colors ${
+                        school.plan === 'paid' ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 
+                        school.plan === 'trial' ? 'bg-blue-50 text-blue-700 border-blue-200' :
+                        'bg-slate-50 text-slate-700 border-slate-200'
+                      }`}
+                    >
+                      <option value="free">FREE</option>
+                      <option value="trial">TRIAL (5 Days)</option>
+                      <option value="paid">PAID</option>
+                    </select>
                   </td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-1 rounded-none text-xs font-semibold ${school.licenseStatus ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'}`}>

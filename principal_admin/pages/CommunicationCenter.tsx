@@ -211,7 +211,7 @@ const CommunicationCenter: React.FC<CommunicationCenterProps> = ({ schoolId, stu
     <div className="flex flex-col gap-8">
       
       {/* Header Section */}
-      <div className="bg-white dark:bg-slate-800 border-2 border-slate-900 p-8 shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] relative overflow-hidden">
+      <div className="bg-white dark:bg-[#1e293b] border-2 border-slate-900 p-8 shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div className="flex items-center gap-5">
@@ -243,7 +243,7 @@ const CommunicationCenter: React.FC<CommunicationCenterProps> = ({ schoolId, stu
             {sendMethod === 'web' && (
               <button 
                 onClick={() => window.open('https://web.whatsapp.com', 'whatsapp_portal')}
-                className="px-4 py-2 bg-white dark:bg-slate-800 border-2 border-slate-900 text-slate-900 dark:text-white font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center gap-2"
+                className="px-4 py-2 bg-white dark:bg-[#1e293b] border-2 border-slate-900 text-slate-900 dark:text-white font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center gap-2"
               >
                 <WhatsappLogo size={18} weight="fill" className="text-emerald-600" /> Open Web
               </button>
@@ -259,22 +259,22 @@ const CommunicationCenter: React.FC<CommunicationCenterProps> = ({ schoolId, stu
         
         {/* LEFT: Selection Panel */}
         <div className="xl:col-span-4 flex flex-col gap-6">
-          <div className="bg-white dark:bg-slate-800 border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] flex flex-col h-[700px]">
+          <div className="bg-white dark:bg-[#1e293b] border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] flex flex-col h-[700px]">
             <div className="p-6 border-b-2 border-slate-900 bg-slate-900 text-white flex items-center justify-between">
               <h3 className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
                 <UserList size={18} weight="fill" /> Select Recipients
               </h3>
-              <span className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-2 py-0.5 text-[10px] font-black">{selectedStudents.length} Selected</span>
+              <span className="bg-white dark:bg-[#1e293b] text-slate-900 dark:text-white px-2 py-0.5 text-[10px] font-black">{selectedStudents.length} Selected</span>
             </div>
 
             {/* Filters */}
-            <div className="p-4 border-b-2 border-slate-100 dark:border-slate-800 space-y-3">
+            <div className="p-4 border-b-2 border-slate-100 dark:border-[#334155] space-y-3">
               <div className="relative">
                 <MagnifyingGlass size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input 
                   type="text" 
                   placeholder="Search name or roll no..." 
-                  className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-200 dark:border-slate-700 focus:border-slate-900 outline-none text-xs font-bold transition-all"
+                  className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-[#0f172a] border-2 border-slate-200 dark:border-[#1e293b] focus:border-slate-900 outline-none text-xs font-bold transition-all"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -283,7 +283,7 @@ const CommunicationCenter: React.FC<CommunicationCenterProps> = ({ schoolId, stu
                 <div className="flex-1 relative">
                   <Funnel size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                   <select 
-                    className="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-200 dark:border-slate-700 focus:border-slate-900 outline-none text-[10px] font-black uppercase appearance-none"
+                    className="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-[#0f172a] border-2 border-slate-200 dark:border-[#1e293b] focus:border-slate-900 outline-none text-[10px] font-black uppercase appearance-none"
                     value={selectedClass}
                     onChange={(e) => setSelectedClass(e.target.value)}
                   >
@@ -315,7 +315,7 @@ const CommunicationCenter: React.FC<CommunicationCenterProps> = ({ schoolId, stu
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-black text-slate-900 dark:text-white truncate">{student.name}</p>
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">
-                        {getClassName(student.classId)} • Roll: {student.rollNo}
+                        {getClassName(student.classId)} • 
                       </p>
                     </div>
                     {sentStatus[student.id] && (
@@ -336,7 +336,7 @@ const CommunicationCenter: React.FC<CommunicationCenterProps> = ({ schoolId, stu
         <div className="xl:col-span-8 flex flex-col gap-8">
           
           {/* Composer */}
-          <div className="bg-white dark:bg-slate-800 border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] flex flex-col">
+          <div className="bg-white dark:bg-[#1e293b] border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] flex flex-col">
             <div className="p-6 border-b-2 border-slate-900 bg-slate-900 text-white flex items-center justify-between">
               <h3 className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
                 <ChatText size={18} weight="fill" /> Message Composer
@@ -346,7 +346,7 @@ const CommunicationCenter: React.FC<CommunicationCenterProps> = ({ schoolId, stu
                   <button 
                     key={tag}
                     onClick={() => insertTag(tag)}
-                    className="px-2 py-1 bg-white/10 dark:bg-slate-800/10 hover:bg-white/20 dark:bg-slate-800/20 text-[9px] font-black uppercase tracking-tighter border border-white/20 transition-all"
+                    className="px-2 py-1 bg-white/10 dark:bg-[#1e293b]/10 hover:bg-white/20 dark:bg-[#1e293b]/20 text-[9px] font-black uppercase tracking-tighter border border-white/20 transition-all"
                   >
                     +{tag.replace('_', ' ')}
                   </button>
@@ -356,7 +356,7 @@ const CommunicationCenter: React.FC<CommunicationCenterProps> = ({ schoolId, stu
 
             <div className="p-6 space-y-6">
               {/* File Upload Section */}
-              <div className="flex flex-col md:flex-row gap-4 items-center p-4 bg-slate-50 dark:bg-slate-800/50 border-2 border-dashed border-slate-200 dark:border-slate-700">
+              <div className="flex flex-col md:flex-row gap-4 items-center p-4 bg-slate-50 dark:bg-[#0f172a] border-2 border-dashed border-slate-200 dark:border-[#1e293b]">
                 <div className="flex-1">
                   <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">Attachment (Optional)</p>
                   {uploadedFile ? (
@@ -394,7 +394,7 @@ const CommunicationCenter: React.FC<CommunicationCenterProps> = ({ schoolId, stu
                   <button 
                     key={t.name}
                     onClick={() => setMessage(t.text)}
-                    className="flex flex-col items-center gap-2 p-3 bg-slate-50 border-2 border-slate-200 dark:border-slate-700 hover:border-slate-900 hover:bg-white dark:bg-slate-800 transition-all group"
+                    className="flex flex-col items-center gap-2 p-3 bg-slate-50 border-2 border-slate-200 dark:border-[#1e293b] hover:border-slate-900 hover:bg-white dark:bg-[#1e293b] transition-all group"
                   >
                     <div className="text-slate-400 group-hover:text-slate-900 dark:text-white transition-colors">
                       {t.icon}
@@ -407,7 +407,7 @@ const CommunicationCenter: React.FC<CommunicationCenterProps> = ({ schoolId, stu
               {/* Text Area */}
               <div className="relative">
                 <textarea 
-                  className="w-full h-48 p-6 bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-200 dark:border-slate-700 focus:border-slate-900 outline-none text-sm font-bold transition-all resize-none placeholder:text-slate-300"
+                  className="w-full h-48 p-6 bg-slate-50 dark:bg-[#0f172a] border-2 border-slate-200 dark:border-[#1e293b] focus:border-slate-900 outline-none text-sm font-bold transition-all resize-none placeholder:text-slate-300"
                   placeholder="Type your message here... Use tags like {student_name} for personalization."
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
@@ -429,7 +429,7 @@ const CommunicationCenter: React.FC<CommunicationCenterProps> = ({ schoolId, stu
 
           {/* Sending Queue */}
           {sendingQueue.length > 0 && (
-            <div className="bg-white dark:bg-slate-800 border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] flex flex-col animate-in slide-in-from-bottom-4">
+            <div className="bg-white dark:bg-[#1e293b] border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] flex flex-col animate-in slide-in-from-bottom-4">
               <div className="p-6 border-b-2 border-slate-900 bg-emerald-600 text-white flex items-center justify-between">
                 <h3 className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
                   <PaperPlaneTilt size={18} weight="fill" /> Sending Queue ({sendingQueue.length})
@@ -437,11 +437,11 @@ const CommunicationCenter: React.FC<CommunicationCenterProps> = ({ schoolId, stu
                 <div className="flex gap-2">
                   <button 
                     onClick={() => setSentStatus({})}
-                    className="px-3 py-1 bg-white/10 dark:bg-slate-800/10 hover:bg-white/20 dark:bg-slate-800/20 text-[9px] font-black uppercase tracking-widest border border-white/20 transition-all"
+                    className="px-3 py-1 bg-white/10 dark:bg-[#1e293b]/10 hover:bg-white/20 dark:bg-[#1e293b]/20 text-[9px] font-black uppercase tracking-widest border border-white/20 transition-all"
                   >
                     Reset Status
                   </button>
-                  <button onClick={() => setSendingQueue([])} className="p-1 hover:bg-white/20 dark:bg-slate-800/20 transition-colors">
+                  <button onClick={() => setSendingQueue([])} className="p-1 hover:bg-white/20 dark:bg-[#1e293b]/20 transition-colors">
                     <X size={18} weight="bold" />
                   </button>
                 </div>
@@ -464,7 +464,7 @@ const CommunicationCenter: React.FC<CommunicationCenterProps> = ({ schoolId, stu
 
                 <div className="space-y-3 max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
                   {sendingQueue.map((item, index) => (
-                    <div key={item.id} className={`p-4 border-2 flex items-center justify-between transition-all ${sentStatus[item.id] ? 'bg-slate-50 border-slate-200 opacity-60' : 'bg-white dark:bg-slate-800 border-slate-900 shadow-sm'}`}>
+                    <div key={item.id} className={`p-4 border-2 flex items-center justify-between transition-all ${sentStatus[item.id] ? 'bg-slate-50 border-slate-200 opacity-60' : 'bg-white dark:bg-[#1e293b] border-slate-900 shadow-sm'}`}>
                       <div className="flex items-center gap-4">
                         <div className="w-8 h-8 bg-slate-100 flex items-center justify-center text-xs font-black text-slate-500 dark:text-slate-400">
                           {index + 1}
@@ -505,7 +505,7 @@ const CommunicationCenter: React.FC<CommunicationCenterProps> = ({ schoolId, stu
 
           {/* Information Notice */}
           <div className="bg-slate-900 p-8 text-white flex flex-col md:flex-row gap-8 items-center">
-            <div className="w-20 h-20 bg-white/10 dark:bg-slate-800/10 flex items-center justify-center shrink-0">
+            <div className="w-20 h-20 bg-white/10 dark:bg-[#1e293b]/10 flex items-center justify-center shrink-0">
               <Warning size={40} className="text-amber-400" weight="fill" />
             </div>
             <div>

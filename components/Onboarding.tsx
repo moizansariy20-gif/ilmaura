@@ -59,10 +59,10 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
   const slide = SLIDES[currentSlide];
 
   return (
-    <div className="fixed inset-0 z-[9000] bg-white dark:bg-slate-800 flex flex-col font-sans overflow-hidden">
+    <div className="fixed inset-0 z-[9000] bg-white dark:bg-[#1e293b] flex flex-col font-sans overflow-hidden">
         
         {/* Image Section - Full width, stuck to top */}
-        <div className="w-full relative h-[55vh] flex-shrink-0 bg-slate-50 dark:bg-slate-800/50 overflow-hidden">
+        <div className="w-full relative h-[55vh] flex-shrink-0 bg-slate-50 dark:bg-[#0f172a] overflow-hidden">
             {/* 
                 PRELOADING STRATEGY:
                 Render ALL images at once, stacked on top of each other.

@@ -47,6 +47,8 @@ interface PrincipalDashboardProps {
   expenses: any[];
   enquiries: any[];
   announcements: any[];
+  ledger: any[];
+  dashboardSummary?: any;
   onNavigate: (tab: string) => void;
 }
 
@@ -80,7 +82,7 @@ const StatCard = React.memo(({ icon: Icon, label, value, color, onClick }: any) 
   return (
     <button 
       onClick={onClick}
-      className={`bg-white dark:bg-slate-800 p-6 min-h-[120px] rounded-none border-2 ${borderColor} transition-all flex items-center gap-4 group text-left w-full hover:shadow-md`}
+      className={`bg-white dark:bg-[#1e293b] p-6 min-h-[120px] rounded-none border-2 ${borderColor} transition-all flex items-center gap-4 group text-left w-full hover:shadow-md`}
     >
       <div className={`w-14 h-14 rounded-none ${color} flex items-center justify-center text-white transition-all`}>
         <Icon size={28} weight="fill" />
@@ -107,8 +109,8 @@ const MobileStatCard = React.memo(({ icon: Icon, label, value, onClick }: any) =
 });
 
 const ChartContainer = React.memo(({ title, icon: Icon, children, extra }: any) => (
-  <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm rounded-none p-6 flex flex-col h-full">
-    <div className="flex items-center justify-between mb-8 border-b border-slate-100 dark:border-slate-700 pb-4">
+  <div className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#1e293b] shadow-sm rounded-none p-6 flex flex-col h-full">
+    <div className="flex items-center justify-between mb-8 border-b border-slate-100 dark:border-[#1e293b] pb-4">
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/30 rounded-none flex items-center justify-center text-[#1e3a8a] dark:text-blue-400">
           <Icon size={20} weight="bold" />
@@ -172,7 +174,7 @@ const ClassAttendanceBarChart = React.memo(({ data }: any) => (
 const CustomTooltip = React.memo(({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 shadow-xl rounded-none">
+      <div className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#1e293b] p-3 shadow-xl rounded-none">
         <p className="font-bold text-slate-900 dark:text-white uppercase text-xs mb-1">{label || payload[0].name}</p>
         {payload.map((p: any, index: number) => (
            <p key={index} className="text-slate-700 dark:text-slate-300 font-bold text-xs">
@@ -231,7 +233,8 @@ const GenderDistributionChart = React.memo(({ data }: any) => (
 
 const Dashboard: React.FC<PrincipalDashboardProps> = ({ 
   school, teachers, students, classes, todaysAttendance, 
-  todaysTeacherAttendance, expenses, enquiries, announcements, onNavigate 
+  todaysTeacherAttendance, expenses, enquiries, announcements, ledger, 
+  dashboardSummary, onNavigate 
 }) => {
   
   const handleNavigate = React.useCallback((tab: string) => {
@@ -274,18 +277,35 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
     loadHolidays();
   }, [viewDate.getFullYear()]);
 
-  // --- DATA PROCESSING ---
+  // --- OPTIMIZED LOOKUP MAPS (O(1) Performance) ---
+  const studentMap = useMemo(() => {
+    const map = new Map();
+    students.forEach(s => map.set(s.id, s));
+    return map;
+  }, [students]);
 
-  // 1. Overall Attendance
-  const presentStudents = todaysAttendance.filter(rec => rec.status === 'Present').length;
-  const totalStudents = students.length;
-  const absentStudents = totalStudents - presentStudents; // Simple calc for demo
+  const teacherMap = useMemo(() => {
+    const map = new Map();
+    teachers.forEach(t => map.set(t.id, t));
+    return map;
+  }, [teachers]);
+
+  const classMap = useMemo(() => {
+    const map = new Map();
+    classes.forEach(c => map.set(c.id, c));
+    return map;
+  }, [classes]);
+
+  // --- DATA PROCESSING ---
+  const presentStudents = useMemo(() => dashboardSummary?.count_present_today ?? todaysAttendance.filter(rec => rec.status === 'Present').length, [dashboardSummary, todaysAttendance]);
+  const totalStudents = useMemo(() => dashboardSummary?.count_students ?? students.length, [dashboardSummary, students]);
+  const absentStudents = totalStudents - presentStudents; 
   const attendanceRate = totalStudents > 0 ? Math.round((presentStudents / totalStudents) * 100) : 0;
 
-  const attendancePieData = [
+  const attendancePieData = useMemo(() => [
       { name: 'Present', value: presentStudents },
       { name: 'Absent', value: absentStudents }
-  ];
+  ], [presentStudents, absentStudents]);
 
   // 2. Class-wise Attendance
   const classAttendanceGraphData = useMemo(() => {
@@ -317,33 +337,53 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
 
   // Staff Stats
   const staffPresent = todaysTeacherAttendance.filter(a => a.status === 'Present' || a.status === 'Late').length;
-  const totalStaff = teachers.length;
+  const totalStaff = dashboardSummary?.count_staff ?? teachers.length;
   const staffAbsent = totalStaff - staffPresent;
 
   // 3. Gender Data (SHARP)
-  const boysCount = students.filter(s => s.customData?.gender === 'Male' || !s.customData?.gender).length;
-  const girlsCount = students.filter(s => s.customData?.gender === 'Female').length;
-  const genderData = [
+  const boysCount = useMemo(() => students.filter(s => s.customData?.gender === 'Male' || !s.customData?.gender).length, [students]);
+  const girlsCount = useMemo(() => students.filter(s => s.customData?.gender === 'Female').length, [students]);
+  const genderData = useMemo(() => [
       { name: 'Boys', value: boysCount, color: '#1e3a8a' }, // Deep Navy
       { name: 'Girls', value: girlsCount, color: '#be123c' } // Deep Rose
-  ];
+  ], [boysCount, girlsCount]);
 
-  // 4. Financials
+  // 4. Financials (Month-Aware)
   const financialStats = useMemo(() => {
+    // 1. Determine the "Active Month" for the dashboard
+    // We'll pick the most recent month present in the ledger
+    let targetMonth = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
+    
+    if (ledger && ledger.length > 0) {
+        // Find the most recent transaction/challan
+        const sortedLedger = [...ledger].sort((a, b) => {
+            const dateA = a.timestamp?.seconds || a.timestamp?.toDate?.()?.getTime() || 0;
+            const dateB = b.timestamp?.seconds || b.timestamp?.toDate?.()?.getTime() || 0;
+            return dateB - dateA;
+        });
+        if (sortedLedger[0]?.month) {
+            targetMonth = sortedLedger[0].month;
+        }
+    }
+
+    // 2. Filter transactions for this month
+    const monthTransactions = ledger.filter(t => t.month === targetMonth);
+
+    // 3. Calculate stats for this month
     let totalCollectible = 0;
     let totalCollected = 0;
-    
-    students.forEach(student => {
-        const classFee = school.feeConfig?.classFees?.[student.classId] || 0;
-        totalCollectible += classFee;
-        if (student.feeStatus === 'Paid') {
-            totalCollected += classFee;
+
+    monthTransactions.forEach(t => {
+        if (t.type === 'challan' || !t.type) { 
+            totalCollectible += (t.amount || t.amountPaid || 0);
+        }
+        if (t.status === 'Success' && t.amountPaid > 0) {
+            totalCollected += t.amountPaid;
         }
     });
 
     const totalPending = totalCollectible - totalCollected;
     
-    // Use real expenses if available
     const totalExpenses = expenses.reduce((acc, exp) => acc + (exp.amount || 0), 0);
     const todaysExpenses = expenses
         .filter(exp => exp.date === new Date().toISOString().split('T')[0])
@@ -351,8 +391,16 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
 
     const cashInHand = totalCollected - totalExpenses;
 
-    return { totalCollectible, totalCollected, totalPending, totalExpenses, todaysExpenses, cashInHand };
-  }, [students, school.feeConfig, expenses]);
+    return { 
+        totalCollectible, 
+        totalCollected, 
+        totalPending, 
+        totalExpenses, 
+        todaysExpenses, 
+        cashInHand,
+        activeMonth: targetMonth
+    };
+  }, [students, school.feeConfig, expenses, ledger]);
 
   // 5. Birthdays
   const todaysBirthdayStudents = useMemo(() => {
@@ -363,16 +411,29 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
     });
   }, [students]);
 
-  // 6. Revenue Bar Chart
+  const todaysBirthdayStudentsCount = dashboardSummary?.count_birthdays ?? todaysBirthdayStudents.length;
+  const openComplaintsCount = dashboardSummary?.count_complaints ?? complaints.filter(c => c.status === 'Open').length;
+
+  // 6. Revenue Bar Chart (Month-Aware)
   const classFeeData = useMemo(() => {
+      const targetMonth = financialStats.activeMonth;
+      const monthTransactions = ledger.filter(t => t.month === targetMonth);
+
       return classes
         .sort((a,b) => a.name.localeCompare(b.name))
         .map(cls => {
-          const classStudents = students.filter(s => s.classId === cls.id);
-          const feePerStudent = school.feeConfig?.classFees?.[cls.id] || 0;
+          const classTrans = monthTransactions.filter(t => t.classId === cls.id);
           
-          const collected = classStudents.filter(s => s.feeStatus === 'Paid').length * feePerStudent;
-          const pending = classStudents.filter(s => s.feeStatus !== 'Paid').length * feePerStudent;
+          let collected = 0;
+          let pending = 0;
+
+          classTrans.forEach(t => {
+              if (t.status === 'Success' && t.amountPaid > 0) {
+                  collected += t.amountPaid;
+              } else if (t.status === 'Pending') {
+                  pending += (t.amount || t.amountPaid || 0);
+              }
+          });
 
           return {
               name: cls.name.replace('Class', '').replace('Grade', '').trim(), 
@@ -380,36 +441,61 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
               Pending: pending
           };
       });
-  }, [classes, students, school.feeConfig]);
+  }, [classes, students, school.feeConfig, ledger, financialStats.activeMonth]);
 
-  // 7. Defaulters
-  const unpaidStudents = students.filter(s => s.feeStatus !== 'Paid');
+  // 7. Defaulters (Month-Aware)
+  const unpaidStudents = useMemo(() => {
+    const targetMonth = financialStats.activeMonth;
+    const pendingTrans = ledger.filter(t => t.month === targetMonth && t.status === 'Pending');
+    
+    return pendingTrans.map(t => {
+        const student = studentMap.get(t.studentId);
+        return {
+            ...student,
+            pendingAmount: t.amount || t.amountPaid || 0,
+            month: t.month
+        };
+    }).filter(s => s && s.id); 
+  }, [ledger, studentMap, financialStats.activeMonth]);
+
   const topDefaulters = unpaidStudents.slice(0, 8);
 
-  // 8. New Chart Data 
+  // 8. New Chart Data (Month-Aware)
+  const { paidCount, pendingCountForMonth } = useMemo(() => {
+    const paidCount = ledger.filter(t => t.month === financialStats.activeMonth && t.status === 'Success').length;
+    const pendingCountForMonth = ledger.filter(t => t.month === financialStats.activeMonth && t.status === 'Pending').length;
+    return { paidCount, pendingCountForMonth };
+  }, [ledger, financialStats.activeMonth]);
+
   // Fee Status Donut
-  const paidCount = students.filter(s => s.feeStatus === 'Paid').length;
-  const pendingCount = students.length - paidCount;
-  const feeStatusData = [
+  const feeStatusData = useMemo(() => [
       { name: 'Paid', value: paidCount, color: '#047857' }, // Emerald
-      { name: 'Pending', value: pendingCount, color: '#be123c' } // Rose
-  ];
+      { name: 'Pending', value: pendingCountForMonth, color: '#be123c' } // Rose
+  ], [paidCount, pendingCountForMonth]);
 
   // Complaints Donut
-  const openComplaints = complaints.filter(c => c.status === 'Open').length;
-  const resolvedComplaints = complaints.length - openComplaints;
-  const complaintChartData = [
-      { name: 'Open', value: openComplaints, color: '#f97316' }, // Orange
-      { name: 'Resolved', value: resolvedComplaints, color: '#64748b' } // Slate
-  ];
+  const { openCount, resolvedCount } = useMemo(() => {
+    const openCount = complaints.filter(c => c.status === 'Open').length;
+    const resolvedCount = complaints.length - openCount;
+    return { openCount, resolvedCount };
+  }, [complaints]);
+
+  const complaintChartData = useMemo(() => [
+      { name: 'Open', value: openCount, color: '#f97316' }, // Orange
+      { name: 'Resolved', value: resolvedCount, color: '#64748b' } // Slate
+  ], [openCount, resolvedCount]);
 
   // Enrollment Donut (New vs Old)
-  const newStudents = students.filter(s => s.category === 'New').length;
-  const oldStudents = students.length - newStudents;
-  const enrollmentData = [
+  const { newStudents, oldStudents } = useMemo(() => {
+    const newStudents = students.filter(s => s.category === 'New').length;
+    const oldStudents = students.length - newStudents;
+    return { newStudents, oldStudents };
+  }, [students]);
+
+  const enrollmentData = useMemo(() => [
       { name: 'New Adm', value: newStudents, color: '#7c3aed' }, // Violet
       { name: 'Returning', value: oldStudents, color: '#1e3a8a' } // Navy
-  ];
+  ], [newStudents, oldStudents]);
   
 
   // --- EXPORT FUNCTIONALITY ---
@@ -683,7 +769,7 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="min-h-screen flex flex-col bg-[#FCFBF8] dark:bg-slate-900 transition-colors duration-300 pb-0"
+        className="min-h-screen flex flex-col bg-[#FCFBF8] dark:bg-[#020617] transition-colors duration-300 pb-0"
       >
         {/* Welcome Banner - Skeuomorphic & Premium (Navy Blue Theme) */}
         <div className="w-full h-[250px] bg-gradient-to-br from-[#1e3a8a] to-[#1e40af] rounded-b-none shadow-[0_15px_40px_rgba(30,58,138,0.4)] relative z-10 shrink-0 flex flex-col justify-between px-6 pt-6 pb-8 overflow-hidden border-b-4 border-[#D4AF37]">
@@ -720,8 +806,8 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
             </div>
             <div className="flex flex-col items-center justify-center p-3 rounded-none bg-gradient-to-b from-white to-slate-50 border-2 border-[#D4AF37] h-24 shadow-[0_10px_20px_rgba(0,0,0,0.2)]">
               <UsersThree size={24} className="text-[#1e3a8a] mb-1" />
-              <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 text-center leading-tight">Staff Attendance</p>
-              <p className="text-sm font-black leading-none text-[#1e3a8a] mt-1">{staffPresent}</p>
+              <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 text-center leading-tight">Total Students</p>
+              <p className="text-sm font-black leading-none text-[#1e3a8a] mt-1">{totalStudents}</p>
             </div>
             <div className="flex flex-col items-center justify-center p-3 rounded-none bg-gradient-to-b from-white to-slate-50 border-2 border-[#D4AF37] h-24 shadow-[0_10px_20px_rgba(0,0,0,0.2)]">
               <Wallet size={24} className="text-[#1e3a8a] mb-1" />
@@ -820,14 +906,14 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
           </div>
           
           <div className="grid grid-cols-3 gap-3">
-            <MobileStatCard icon={UsersThree} label="Students" value={students.length} onClick={() => handleNavigate('students_directory')} />
+            <MobileStatCard icon={UsersThree} label="Students" value={totalStudents} onClick={() => handleNavigate('students_directory')} />
             <MobileStatCard icon={TrendUp} label="Attendance" value={`${attendanceRate}%`} onClick={() => handleNavigate('attendance')} />
             <MobileStatCard icon={UsersThree} label="Staff Pres" value={staffPresent} onClick={() => handleNavigate('teachers_directory')} />
             <MobileStatCard icon={UserMinus} label="Staff Abs" value={staffAbsent} onClick={() => handleNavigate('teachers_directory')} />
             <MobileStatCard icon={Chalkboard} label="Classes" value={classes.length} onClick={() => handleNavigate('classes')} />
-            <MobileStatCard icon={UserPlus} label="Enquiries" value={enquiries.filter(e => e.date === new Date().toISOString().split('T')[0]).length} onClick={() => handleNavigate('enquiries')} />
-            <MobileStatCard icon={Cake} label="Birthdays" value={todaysBirthdayStudents.length} />
-            <MobileStatCard icon={Megaphone} label="Complaint" value={openComplaints} onClick={() => handleNavigate('complaints')} />
+            <MobileStatCard icon={UserPlus} label="Enquiries" value={dashboardSummary?.count_enquiries ?? enquiries.length} onClick={() => handleNavigate('enquiries')} />
+            <MobileStatCard icon={Cake} label="Birthdays" value={todaysBirthdayStudentsCount} />
+            <MobileStatCard icon={Megaphone} label="Complaint" value={openComplaintsCount} onClick={() => handleNavigate('complaints')} />
             <MobileStatCard icon={Receipt} label="Today Exp" value={`Rs ${financialStats.todaysExpenses.toLocaleString()}`} onClick={() => handleNavigate('expenses_daily')} />
           </div>
         </div>
@@ -835,7 +921,7 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
           {/* Donut Charts Section */}
           <div className="grid grid-cols-2 gap-4 mt-6">
             {/* Attendance Donut */}
-            <div className="bg-white dark:bg-slate-800 p-4 rounded-none border-2 border-[#D4AF37] shadow-[0_10px_20px_rgba(0,0,0,0.1)] flex flex-col items-center">
+            <div className="bg-white dark:bg-[#1e293b] p-4 rounded-none border-2 border-[#D4AF37] shadow-[0_10px_20px_rgba(0,0,0,0.1)] flex flex-col items-center">
               <h3 className="text-[10px] font-black text-[#1e3a8a] dark:text-[#D4AF37] uppercase tracking-widest mb-2">Attendance</h3>
               <div className="h-32 w-full relative">
                 <ResponsiveContainer width="100%" height="100%">
@@ -875,7 +961,7 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
             </div>
 
             {/* Fee Collection Donut */}
-            <div className="bg-white dark:bg-slate-800 p-4 rounded-none border-2 border-[#D4AF37] shadow-[0_10px_20px_rgba(0,0,0,0.1)] flex flex-col items-center">
+            <div className="bg-white dark:bg-[#1e293b] p-4 rounded-none border-2 border-[#D4AF37] shadow-[0_10px_20px_rgba(0,0,0,0.1)] flex flex-col items-center">
               <h3 className="text-[10px] font-black text-[#1e3a8a] dark:text-[#D4AF37] uppercase tracking-widest mb-2">Fee Collection</h3>
               <div className="h-32 w-full relative">
                 <ResponsiveContainer width="100%" height="100%">
@@ -918,7 +1004,7 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
           </div>
 
         {/* Principal Tools Section */}
-        <div className="hidden md:block w-full bg-white dark:bg-slate-800 rounded-t-none p-8 pb-8 border-t-4 border-[#D4AF37] shadow-[0_-15px_35px_rgba(30,58,138,0.08)] transition-colors duration-300 mt-8">
+        <div className="hidden md:block w-full bg-white dark:bg-[#1e293b] rounded-t-none p-8 pb-8 border-t-4 border-[#D4AF37] shadow-[0_-15px_35px_rgba(30,58,138,0.08)] transition-colors duration-300 mt-8">
           <div className="flex justify-between items-center mb-6 px-2">
             <h2 className="text-xs font-black text-[#1e3a8a] dark:text-[#D4AF37] uppercase tracking-widest flex items-center gap-2">
               <SquaresFour size={16} weight="fill" /> Principal Tools
@@ -1012,21 +1098,21 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
       <div className="font-sans text-slate-900 dark:text-white pb-20 bg-slate-100 min-h-screen p-4 md:p-6">
         
         {/* --- MAIN BASE BACKGROUND CONTAINER --- */}
-        <div className="w-full max-w-[1920px] mx-auto bg-white dark:bg-slate-800 rounded-none shadow-sm flex flex-col min-h-[90vh]">
+        <div className="w-full max-w-[1920px] mx-auto bg-white dark:bg-[#1e293b] rounded-none shadow-sm flex flex-col min-h-[90vh]">
             
             {/* --- HEADER (Moved Inside) --- */}
             <div className="bg-[#1e3a8a] text-white p-6 shadow-md flex flex-col md:flex-row md:items-center justify-between rounded-none">
                 <div>
                     <h1 className="text-3xl font-black tracking-tight uppercase">{school.name}</h1>
                     <div className="flex items-center gap-4 mt-2">
-                         <span className="bg-white dark:bg-slate-800 text-[#1e3a8a] px-3 py-1 text-xs font-black uppercase tracking-wider rounded-none">Dashboard</span>
+                         <span className="bg-white dark:bg-[#1e293b] text-[#1e3a8a] px-3 py-1 text-xs font-black uppercase tracking-wider rounded-none">Dashboard</span>
                          <span className="text-sm font-bold opacity-80">{new Date().toLocaleDateString('en-GB', { dateStyle: 'full' })}</span>
                     </div>
                 </div>
                 <div className="flex gap-3 mt-4 md:mt-0">
                      <button 
                         onClick={() => setShowExportModal(true)}
-                        className="flex items-center gap-2 px-5 py-2 bg-white dark:bg-slate-800 text-[#1e3a8a] text-xs font-black uppercase hover:bg-slate-200 transition-colors shadow-sm rounded-none"
+                        className="flex items-center gap-2 px-5 py-2 bg-white dark:bg-[#1e293b] text-[#1e3a8a] text-xs font-black uppercase hover:bg-slate-200 transition-colors shadow-sm rounded-none"
                      >
                         <DownloadSimple size={18} weight="fill"/> Export
                      </button>
@@ -1041,16 +1127,16 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
 
                 {/* --- METRICS GRID (12 Cards - 4 Columns) --- */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-6">
-                    <StatCard icon={UsersThree} label="Total Students" value={students.length} color="bg-blue-900" onClick={() => handleNavigate('students_directory')} />
+                    <StatCard icon={UsersThree} label="Total Students" value={totalStudents} color="bg-blue-900" onClick={() => handleNavigate('students_directory')} />
                     <StatCard icon={TrendUp} label="Attendance" value={`${attendanceRate}%`} color="bg-emerald-600" onClick={() => handleNavigate('attendance')} />
                     <StatCard icon={ChalkboardTeacher} label="Teachers" value={`${staffPresent}/${totalStaff}`} color="bg-slate-700" onClick={() => handleNavigate('teachers_directory')} />
                     <StatCard icon={Chalkboard} label="Total Classes" value={classes.length} color="bg-indigo-700" onClick={() => handleNavigate('classes')} />
-                    <StatCard icon={Cake} label="Birthdays Today" value={todaysBirthdayStudents.length} color="bg-pink-500" />
-                    <StatCard icon={Wallet} label="Collected" value={`Rs. ${(financialStats.cashInHand / 1000).toFixed(0)}k`} color="bg-[#1e3a8a]" onClick={() => handleNavigate('fees_dashboard')} />
-                    <StatCard icon={WarningCircle} label="Unpaid" value={`Rs. ${(financialStats.totalPending / 1000).toFixed(0)}k`} color="bg-[#1e3a8a]" onClick={() => handleNavigate('fees_dashboard')} />
-                    <StatCard icon={Target} label="Total Fees" value={`Rs. ${(financialStats.totalCollectible / 1000).toFixed(0)}k`} color="bg-[#7c3aed]" onClick={() => handleNavigate('fees_dashboard')} />
-                    <StatCard icon={Megaphone} label="Issues" value={complaints.filter(c => c.status === 'Open').length} color="bg-[#ea580c]" onClick={() => handleNavigate('complaints')} />
-                    <StatCard icon={UserList} label="Visitors" value={enquiries.filter(e => e.date === new Date().toISOString().split('T')[0]).length} color="bg-cyan-600" onClick={() => handleNavigate('enquiries')} />
+                    <StatCard icon={Cake} label="Birthdays Today" value={todaysBirthdayStudentsCount} color="bg-pink-500" />
+                    <StatCard icon={Wallet} label={`Collected (${financialStats.activeMonth})`} value={`Rs. ${(financialStats.totalCollected / 1000).toFixed(0)}k`} color="bg-[#1e3a8a]" onClick={() => handleNavigate('fees_dashboard')} />
+                    <StatCard icon={WarningCircle} label={`Unpaid (${financialStats.activeMonth})`} value={`Rs. ${(financialStats.totalPending / 1000).toFixed(0)}k`} color="bg-[#1e3a8a]" onClick={() => handleNavigate('fees_dashboard')} />
+                    <StatCard icon={Target} label={`Total Fees (${financialStats.activeMonth})`} value={`Rs. ${(financialStats.totalCollectible / 1000).toFixed(0)}k`} color="bg-[#7c3aed]" onClick={() => handleNavigate('fees_dashboard')} />
+                    <StatCard icon={Megaphone} label="Issues" value={openComplaintsCount} color="bg-[#ea580c]" onClick={() => handleNavigate('complaints')} />
+                    <StatCard icon={UserList} label="Visitors" value={dashboardSummary?.count_enquiries ?? enquiries.length} color="bg-cyan-600" onClick={() => handleNavigate('enquiries')} />
                     <StatCard icon={UserMinus} label="Absent Staff" value={staffAbsent} color="bg-rose-900" onClick={() => handleNavigate('teachers_directory')} />
                     <StatCard icon={Receipt} label="Expenses" value={`Rs. ${financialStats.todaysExpenses.toLocaleString()}`} color="bg-amber-500" onClick={() => handleNavigate('expenses_daily')} />
                 </div>
@@ -1066,7 +1152,7 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
                     </div>
 
                     {/* 2. SHARP QUICK ACTIONS */}
-                    <div className="bg-white dark:bg-slate-800 border-2 border-slate-300 shadow-sm flex flex-col">
+                    <div className="bg-white dark:bg-[#1e293b] border-2 border-slate-300 shadow-sm flex flex-col">
                         <div className="px-6 py-4 border-b-2 border-slate-300 bg-slate-800">
                             <h3 className="text-sm font-black text-white uppercase tracking-wide flex items-center gap-2">
                                 <ListBullets size={18} weight="fill"/> Shortcuts
@@ -1083,7 +1169,7 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
                             </button>
                             
                             <button 
-                                onClick={() => onNavigate('fees_students')}
+                                onClick={() => onNavigate('fees_collect')}
                                 className="flex flex-col items-center justify-center p-6 bg-[#047857] text-white hover:bg-[#065f46] transition-all shadow-lg active:scale-95 group rounded-none"
                             >
                                 <Coins size={28} weight="fill" className="mb-2 text-white"/>
@@ -1113,13 +1199,13 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     
                     {/* 3. CALENDAR WIDGET */}
-                    <div className="bg-white dark:bg-slate-800 border-2 border-slate-300 shadow-sm flex flex-col">
+                    <div className="bg-white dark:bg-[#1e293b] border-2 border-slate-300 shadow-sm flex flex-col">
                         <div className="px-6 py-4 border-b-2 border-slate-300 flex justify-between items-center bg-slate-800">
                             <h3 className="text-sm font-black text-white uppercase tracking-wide flex items-center gap-2">
                                 <CalendarBlank size={18} weight="fill"/> Calendar
                             </h3>
                             {selectedDate !== new Date().toISOString().split('T')[0] && (
-                                <button onClick={() => setSelectedDate(new Date().toISOString().split('T')[0])} className="text-[9px] font-bold bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-2 py-0.5 rounded uppercase hover:bg-slate-200">
+                                <button onClick={() => setSelectedDate(new Date().toISOString().split('T')[0])} className="text-[9px] font-bold bg-white dark:bg-[#1e293b] text-slate-900 dark:text-white px-2 py-0.5 rounded uppercase hover:bg-slate-200">
                                     Reset
                                 </button>
                             )}
@@ -1144,18 +1230,18 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     
                     {/* 6. FINANCIAL LEDGER */}
-                    <div className="bg-white dark:bg-slate-800 border-2 border-slate-300 shadow-sm overflow-hidden flex flex-col">
+                    <div className="bg-white dark:bg-[#1e293b] border-2 border-slate-300 shadow-sm overflow-hidden flex flex-col">
                         <div className="px-6 py-4 border-b-2 border-slate-300 bg-slate-800">
                             <h3 className="text-sm font-black text-white uppercase tracking-wide flex items-center gap-2">
                                 <Bank size={18} weight="fill"/> Income vs Expense
                             </h3>
                         </div>
                         <div className="grid grid-cols-2 divide-x-2 divide-slate-200 h-full items-center">
-                            <div className="p-8 text-center hover:bg-slate-50 dark:bg-slate-800/50 transition-colors">
+                            <div className="p-8 text-center hover:bg-slate-50 dark:bg-[#0f172a] transition-colors">
                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Revenue</p>
                                 <p className="text-3xl font-black text-[#1e3a8a] font-mono tracking-tight">Rs. {financialStats.totalCollected.toLocaleString()}</p>
                             </div>
-                            <div className="p-8 text-center hover:bg-slate-50 dark:bg-slate-800/50 transition-colors">
+                            <div className="p-8 text-center hover:bg-slate-50 dark:bg-[#0f172a] transition-colors">
                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Expenses</p>
                                 <p className="text-3xl font-black text-[#D4AF37] font-mono tracking-tight">Rs. {financialStats.totalExpenses.toLocaleString()}</p>
                             </div>
@@ -1169,28 +1255,28 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
                 </div>
 
                 {/* --- ROW 4: DUES & DEFAULTERS --- */}
-                <div className="bg-white dark:bg-slate-800 border-2 border-[#1e3a8a] shadow-sm overflow-hidden flex flex-col">
+                <div className="bg-white dark:bg-[#1e293b] border-2 border-[#1e3a8a] shadow-sm overflow-hidden flex flex-col">
                     <div className="px-6 py-4 bg-[#1e3a8a] border-b-2 border-[#1e3a8a] flex justify-between items-center">
                         <h3 className="text-sm font-black text-white uppercase tracking-wide flex items-center gap-2">
                             <ShieldWarning size={18} weight="fill"/> Unpaid Fee List
                         </h3>
-                        <span className="text-[10px] font-black uppercase bg-white dark:bg-slate-800 px-3 py-1 text-[#D4AF37] shadow-sm">{unpaidStudents.length} Pending</span>
+                        <span className="text-[10px] font-black uppercase bg-white dark:bg-[#1e293b] px-3 py-1 text-[#D4AF37] shadow-sm">{unpaidStudents.length} Pending</span>
                     </div>
                     
                     <div className="overflow-x-auto">
                         {topDefaulters.length > 0 ? (
                             <table className="w-full text-left">
                                 <thead>
-                                    <tr className="border-b border-slate-200 dark:border-slate-700 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest bg-slate-50 dark:bg-slate-800/50">
+                                    <tr className="border-b border-slate-200 dark:border-[#1e293b] text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest bg-slate-50 dark:bg-[#0f172a]">
                                         <th className="px-6 py-3">Student Name</th>
                                         <th className="px-6 py-3">Class</th>
-                                        <th className="px-6 py-3">Roll No</th>
-                                        <th className="px-6 py-3 text-right">Status</th>
+                                        <th className="px-6 py-3">Month</th>
+                                        <th className="px-6 py-3 text-right">Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100">
-                                    {topDefaulters.map((s, i) => (
-                                        <tr key={i} className="hover:bg-slate-50 dark:bg-slate-800/50 transition-colors">
+                                    {topDefaulters.map((s: any, i) => (
+                                        <tr key={i} className="hover:bg-slate-50 dark:bg-[#0f172a] transition-colors">
                                             <td className="px-6 py-3">
                                                 <p className="font-bold text-sm text-slate-800 dark:text-slate-100">{s.name}</p>
                                                 <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{s.fatherName}</p>
@@ -1200,12 +1286,12 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
                                                     {getClassName(s.classId)}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-3 text-sm font-mono font-bold text-slate-500 dark:text-slate-400">
-                                                {s.rollNo}
+                                            <td className="px-6 py-3 text-xs font-bold text-slate-500">
+                                                {s.month}
                                             </td>
                                             <td className="px-6 py-3 text-right">
-                                                <span className="inline-flex items-center gap-1 text-[10px] font-black text-white bg-[#1e3a8a] px-2 py-1 uppercase">
-                                                    DUE
+                                                <span className="inline-flex items-center gap-1 text-[10px] font-black text-white bg-rose-600 px-2 py-1 uppercase border border-rose-700">
+                                                    Rs. {s.pendingAmount}
                                                 </span>
                                             </td>
                                         </tr>
@@ -1222,8 +1308,8 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
                             </div>
                         )}
                         {unpaidStudents.length > 8 && (
-                            <div className="p-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700 text-center">
-                                <button className="text-xs font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest hover:underline">View All {unpaidStudents.length} Defaulters</button>
+                            <div className="p-3 bg-slate-50 dark:bg-[#0f172a] border-t border-slate-200 dark:border-[#1e293b] text-center">
+                                <button onClick={() => onNavigate('fees_due')} className="text-xs font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest hover:underline">View All {unpaidStudents.length} Defaulters</button>
                             </div>
                         )}
                     </div>
@@ -1233,19 +1319,19 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     
                     {/* BIRTHDAY TABLE */}
-                    <div className="bg-white dark:bg-slate-800 border-2 border-pink-500 shadow-sm overflow-hidden flex flex-col">
+                    <div className="bg-white dark:bg-[#1e293b] border-2 border-pink-500 shadow-sm overflow-hidden flex flex-col">
                         <div className="px-6 py-4 bg-pink-500 border-b-2 border-pink-500 flex justify-between items-center">
                             <h3 className="text-sm font-black text-white uppercase tracking-wide flex items-center gap-2">
                                 <Gift size={18} weight="fill"/> Birthdays
                             </h3>
-                            <span className="text-[10px] font-black uppercase bg-white dark:bg-slate-800 px-3 py-1 text-pink-600 shadow-sm">{todaysBirthdayStudents.length} Today</span>
+                            <span className="text-[10px] font-black uppercase bg-white dark:bg-[#1e293b] px-3 py-1 text-pink-600 shadow-sm">{todaysBirthdayStudents.length} Today</span>
                         </div>
                         
                         <div className="overflow-x-auto max-h-[300px] overflow-y-auto custom-scrollbar">
                             {todaysBirthdayStudents.length > 0 ? (
                                 <table className="w-full text-left">
                                     <thead>
-                                        <tr className="border-b border-slate-200 dark:border-slate-700 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest bg-slate-50 dark:bg-slate-800/50">
+                                        <tr className="border-b border-slate-200 dark:border-[#1e293b] text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest bg-slate-50 dark:bg-[#0f172a]">
                                             <th className="px-6 py-3">Name</th>
                                             <th className="px-6 py-3">Class</th>
                                             <th className="px-6 py-3 text-right">Age</th>
@@ -1298,12 +1384,12 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
                     </div>
 
                     {/* COMPLAINTS TABLE (NEW) */}
-                    <div className="bg-white dark:bg-slate-800 border-2 border-orange-500 shadow-sm overflow-hidden flex flex-col">
+                    <div className="bg-white dark:bg-[#1e293b] border-2 border-orange-500 shadow-sm overflow-hidden flex flex-col">
                         <div className="px-6 py-4 bg-orange-500 border-b-2 border-orange-500 flex justify-between items-center">
                             <h3 className="text-sm font-black text-white uppercase tracking-wide flex items-center gap-2">
                                 <Megaphone size={18} weight="fill"/> Complaints
                             </h3>
-                            <span className="text-[10px] font-black uppercase bg-white dark:bg-slate-800 px-3 py-1 text-orange-600 shadow-sm">
+                            <span className="text-[10px] font-black uppercase bg-white dark:bg-[#1e293b] px-3 py-1 text-orange-600 shadow-sm">
                                 {complaints.filter(c => c.status === 'Open').length} Open
                             </span>
                         </div>
@@ -1312,7 +1398,7 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
                             {complaints.length > 0 ? (
                                 <table className="w-full text-left">
                                     <thead>
-                                        <tr className="border-b border-slate-200 dark:border-slate-700 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest bg-slate-50 dark:bg-slate-800/50">
+                                        <tr className="border-b border-slate-200 dark:border-[#1e293b] text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest bg-slate-50 dark:bg-[#0f172a]">
                                             <th className="px-6 py-3">Subject</th>
                                             <th className="px-6 py-3 text-right">Status</th>
                                         </tr>
@@ -1345,12 +1431,12 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
                 </div>
 
                 {/* --- ROW 6: EVENTS & ANNOUNCEMENTS --- */}
-                <div className="bg-white dark:bg-slate-800 border-2 border-violet-600 shadow-sm overflow-hidden flex flex-col mt-6">
+                <div className="bg-white dark:bg-[#1e293b] border-2 border-violet-600 shadow-sm overflow-hidden flex flex-col mt-6">
                     <div className="px-6 py-4 bg-violet-600 border-b-2 border-violet-600 flex justify-between items-center">
                         <h3 className="text-sm font-black text-white uppercase tracking-wide flex items-center gap-2">
                             <CalendarPlus size={18} weight="fill"/> Notice Board
                         </h3>
-                        <span className="text-[10px] font-black uppercase bg-white dark:bg-slate-800 px-3 py-1 text-violet-700 shadow-sm">
+                        <span className="text-[10px] font-black uppercase bg-white dark:bg-[#1e293b] px-3 py-1 text-violet-700 shadow-sm">
                             {announcements.length} Active
                         </span>
                     </div>
@@ -1359,7 +1445,7 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
                         {announcements.length > 0 ? (
                             <table className="w-full text-left">
                                 <thead>
-                                    <tr className="border-b border-slate-200 dark:border-slate-700 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest bg-slate-50 dark:bg-slate-800/50">
+                                    <tr className="border-b border-slate-200 dark:border-[#1e293b] text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest bg-slate-50 dark:bg-[#0f172a]">
                                         <th className="px-6 py-3">Notice</th>
                                         <th className="px-6 py-3">Date</th>
                                         <th className="px-6 py-3">Audience</th>
@@ -1379,7 +1465,7 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
                                                 </div>
                                             </td>
                                             <td className="px-6 py-3">
-                                                <span className="text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 px-2 py-1 rounded border border-slate-200 dark:border-slate-700">
+                                                <span className="text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 px-2 py-1 rounded border border-slate-200 dark:border-[#1e293b]">
                                                     {new Date(e.timestamp || e.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                                                 </span>
                                             </td>
@@ -1408,7 +1494,7 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-6">
                     
                     {/* 1. FEE STATUS DONUT */}
-                    <div className="bg-white dark:bg-slate-800 border-2 border-slate-300 shadow-sm flex flex-col">
+                    <div className="bg-white dark:bg-[#1e293b] border-2 border-slate-300 shadow-sm flex flex-col">
                         <div className="px-6 py-4 border-b-2 border-slate-300 bg-slate-800">
                             <h3 className="text-sm font-black text-white uppercase tracking-wide flex items-center gap-2">
                                 <ChartPie size={18} weight="fill"/> Fee Summary
@@ -1441,7 +1527,7 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
                                     <span className="text-[9px] font-bold uppercase text-slate-500 dark:text-slate-400">Paid</span>
                                 </div>
                                 <div className="text-center">
-                                    <span className="block text-xl font-black text-[#D4AF37]">{pendingCount}</span>
+                                    <span className="block text-xl font-black text-[#D4AF37]">{pendingCountForMonth}</span>
                                     <span className="text-[9px] font-bold uppercase text-slate-500 dark:text-slate-400">Pending</span>
                                 </div>
                             </div>
@@ -1449,7 +1535,7 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
                     </div>
 
                     {/* 2. COMPLAINTS RESOLUTION DONUT */}
-                    <div className="bg-white dark:bg-slate-800 border-2 border-slate-300 shadow-sm flex flex-col">
+                    <div className="bg-white dark:bg-[#1e293b] border-2 border-slate-300 shadow-sm flex flex-col">
                         <div className="px-6 py-4 border-b-2 border-slate-300 bg-slate-800">
                             <h3 className="text-sm font-black text-white uppercase tracking-wide flex items-center gap-2">
                                 <Megaphone size={18} weight="fill"/> Complaints Summary
@@ -1478,11 +1564,11 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
                             </div>
                              <div className="flex gap-4 mt-2 justify-center">
                                 <div className="text-center">
-                                    <span className="block text-xl font-black text-[#f97316]">{openComplaints}</span>
+                                    <span className="block text-xl font-black text-[#f97316]">{openCount}</span>
                                     <span className="text-[9px] font-bold uppercase text-slate-500 dark:text-slate-400">Open</span>
                                 </div>
                                 <div className="text-center">
-                                    <span className="block text-xl font-black text-[#64748b]">{resolvedComplaints}</span>
+                                    <span className="block text-xl font-black text-[#64748b]">{resolvedCount}</span>
                                     <span className="text-[9px] font-bold uppercase text-slate-500 dark:text-slate-400">Solved</span>
                                 </div>
                             </div>
@@ -1490,7 +1576,7 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
                     </div>
 
                     {/* 3. ENROLLMENT DONUT */}
-                    <div className="bg-white dark:bg-slate-800 border-2 border-slate-300 shadow-sm flex flex-col">
+                    <div className="bg-white dark:bg-[#1e293b] border-2 border-slate-300 shadow-sm flex flex-col">
                         <div className="px-6 py-4 border-b-2 border-slate-300 bg-slate-800">
                             <h3 className="text-sm font-black text-white uppercase tracking-wide flex items-center gap-2">
                                 <UserPlus size={18} weight="fill"/> Admissions
@@ -1537,7 +1623,7 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
             {showExportModal && (
                 <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" onClick={() => setShowExportModal(false)}></div>
-                    <div className="bg-white dark:bg-slate-800 w-full max-w-lg rounded-none relative z-10 animate-in zoom-in-95 shadow-2xl overflow-hidden">
+                    <div className="bg-white dark:bg-[#1e293b] w-full max-w-lg rounded-none relative z-10 animate-in zoom-in-95 shadow-2xl overflow-hidden">
                         <div className="bg-slate-800 text-white p-5 flex justify-between items-center">
                             <h3 className="text-lg font-black uppercase tracking-tight flex items-center gap-2">
                                 <DownloadSimple size={24} weight="fill"/> Export Data
@@ -1551,7 +1637,7 @@ const Dashboard: React.FC<PrincipalDashboardProps> = ({
                                 <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Select Data to Export</h4>
                                 <div className="grid grid-cols-2 gap-3">
                                     {Object.keys(exportOptions).map(key => (
-                                        <label key={key} className="flex items-center gap-3 p-3 border-2 border-slate-200 dark:border-slate-700 hover:border-blue-500 cursor-pointer transition-colors bg-slate-50 dark:bg-slate-800/50">
+                                        <label key={key} className="flex items-center gap-3 p-3 border-2 border-slate-200 dark:border-[#1e293b] hover:border-blue-500 cursor-pointer transition-colors bg-slate-50 dark:bg-[#0f172a]">
                                             <div className={`w-5 h-5 border-2 flex items-center justify-center ${exportOptions[key as keyof typeof exportOptions] ? 'bg-blue-600 border-blue-600' : 'border-slate-300'}`}>
                                                 {exportOptions[key as keyof typeof exportOptions] && <Check size={14} weight="bold" className="text-white"/>}
                                             </div>

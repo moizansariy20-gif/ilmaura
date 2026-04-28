@@ -94,9 +94,9 @@ const ComplaintsManagement: React.FC<ComplaintsManagementProps> = ({ schoolId, p
 
     if (isMobile) {
       return (
-        <div className="bg-[#FCFBF8] dark:bg-slate-900 min-h-screen pb-32 font-sans">
+        <div className="bg-[#FCFBF8] dark:bg-[#020617] min-h-screen pb-32 font-sans">
           {/* Premium Mobile Header */}
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+          <div className="bg-white dark:bg-[#1e293b] p-6 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
             <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#1e3a8a] via-[#D4AF37] to-[#1e3a8a]"></div>
             <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
             
@@ -117,7 +117,7 @@ const ComplaintsManagement: React.FC<ComplaintsManagementProps> = ({ schoolId, p
               </div>
               <div className="flex p-1.5 bg-gradient-to-br from-[#1e3a8a] to-[#172554] shadow-[0_10px_25px_-5px_rgba(30,58,138,0.4),inset_0_2px_4px_rgba(255,255,255,0.2)] rounded-2xl border-2 border-[#D4AF37]/40 relative group overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-tr from-[#D4AF37]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="w-12 h-12 rounded-xl overflow-hidden border border-[#D4AF37]/30 bg-white/10 dark:bg-slate-800/10 flex items-center justify-center relative z-10">
+                <div className="w-12 h-12 rounded-xl overflow-hidden border border-[#D4AF37]/30 bg-white/10 dark:bg-[#1e293b]/10 flex items-center justify-center relative z-10">
                   {profile?.photoURL ? (
                     <img 
                       src={profile.photoURL} 
@@ -142,7 +142,7 @@ const ComplaintsManagement: React.FC<ComplaintsManagementProps> = ({ schoolId, p
                 <select 
                   value={filterStatus} 
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="w-full p-4 pl-12 bg-[#FCFBF8] dark:bg-slate-900 shadow-[inset_0_2px_8px_rgba(30,58,138,0.04)] border border-[#E5E0D8] dark:border-slate-700 rounded-xl text-sm font-bold text-[#1e3a8a] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all appearance-none uppercase"
+                  className="w-full p-4 pl-12 bg-[#FCFBF8] dark:bg-[#020617] shadow-[inset_0_2px_8px_rgba(30,58,138,0.04)] border border-[#E5E0D8] dark:border-[#1e293b] rounded-xl text-sm font-bold text-[#1e3a8a] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all appearance-none uppercase"
                 >
                   <option value="All">ALL COMPLAINTS</option>
                   <option value="Pending">PENDING</option>
@@ -170,7 +170,7 @@ const ComplaintsManagement: React.FC<ComplaintsManagementProps> = ({ schoolId, p
                   <div className="text-center py-12 text-slate-500 font-bold uppercase tracking-widest text-xs">Loading...</div>
                 ) : filteredList.length > 0 ? (
                   filteredList.map(c => (
-                    <div key={c.id} className="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-[#D4AF37]/20 shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] relative overflow-hidden group">
+                    <div key={c.id} className="bg-white dark:bg-[#1e293b] p-5 rounded-3xl border border-[#D4AF37]/20 shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] relative overflow-hidden group">
                       <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-[#D4AF37] to-[#1e3a8a] opacity-90"></div>
                       
                       <div className="flex justify-between items-start mb-3">
@@ -188,7 +188,7 @@ const ComplaintsManagement: React.FC<ComplaintsManagementProps> = ({ schoolId, p
                       <h3 className="font-black text-[#1e3a8a] dark:text-white text-lg leading-tight mb-2">{c.title}</h3>
                       <p className="text-sm font-medium text-slate-600 dark:text-slate-300 mb-4">{c.description}</p>
                       
-                      <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-700">
+                      <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-[#1e293b]">
                         <span className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-widest">
                             By: {c.submittedBy}
                         </span>
@@ -205,7 +205,7 @@ const ComplaintsManagement: React.FC<ComplaintsManagementProps> = ({ schoolId, p
                     </div>
                   ))
                 ) : (
-                  <div className="col-span-full text-center py-16 rounded-3xl bg-white dark:bg-slate-800 shadow-[0_10px_40px_-10px_rgba(30,58,138,0.05)] border-2 border-[#D4AF37]/30 border-dashed">
+                  <div className="col-span-full text-center py-16 rounded-3xl bg-white dark:bg-[#1e293b] shadow-[0_10px_40px_-10px_rgba(30,58,138,0.05)] border-2 border-[#D4AF37]/30 border-dashed">
                     <CheckCircle size={48} className="text-[#D4AF37] mx-auto mb-4 opacity-50" weight="fill" />
                     <p className="text-xl font-black text-[#1e3a8a] dark:text-white tracking-tight">No Complaints Found</p>
                   </div>
@@ -235,14 +235,14 @@ const ComplaintsManagement: React.FC<ComplaintsManagementProps> = ({ schoolId, p
 
     return (
         <div className="font-sans text-slate-900 dark:text-white animate-in fade-in duration-300 pb-20 bg-slate-100 min-h-screen p-4 md:p-6">
-            <div className="w-full max-w-[1920px] mx-auto bg-white dark:bg-slate-800 border-2 border-slate-300 shadow-sm flex flex-col min-h-[90vh]">
+            <div className="w-full max-w-[1920px] mx-auto bg-white dark:bg-[#1e293b] border-2 border-slate-300 shadow-sm flex flex-col min-h-[90vh]">
                 
                 {/* Header */}
                 <div className="bg-[#1e3a8a] text-white p-6 shadow-md flex flex-col md:flex-row md:items-center justify-between border-b-4 border-slate-900">
                     <div>
                         <h1 className="text-3xl font-black tracking-tight uppercase">Issue Tracker</h1>
                         <div className="flex items-center gap-4 mt-2">
-                             <span className="bg-white dark:bg-slate-800 text-[#1e3a8a] px-3 py-1 text-xs font-black uppercase tracking-wider border border-slate-900">Complaints</span>
+                             <span className="bg-white dark:bg-[#1e293b] text-[#1e3a8a] px-3 py-1 text-xs font-black uppercase tracking-wider border border-slate-900">Complaints</span>
                         </div>
                     </div>
                     <div className="mt-4 md:mt-0">
@@ -253,11 +253,11 @@ const ComplaintsManagement: React.FC<ComplaintsManagementProps> = ({ schoolId, p
                 </div>
 
                 {/* Content */}
-                <div className="p-8 bg-slate-50 dark:bg-slate-800/50 min-h-[600px]">
+                <div className="p-8 bg-slate-50 dark:bg-[#0f172a] min-h-[600px]">
                     
                     {/* Toolbar */}
                     <div className="flex justify-between items-center mb-6">
-                        <div className="flex bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 p-1">
+                        <div className="flex bg-white dark:bg-[#1e293b] border-2 border-slate-200 dark:border-[#1e293b] p-1">
                             {['All', 'Open', 'In Progress', 'Resolved'].map(s => (
                                 <button 
                                     key={s} 
@@ -273,7 +273,7 @@ const ComplaintsManagement: React.FC<ComplaintsManagementProps> = ({ schoolId, p
                     {/* Grid */}
                     <div className="grid grid-cols-1 gap-4">
                         {filteredList.map(item => (
-                            <div key={item.id} className="bg-white dark:bg-slate-800 border-l-8 border-l-slate-800 border-2 border-slate-200 dark:border-slate-700 p-6 flex flex-col md:flex-row justify-between items-start md:items-center shadow-sm hover:shadow-md transition-all">
+                            <div key={item.id} className="bg-white dark:bg-[#1e293b] border-l-8 border-l-slate-800 border-2 border-slate-200 dark:border-[#1e293b] p-6 flex flex-col md:flex-row justify-between items-start md:items-center shadow-sm hover:shadow-md transition-all">
                                 <div className="flex-1">
                                     <div className="flex items-center gap-3 mb-2">
                                         <PriorityBadge p={item.priority} />
@@ -291,7 +291,7 @@ const ComplaintsManagement: React.FC<ComplaintsManagementProps> = ({ schoolId, p
                                                     <button 
                                                         key={idx} 
                                                         onClick={() => setPreviewMedia({ url, isVideo })}
-                                                        className="relative w-16 h-16 rounded border-2 border-slate-200 dark:border-slate-700 overflow-hidden bg-slate-50 dark:bg-slate-800/50 flex items-center justify-center hover:border-[#1e3a8a] transition-all"
+                                                        className="relative w-16 h-16 rounded border-2 border-slate-200 dark:border-[#1e293b] overflow-hidden bg-slate-50 dark:bg-[#0f172a] flex items-center justify-center hover:border-[#1e3a8a] transition-all"
                                                     >
                                                         {isVideo ? (
                                                             <VideoIcon size={24} className="text-slate-400" />
@@ -317,7 +317,7 @@ const ComplaintsManagement: React.FC<ComplaintsManagementProps> = ({ schoolId, p
                                          </span>
                                     </div>
                                     
-                                    <div className="flex gap-1 ml-4 border-l-2 border-slate-100 dark:border-slate-800 pl-4">
+                                    <div className="flex gap-1 ml-4 border-l-2 border-slate-100 dark:border-[#334155] pl-4">
                                         {item.status !== 'Resolved' && (
                                             <button onClick={() => handleStatusUpdate(item.id, 'Resolved')} className="p-2 text-emerald-600 hover:bg-emerald-50" title="Mark Resolved"><CheckCircle size={20} weight="fill"/></button>
                                         )}
@@ -337,18 +337,18 @@ const ComplaintsManagement: React.FC<ComplaintsManagementProps> = ({ schoolId, p
             {showModal && (
                 <div className="fixed inset-0 z-[600] flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-slate-900/90 backdrop-blur-sm" onClick={() => setShowModal(false)}></div>
-                    <div className="bg-white dark:bg-slate-800 w-full max-w-lg border-4 border-slate-800 p-0 relative z-10 shadow-2xl">
+                    <div className="bg-white dark:bg-[#1e293b] w-full max-w-lg border-4 border-slate-800 p-0 relative z-10 shadow-2xl">
                         <div className="bg-slate-800 text-white p-5 flex justify-between items-center border-b-4 border-black">
                             <h3 className="text-lg font-black uppercase tracking-tight">Report Issue</h3>
                         </div>
                         <div className="p-8 space-y-4">
                             <div>
                                 <label className="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest block mb-1">Title</label>
-                                <input className="w-full p-3 bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-200 dark:border-slate-700 font-bold outline-none" value={newTitle} onChange={e => setNewTitle(e.target.value)} />
+                                <input className="w-full p-3 bg-slate-50 dark:bg-[#0f172a] border-2 border-slate-200 dark:border-[#1e293b] font-bold outline-none" value={newTitle} onChange={e => setNewTitle(e.target.value)} />
                             </div>
                             <div>
                                 <label className="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest block mb-1">Priority</label>
-                                <select className="w-full p-3 bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-200 dark:border-slate-700 font-bold outline-none" value={newPriority} onChange={e => setNewPriority(e.target.value)}>
+                                <select className="w-full p-3 bg-slate-50 dark:bg-[#0f172a] border-2 border-slate-200 dark:border-[#1e293b] font-bold outline-none" value={newPriority} onChange={e => setNewPriority(e.target.value)}>
                                     <option value="Low">Low</option>
                                     <option value="Medium">Medium</option>
                                     <option value="High">High</option>
@@ -356,7 +356,7 @@ const ComplaintsManagement: React.FC<ComplaintsManagementProps> = ({ schoolId, p
                             </div>
                             <div>
                                 <label className="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest block mb-1">Details</label>
-                                <textarea className="w-full p-3 bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-200 dark:border-slate-700 font-bold outline-none h-24" value={newDesc} onChange={e => setNewDesc(e.target.value)} />
+                                <textarea className="w-full p-3 bg-slate-50 dark:bg-[#0f172a] border-2 border-slate-200 dark:border-[#1e293b] font-bold outline-none h-24" value={newDesc} onChange={e => setNewDesc(e.target.value)} />
                             </div>
                             <button onClick={handleAdd} className="w-full py-4 bg-[#1e3a8a] text-white font-black text-xs uppercase tracking-widest">Submit Ticket</button>
                         </div>

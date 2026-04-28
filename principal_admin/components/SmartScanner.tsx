@@ -4,6 +4,11 @@ import { Camera, Keyboard, XCircle, Scan, SpinnerGap, CheckCircle } from 'phosph
 import Webcam from 'react-webcam';
 import * as faceapi from '@vladmandic/face-api';
 
+// GLOBAL CACHE: Store student face descriptors so we process each photo only once per session.
+// This prevents the "system hang" and lag when opening the scanner multiple times.
+const FACE_DESCRIPTOR_CACHE: Record<string, faceapi.LabeledFaceDescriptors> = {};
+let MODELS_LOADED_GLOBAL = false;
+
 interface SmartScannerProps {
   onScan: (scannedData: string) => void;
   mode: 'qr' | 'face';
@@ -65,6 +70,12 @@ const SmartScanner: React.FC<SmartScannerProps> = ({ onScan, mode, referenceData
   // --- Face API Logic ---
   useEffect(() => {
     if (mode === 'face' && useCamera) {
+      if (MODELS_LOADED_GLOBAL) {
+        setModelsLoaded(true);
+        setFaceStatus('AI Ready. Checking Cache...');
+        return;
+      }
+
       const loadModels = async () => {
         setFaceStatus('Loading AI Models...');
         try {
@@ -74,6 +85,7 @@ const SmartScanner: React.FC<SmartScannerProps> = ({ onScan, mode, referenceData
             faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
             faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
           ]);
+          MODELS_LOADED_GLOBAL = true;
           setModelsLoaded(true);
           setFaceStatus('Models Loaded. Preparing Faces...');
         } catch (error) {
@@ -88,17 +100,33 @@ const SmartScanner: React.FC<SmartScannerProps> = ({ onScan, mode, referenceData
   useEffect(() => {
     if (modelsLoaded && referenceData && referenceData.length > 0) {
       const buildMatcher = async () => {
-        setFaceStatus('Processing Reference Photos...');
+        setFaceStatus('Processing Student Faces...');
         const labeledDescriptors: faceapi.LabeledFaceDescriptors[] = [];
         
-        for (const person of referenceData) {
+        // 1. Check which students are already in cache
+        const studentsToProcess = referenceData.filter(person => !FACE_DESCRIPTOR_CACHE[person.id]);
+        
+        // 2. Add already cached students to the list
+        referenceData.forEach(person => {
+          if (FACE_DESCRIPTOR_CACHE[person.id]) {
+            labeledDescriptors.push(FACE_DESCRIPTOR_CACHE[person.id]);
+          }
+        });
+
+        if (studentsToProcess.length > 0) {
+          setFaceStatus(`Learning ${studentsToProcess.length} New Faces...`);
+        }
+
+        // 3. Process only new students
+        for (const person of studentsToProcess) {
           if (person.photoURL) {
             try {
-              // Fetch image and create HTMLImageElement
               const img = await faceapi.fetchImage(person.photoURL);
               const detection = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor();
               if (detection) {
-                labeledDescriptors.push(new faceapi.LabeledFaceDescriptors(person.id, [detection.descriptor]));
+                const descriptor = new faceapi.LabeledFaceDescriptors(person.id, [detection.descriptor]);
+                FACE_DESCRIPTOR_CACHE[person.id] = descriptor; // Store in cache
+                labeledDescriptors.push(descriptor);
               }
             } catch (e) {
               console.warn(`Could not load face for ${person.name}`, e);
@@ -110,12 +138,12 @@ const SmartScanner: React.FC<SmartScannerProps> = ({ onScan, mode, referenceData
           setFaceMatcher(new faceapi.FaceMatcher(labeledDescriptors, 0.6));
           setFaceStatus('Ready to Scan');
         } else {
-          setFaceStatus('No valid reference photos found.');
+          setFaceStatus('No valid photos found.');
         }
       };
       buildMatcher();
     } else if (modelsLoaded && (!referenceData || referenceData.length === 0)) {
-      setFaceStatus('No reference data provided.');
+      setFaceStatus('No student data provided.');
     }
   }, [modelsLoaded, referenceData]);
 
@@ -146,6 +174,8 @@ const SmartScanner: React.FC<SmartScannerProps> = ({ onScan, mode, referenceData
   // --- End Face API Logic ---
 
   // Hardware Scanner Logic (Keyboard wedge)
+  const [hwBuffer, setHwBuffer] = useState('');
+  
   useEffect(() => {
     if (useCamera) return; // Don't listen to keyboard if camera is active
 
@@ -159,16 +189,19 @@ const SmartScanner: React.FC<SmartScannerProps> = ({ onScan, mode, referenceData
       }
 
       if (e.key === 'Enter') {
-        if (barcode.length > 2) {
+        if (barcode.length > 0) {
           handleValidScan(barcode);
         }
         barcode = '';
+        setHwBuffer('');
       } else if (e.key.length === 1) {
         barcode += e.key;
+        setHwBuffer(barcode);
         clearTimeout(timeout);
         timeout = setTimeout(() => {
           barcode = '';
-        }, 100); // 100ms timeout for scanner speed
+          setHwBuffer('');
+        }, 5000); // Increased to 5s to allow manual typing simulation while testing.
       }
     };
 
@@ -206,12 +239,12 @@ const SmartScanner: React.FC<SmartScannerProps> = ({ onScan, mode, referenceData
   }, [useCamera, mode, onScan]);
 
   return (
-    <div className="bg-white dark:bg-slate-800 p-6 border-2 border-slate-200 dark:border-slate-700 shadow-sm flex flex-col items-center">
+    <div className="bg-white dark:bg-[#1e293b] p-6 border-2 border-slate-200 dark:border-[#1e293b] shadow-sm flex flex-col items-center">
       <div className="flex gap-4 mb-6">
         {mode === 'qr' && (
           <button
             onClick={() => setUseCamera(false)}
-            className={`flex items-center gap-2 px-6 py-3 font-black uppercase tracking-widest text-xs transition-all border-2 ${!useCamera ? 'bg-[#1e3a8a] text-white border-[#1e3a8a]' : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-300 hover:border-[#1e3a8a]'}`}
+            className={`flex items-center gap-2 px-6 py-3 font-black uppercase tracking-widest text-xs transition-all border-2 ${!useCamera ? 'bg-[#1e3a8a] text-white border-[#1e3a8a]' : 'bg-white dark:bg-[#1e293b] text-slate-500 dark:text-slate-400 border-slate-300 hover:border-[#1e3a8a]'}`}
           >
             <Keyboard size={20} weight={!useCamera ? 'fill' : 'regular'} />
             Hardware Scanner
@@ -219,7 +252,7 @@ const SmartScanner: React.FC<SmartScannerProps> = ({ onScan, mode, referenceData
         )}
         <button
           onClick={() => setUseCamera(true)}
-          className={`flex items-center gap-2 px-6 py-3 font-black uppercase tracking-widest text-xs transition-all border-2 ${useCamera ? 'bg-[#1e3a8a] text-white border-[#1e3a8a]' : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-300 hover:border-[#1e3a8a]'}`}
+          className={`flex items-center gap-2 px-6 py-3 font-black uppercase tracking-widest text-xs transition-all border-2 ${useCamera ? 'bg-[#1e3a8a] text-white border-[#1e3a8a]' : 'bg-white dark:bg-[#1e293b] text-slate-500 dark:text-slate-400 border-slate-300 hover:border-[#1e3a8a]'}`}
         >
           {mode === 'face' ? <Scan size={20} weight={useCamera ? 'fill' : 'regular'} /> : <Camera size={20} weight={useCamera ? 'fill' : 'regular'} />}
           {mode === 'face' ? 'Face Scanner' : 'Device Camera'}
@@ -254,14 +287,14 @@ const SmartScanner: React.FC<SmartScannerProps> = ({ onScan, mode, referenceData
             }
           `}</style>
           {mode === 'qr' ? (
-            <div className="bg-white dark:bg-slate-800 p-2 rounded-xl border-4 border-slate-200 dark:border-slate-700 shadow-sm">
+            <div className="bg-white dark:bg-[#1e293b] p-2 rounded-xl border-4 border-slate-200 dark:border-[#1e293b] shadow-sm">
               <div id="reader" className="w-full overflow-hidden rounded-lg bg-slate-100"></div>
               <p className="text-center text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-4 mb-2">
                 Point camera at QR/Barcode
               </p>
             </div>
           ) : (
-            <div className="relative w-full overflow-hidden rounded-xl border-4 border-slate-200 dark:border-slate-700 bg-slate-100 aspect-square md:aspect-video flex flex-col items-center justify-center shadow-sm">
+            <div className="relative w-full overflow-hidden rounded-xl border-4 border-slate-200 dark:border-[#1e293b] bg-slate-100 aspect-square md:aspect-video flex flex-col items-center justify-center shadow-sm">
               <Webcam 
                 ref={webcamRef}
                 audio={false}
@@ -270,7 +303,7 @@ const SmartScanner: React.FC<SmartScannerProps> = ({ onScan, mode, referenceData
               />
               
               {/* Simple Status Overlay */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 bg-white dark:bg-slate-800 px-4 py-2 border-2 border-slate-200 dark:border-slate-700 flex items-center gap-2 shadow-sm">
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 bg-white dark:bg-[#1e293b] px-4 py-2 border-2 border-slate-200 dark:border-[#1e293b] flex items-center gap-2 shadow-sm">
                 {faceStatus === 'Ready to Scan' ? (
                   <>
                     <span className="relative flex h-3 w-3">
@@ -290,7 +323,7 @@ const SmartScanner: React.FC<SmartScannerProps> = ({ onScan, mode, referenceData
           )}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center p-12 border-2 border-dashed border-slate-300 w-full max-w-md bg-slate-50 dark:bg-slate-800/50">
+        <div className="flex flex-col items-center justify-center p-12 border-2 border-dashed border-slate-300 w-full max-w-md bg-slate-50 dark:bg-[#0f172a]">
           <Keyboard size={48} weight="duotone" className="text-slate-400 mb-4" />
           <p className="text-center text-sm font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest">
             Ready for Hardware Scanner
@@ -298,6 +331,13 @@ const SmartScanner: React.FC<SmartScannerProps> = ({ onScan, mode, referenceData
           <p className="text-center text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-2">
             Scan any ID card now...
           </p>
+          
+          {hwBuffer && (
+            <div className="mt-6 p-3 bg-white dark:bg-slate-700 border-2 border-slate-900 shadow-[4px_4px_0px_#1e3a8a] animate-bounce">
+              <p className="text-[10px] font-black uppercase text-[#1e3a8a] dark:text-blue-400 mb-1">Typing/Scanning...</p>
+              <p className="text-lg font-mono font-black tracking-widest">{hwBuffer}</p>
+            </div>
+          )}
         </div>
       )}
     </div>

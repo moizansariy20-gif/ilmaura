@@ -18,7 +18,7 @@ const IDCardRenderer: React.FC<IDCardRendererProps> = ({ student, school }) => {
 
   return (
     <div 
-      className="relative bg-white dark:bg-slate-800 shadow-sm overflow-hidden print:shadow-none print:border print:border-slate-200 dark:border-slate-700"
+      className="relative bg-white dark:bg-[#1e293b] shadow-sm overflow-hidden print:shadow-none print:border print:border-slate-200 dark:border-[#1e293b]"
       style={{ 
         width: `${CARD_WIDTH}px`, 
         height: `${CARD_HEIGHT}px`,

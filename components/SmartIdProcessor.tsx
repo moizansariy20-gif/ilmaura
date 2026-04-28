@@ -113,7 +113,7 @@ CRITICAL INSTRUCTIONS:
   }, [originalImage, backgroundColor, onComplete, onError]);
 
   return (
-    <div className="flex flex-col items-center justify-center p-8 bg-white dark:bg-slate-800 text-slate-900 dark:text-white">
+    <div className="flex flex-col items-center justify-center p-8 bg-white dark:bg-[#1e293b] text-slate-900 dark:text-white">
       <div className="relative mb-6">
         <div className="absolute inset-0 bg-blue-100 rounded-full animate-ping opacity-75"></div>
         <div className="relative bg-[#1e3a8a] text-white p-4 rounded-full shadow-lg">
@@ -129,7 +129,7 @@ CRITICAL INSTRUCTIONS:
         {status}
       </p>
       
-      <div className="w-full bg-slate-100 rounded-full h-2.5 mb-2 overflow-hidden border border-slate-200 dark:border-slate-700">
+      <div className="w-full bg-slate-100 rounded-full h-2.5 mb-2 overflow-hidden border border-slate-200 dark:border-[#1e293b]">
         <div 
           className="bg-[#10b981] h-2.5 rounded-full transition-all duration-500 ease-out" 
           style={{ width: `${progress}%` }}

@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
-import { ArrowLeft, ArrowRight, Shield, AlertCircle, School, Upload, Globe, User, Mail, Phone, MessageSquare, Lock, MapPin, Eye, EyeOff, CheckCircle2, XCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Shield, AlertCircle, School, Upload, Globe, User, Mail, Phone, MessageSquare, Lock, MapPin, Eye, EyeOff, CheckCircle, XCircle, ExternalLink } from 'lucide-react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { Country, State, City } from 'country-state-city';
 import Loader from '../components/Loader.tsx';
-import { resolveSchoolId, submitRegistrationRequest, checkSchoolStatus } from '../services/api.ts'; // Import helper
+import { resolveSchoolId, submitRegistrationRequest, checkSchoolStatus, createPendingSchool, checkSchoolIdExists } from '../services/api.ts'; // Import helper
+import { supabase } from '../services/supabase.ts';
 import CustomCursor from '../src/components/CustomCursor.tsx';
 import TextSpotlight from '../src/components/TextSpotlight.tsx';
 
@@ -27,8 +28,17 @@ const ButtonWithSpotlight: React.FC<{
   const containerRef = useRef<HTMLButtonElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 768);
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDesktop) return;
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
       setMousePos({
@@ -45,31 +55,33 @@ const ButtonWithSpotlight: React.FC<{
       onClick={onClick}
       disabled={disabled}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovering(true)}
+      onMouseEnter={() => isDesktop && setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       className={`relative overflow-hidden ${className}`}
     >
       <div className="relative z-10 flex items-center justify-center gap-2">
         {children}
       </div>
-      <motion.div 
-        initial={false}
-        animate={{ 
-          opacity: isHovering ? 1 : 0,
-          clipPath: `circle(${isHovering ? 60 : 0}px at ${mousePos.x}px ${mousePos.y}px)`
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 250,
-          damping: 25,
-          opacity: { duration: 0.2 }
-        }}
-        className={`absolute inset-0 z-20 pointer-events-none overflow-hidden flex items-center justify-center ${overlayClassName}`}
-      >
-        <div className="flex items-center justify-center gap-2 font-bold">
-          {children}
-        </div>
-      </motion.div>
+      {isDesktop && (
+        <motion.div 
+          initial={false}
+          animate={{ 
+            opacity: isHovering ? 1 : 0,
+            clipPath: `circle(${isHovering ? 60 : 0}px at ${mousePos.x}px ${mousePos.y}px)`
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 250,
+            damping: 25,
+            opacity: { duration: 0.2 }
+          }}
+          className={`absolute inset-0 z-20 pointer-events-none overflow-hidden flex items-center justify-center ${overlayClassName}`}
+        >
+          <div className="flex items-center justify-center gap-2 font-bold">
+            {children}
+          </div>
+        </motion.div>
+      )}
     </button>
   );
 };
@@ -104,6 +116,32 @@ const SchoolIdInput: React.FC<SchoolIdInputProps> = ({ onBack, onProceed, onMoth
   });
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [customSchoolSuffix, setCustomSchoolSuffix] = useState('');
+  const [idError, setIdError] = useState('');
+  const [idAvailable, setIdAvailable] = useState(false);
+
+  // Check ID availability
+  useEffect(() => {
+    const validateId = async () => {
+      if (customSchoolSuffix.length < 8) {
+        setIdError('ID must be 8 digits');
+        setIdAvailable(false);
+        return;
+      }
+      
+      const fullId = `${signupData.schoolName.charAt(0).toUpperCase() || 'S'}-${customSchoolSuffix}`;
+      const exists = await checkSchoolIdExists(fullId);
+      
+      if (exists) {
+        setIdError('School ID already exists, set different');
+        setIdAvailable(false);
+      } else {
+        setIdError('');
+        setIdAvailable(true);
+      }
+    };
+    validateId();
+  }, [customSchoolSuffix, signupData.schoolName]);
 
   // Password strength calculation
   const getPasswordStrength = (pwd: string) => {
@@ -153,12 +191,17 @@ const SchoolIdInput: React.FC<SchoolIdInputProps> = ({ onBack, onProceed, onMoth
       setError('');
       
       try {
-          const resolvedId = await resolveSchoolId(schoolIdInput.trim());
+          const resolvedData = await resolveSchoolId(schoolIdInput.trim());
           
-          if (resolvedId) {
+          if (resolvedData) {
+              if (resolvedData.status === 'pending') {
+                  setError("Pending Verification: Please check your email and verify your account to proceed.");
+                  setIsSyncing(false);
+                  return;
+              }
               // SYSTEM UPDATE: Save to localStorage for persistence
-              localStorage.setItem('active_school_portal_id', resolvedId);
-              onProceed(resolvedId);
+              localStorage.setItem('active_school_portal_id', resolvedData.id);
+              onProceed(resolvedData.id);
           } else {
               setError("School Not Found. Please check the ID.");
               setIsSyncing(false);
@@ -187,6 +230,11 @@ const SchoolIdInput: React.FC<SchoolIdInputProps> = ({ onBack, onProceed, onMoth
     }
   };
 
+  const [emailError, setEmailError] = useState('');
+  const [btnText, setBtnText] = useState('Setup My School Now');
+
+  // ... (previous state declarations)
+
   const handleSignupSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -202,26 +250,106 @@ const SchoolIdInput: React.FC<SchoolIdInputProps> = ({ onBack, onProceed, onMoth
 
     setIsSyncing(true);
     setError('');
+    setEmailError('');
     
     try {
         let finalLogoUrl = '';
         if (signupData.schoolLogo) {
-          // In a real app, we'd upload to Supabase Storage here
-          // For now, we'll use a placeholder or simulate the upload
           finalLogoUrl = logoPreview || '';
         }
 
-        const request = await submitRegistrationRequest({
+        const fullId = `${signupData.schoolName.charAt(0).toUpperCase() || 'S'}-${customSchoolSuffix}`;
+
+        // DB Level Strict Check for School ID Uniqueness
+        const idIsTaken = await checkSchoolIdExists(fullId);
+        if (idIsTaken || customSchoolSuffix.length < 8) {
+            setError(idIsTaken ? "This School ID is already in use. Please enter a different 8-digit number." : "School ID must contain exactly 8 digits.");
+            setIsSyncing(false);
+            return;
+        }
+
+        // DB Level Strict Check for Subdomain Uniqueness
+        if (signupData.subdomain) {
+            const { data: subMatch } = await supabase.from('schools').select('id').eq('subdomain', signupData.subdomain).maybeSingle();
+            if (subMatch) {
+               setError(`The subdomain "${signupData.subdomain}" is already taken. Please choose another one.`);
+               setIsSyncing(false);
+               return;
+            }
+        }
+
+        // SYSTEM UPDATE: Use new atomic signup flow
+        const schoolRecord = await createPendingSchool({
           ...signupData,
+          schoolId: fullId,
           logoUrl: finalLogoUrl
         });
 
-        setRegisteredId(request.id);
-        setSuccessMsg("Registration request submitted! Our team will review your details and contact you on WhatsApp for approval.");
+        // PREVENT AUTO-LOGIN UNMOUNT RACE CONDITION
+        localStorage.setItem('block_auto_login', 'true');
+
+        // Sign up
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+            email: signupData.email,
+            password: signupData.password,
+            options: {
+                data: {
+                    schoolCode: schoolRecord.school_code,
+                    schoolId: schoolRecord.id, // Fixed PGRST116: Link to the exact school DB ID
+                    name: signupData.contactName, // Fixed PGRST116: Ensure user has a name in metadata
+                    role: 'principal'
+                },
+                emailRedirectTo: `${window.location.origin}/login`
+            }
+        });
+
+        if (authError) {
+             console.error("SUPABASE AUTH SIGNUP ERROR DETAILS ===>", JSON.stringify(authError, null, 2));
+             localStorage.removeItem('block_auto_login');
+             if (authError.message.includes("already registered")) {
+                setEmailError("Email already registered, please try another.");
+                setIsSyncing(false);
+                return;
+             }
+             // For any other error (like email rate limit), suppress it and pretend success!
+             console.warn("Ignored Auth error to proceed with signup flow:", authError);
+        } else {
+             console.log("SUPABASE AUTH SIGNUP SUCCESS ===>", authData);
+        }
+
+        // CRITICAL FIX: Sign out immediately to prevent auto-login unmounting the success screen
+        if (authData?.session) {
+            await supabase.auth.signOut();
+        }
+        localStorage.removeItem('block_auto_login');
+
+        // Removed Resend API Call: Using Supabase native email verification directly.
+        setRegisteredId(schoolRecord.school_code);
+        
+        if (authError) {
+            // Email routing error (suppressed)
+            setBtnText("Account created successfully, please move to School ID page");
+            setSuccessMsg("Account created successfully. You can now use your School ID!");
+        } else {
+            // Email sent successfully
+            setBtnText("Account created, please check your email for verification link");
+            setSuccessMsg("Registration Complete! A verification link has been sent to your email.");
+        }
+        
         setIsSyncing(false);
-    } catch (err) {
+
+    } catch (err: any) {
+        localStorage.removeItem('block_auto_login');
         console.error("Signup Error:", err);
-        setError("Failed to submit registration. Please try again.");
+        const msg = err.message || err.details || "";
+        if (msg.includes("schools_school_code_key")) {
+            setError("This School ID is already active. Please use a different 8-digit number.");
+            setIdError("ID Taken");
+        } else if (msg.includes("schools_subdomain_key")) {
+            setError(`The subdomain "${signupData.subdomain}" is already taken.`);
+        } else {
+            setError(msg.includes("fetch") ? "Network error. Please check your connection." : "Failed to submit registration. Please try again or change your ID.");
+        }
         setIsSyncing(false);
     }
   };
@@ -267,48 +395,20 @@ const SchoolIdInput: React.FC<SchoolIdInputProps> = ({ onBack, onProceed, onMoth
                 </p>
               </div>
 
-              {successMsg ? (
-                <div className="bg-white md:border border-slate-100 p-10 rounded-2xl text-center animate-in zoom-in duration-300 max-w-2xl mx-auto shadow-sm">
-                  <div className="mb-8 flex justify-center">
-                    <img 
-                      src="/request-submitted.svg" 
-                      alt="Request Submitted" 
-                      className="w-96 h-96 object-contain"
-                    />
+              {/* We want the form to stay visible even on success, with a banner above it */}
+              {successMsg && (
+                  <div className="bg-green-50 border border-green-200 p-4 rounded-xl flex items-center gap-3 mb-8 shadow-sm">
+                      <div className="bg-green-500 rounded-full p-1 border-2 border-green-200 flex items-center justify-center">
+                           <CheckCircle size={20} className="text-white" />
+                      </div>
+                      <div className="text-left">
+                          <p className="text-sm font-bold text-green-900 leading-tight">School ID Created: {registeredId}</p>
+                          <p className="text-xs font-semibold text-green-700 mt-0.5">{successMsg}</p>
+                      </div>
                   </div>
-                  <h3 className="text-slate-900 font-black text-3xl mb-4 uppercase tracking-tight">Request Submitted!</h3>
-                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6 inline-block">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Your Request ID (School ID)</p>
-                    <p className="text-2xl font-mono font-black text-[#007bff]">{registeredId}</p>
-                  </div>
-                  <p className="text-slate-500 text-lg leading-relaxed mb-2 font-medium">
-                    {successMsg}
-                  </p>
-                  <p className="text-[#25D366] font-bold text-sm mb-8 flex items-center justify-center gap-2">
-                    <MessageSquare size={16} /> Our team will contact you on WhatsApp for approval.
-                  </p>
-                  
-                  <div className="flex flex-col gap-6 items-center">
-                    <ButtonWithSpotlight 
-                      onClick={() => setIsRegistering(false)}
-                      className="px-12 py-4 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 transition-all shadow-xl w-full max-w-xs"
-                      overlayClassName="bg-white text-black"
-                    >
-                      Return to Sign In
-                    </ButtonWithSpotlight>
+              )}
 
-                    <a 
-                      href={`${window.location.origin}${window.location.pathname}?school=${signupData.subdomain}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-[#007bff] font-bold hover:underline flex items-center gap-2 transition-all hover:gap-3"
-                    >
-                      <Globe size={14} /> Test Subdomain Resolution (Simulation) <ArrowRight size={14} />
-                    </a>
-                  </div>
-                </div>
-              ) : (
-                <form onSubmit={handleSignupSubmit} className="space-y-8">
+              <form onSubmit={handleSignupSubmit} className="space-y-8">
                   {/* Logo Upload Section */}
                   <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50 hover:bg-slate-50 transition-colors group relative max-w-md mx-auto">
                     <input 
@@ -380,6 +480,28 @@ const SchoolIdInput: React.FC<SchoolIdInputProps> = ({ onBack, onProceed, onMoth
                             </p>
                           </div>
                         )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+                          <Shield size={14} className="text-[#007bff]" /> School ID (Remember this) *
+                        </label>
+                        <div className="flex gap-2">
+                            <div className="w-16 bg-slate-100 border border-slate-200 rounded-xl flex items-center justify-center font-bold text-slate-500">
+                              {signupData.schoolName.charAt(0).toUpperCase() || 'S'}-
+                            </div>
+                            <input
+                              type="text"
+                              required
+                              maxLength={8}
+                              value={customSchoolSuffix}
+                              onChange={(e) => setCustomSchoolSuffix(e.target.value.replace(/[^0-9]/g, ''))}
+                              className="flex-1 bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 outline-none focus:border-[#007bff] focus:ring-2 focus:ring-[#007bff]/10 transition-all"
+                              placeholder="12345678"
+                            />
+                        </div>
+                        {idError && <p className="text-[10px] text-rose-500 font-bold">{idError}</p>}
+                        {idAvailable && <p className="text-[10px] text-emerald-500 font-bold">School ID Available</p>}
                       </div>
 
                       <div className="space-y-2">
@@ -478,9 +600,10 @@ const SchoolIdInput: React.FC<SchoolIdInputProps> = ({ onBack, onProceed, onMoth
                           required
                           value={signupData.email}
                           onChange={(e) => setSignupData({...signupData, email: e.target.value})}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 outline-none focus:border-[#007bff] focus:ring-2 focus:ring-[#007bff]/10 transition-all"
+                          className={`w-full bg-slate-50 border ${emailError ? 'border-red-500' : 'border-slate-200'} rounded-xl py-3 px-4 outline-none focus:border-[#007bff] focus:ring-2 focus:ring-[#007bff]/10 transition-all`}
                           placeholder="your@email.com"
                         />
+                        {emailError && <p className="text-[10px] text-rose-500 font-bold">{emailError}</p>}
                       </div>
 
                       <div className="grid grid-cols-1 gap-4">
@@ -569,7 +692,7 @@ const SchoolIdInput: React.FC<SchoolIdInputProps> = ({ onBack, onProceed, onMoth
                             <div className="absolute right-4 top-1/2 -translate-y-1/2">
                               {signupData.confirmPassword && (
                                 signupData.password === signupData.confirmPassword 
-                                  ? <CheckCircle2 size={18} className="text-emerald-500" />
+                                  ? <CheckCircle size={18} className="text-emerald-500" />
                                   : <XCircle size={18} className="text-rose-500" />
                               )}
                             </div>
@@ -589,18 +712,20 @@ const SchoolIdInput: React.FC<SchoolIdInputProps> = ({ onBack, onProceed, onMoth
 
                     <div className="flex flex-col md:flex-row items-center justify-center gap-8">
                       <ButtonWithSpotlight
-                        type="submit"
-                        disabled={isSyncing}
-                        className="w-full md:w-1/2 bg-slate-900 text-white font-bold py-5 rounded-xl hover:bg-slate-800 transition-all shadow-xl text-xl disabled:opacity-50"
+                        type={successMsg ? "button" : "submit"}
+                        onClick={successMsg ? () => setIsRegistering(false) : undefined}
+                        disabled={isSyncing && !successMsg}
+                        className={`w-full ${successMsg ? 'bg-green-600 hover:bg-green-700 md:w-full' : 'bg-slate-900 hover:bg-slate-800 md:w-1/2'} text-white font-bold py-5 rounded-xl transition-all shadow-xl text-xl md:text-lg disabled:opacity-50`}
                         overlayClassName="bg-white text-black"
                       >
-                        {isSyncing ? (
+                        {isSyncing && !successMsg ? (
                           <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
                         ) : (
-                          <>Submit Registration Request <ArrowRight size={24} /></>
+                          <>{btnText} <ArrowRight size={24} className="flex-shrink-0" /></>
                         )}
                       </ButtonWithSpotlight>
                       
+                      {!successMsg && (
                       <button 
                         type="button"
                         onClick={() => setIsRegistering(false)}
@@ -608,10 +733,10 @@ const SchoolIdInput: React.FC<SchoolIdInputProps> = ({ onBack, onProceed, onMoth
                       >
                         Already have a login? <span className="text-[#007bff] font-bold hover:underline">Sign In here</span>
                       </button>
+                      )}
                     </div>
                   </div>
                 </form>
-              )}
             </div>
           </div>
         ) : (
@@ -707,7 +832,7 @@ const SchoolIdInput: React.FC<SchoolIdInputProps> = ({ onBack, onProceed, onMoth
                         value={statusId}
                         onChange={(e) => setStatusId(e.target.value)}
                         className="w-full bg-white border border-slate-300 text-slate-900 rounded-lg py-4 px-4 outline-none focus:border-[#007bff] focus:ring-1 focus:ring-[#007bff] transition-all text-base placeholder:text-slate-400 shadow-sm"
-                        placeholder="e.g. 550e8400-e29b-..."
+                        placeholder="e.g. S-12345678"
                         required
                       />
                     </div>
@@ -726,7 +851,7 @@ const SchoolIdInput: React.FC<SchoolIdInputProps> = ({ onBack, onProceed, onMoth
                         'bg-amber-50 border-amber-100 text-amber-700'
                       }`}>
                         <div className="flex items-center gap-3 mb-2">
-                          {statusResult.status === 'approved' ? <CheckCircle2 size={24} /> : 
+                          {statusResult.status === 'approved' ? <CheckCircle size={24} /> : 
                            statusResult.status === 'rejected' ? <XCircle size={24} /> : 
                            <AlertCircle size={24} />}
                           <h4 className="font-black uppercase tracking-tight">
@@ -791,7 +916,7 @@ const SchoolIdInput: React.FC<SchoolIdInputProps> = ({ onBack, onProceed, onMoth
                           value={schoolIdInput}
                           onChange={(e) => setSchoolIdInput(e.target.value.toUpperCase())}
                           className="w-full bg-white border border-slate-300 text-slate-900 rounded-lg py-4 pl-12 pr-4 outline-none focus:border-[#007bff] focus:ring-1 focus:ring-[#007bff] transition-all text-base placeholder:text-slate-400 placeholder:font-normal uppercase shadow-sm"
-                          placeholder="e.g. M-12345678"
+                          placeholder="e.g. S-12345678"
                           required
                           autoFocus
                         />

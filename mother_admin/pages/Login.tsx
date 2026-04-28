@@ -19,8 +19,17 @@ const ButtonWithSpotlight: React.FC<{
 }> = ({ onClick, disabled, className, children, overlayClassName, type = "button" }) => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 768);
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDesktop) return;
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     setMousePos({
       x: e.clientX - rect.left,
@@ -34,31 +43,33 @@ const ButtonWithSpotlight: React.FC<{
       onClick={onClick}
       disabled={disabled}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovering(true)}
+      onMouseEnter={() => isDesktop && setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       className={`relative overflow-hidden ${className}`}
     >
       <div className="relative z-10 flex items-center justify-center gap-2">
         {children}
       </div>
-      <motion.div 
-        initial={false}
-        animate={{ 
-          opacity: isHovering ? 1 : 0,
-          clipPath: `circle(${isHovering ? 60 : 0}px at ${mousePos.x}px ${mousePos.y}px)`
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 250,
-          damping: 25,
-          opacity: { duration: 0.2 }
-        }}
-        className={`absolute inset-0 z-20 pointer-events-none overflow-hidden flex items-center justify-center ${overlayClassName}`}
-      >
-        <div className="flex items-center justify-center gap-2 font-bold">
-          {children}
-        </div>
-      </motion.div>
+      {isDesktop && (
+        <motion.div 
+          initial={false}
+          animate={{ 
+            opacity: isHovering ? 1 : 0,
+            clipPath: `circle(${isHovering ? 60 : 0}px at ${mousePos.x}px ${mousePos.y}px)`
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 250,
+            damping: 25,
+            opacity: { duration: 0.2 }
+          }}
+          className={`absolute inset-0 z-20 pointer-events-none overflow-hidden flex items-center justify-center ${overlayClassName}`}
+        >
+          <div className="flex items-center justify-center gap-2 font-bold">
+            {children}
+          </div>
+        </motion.div>
+      )}
     </button>
   );
 };
@@ -151,9 +162,9 @@ const MotherAdminLogin: React.FC<LoginProps> = ({ onSwitchPortal }) => {
   const handleVerifyCode = (e: React.FormEvent) => {
     e.preventDefault();
     if (verificationCode === generatedCode) {
-      // Success! The useAuth hook already has the session, 
-      // we just need to let the UI proceed.
-      window.location.reload(); // Refresh to trigger the dashboard view
+      // Success! Force a clean reload using location.replace
+      // to establish the fresh authenticated session in the current context.
+      window.location.replace(window.location.pathname);
     } else {
       setMfaError("Invalid verification code. Please check your email.");
     }

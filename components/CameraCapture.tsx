@@ -139,13 +139,13 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onClose }) => 
                     <div className="flex flex-col gap-3 w-full">
                         <button 
                             onClick={() => { setError(null); setFacingMode(prev => prev); }} 
-                            className="w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-white py-3 rounded-xl font-black uppercase tracking-widest text-xs"
+                            className="w-full bg-white dark:bg-[#1e293b] text-slate-900 dark:text-white py-3 rounded-xl font-black uppercase tracking-widest text-xs"
                         >
                             Try Again
                         </button>
                         <button 
                             onClick={onClose} 
-                            className="w-full bg-white/10 dark:bg-slate-800/10 text-white py-3 rounded-xl font-black uppercase tracking-widest text-xs"
+                            className="w-full bg-white/10 dark:bg-[#1e293b]/10 text-white py-3 rounded-xl font-black uppercase tracking-widest text-xs"
                         >
                             Cancel
                         </button>
@@ -189,7 +189,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onClose }) => 
                                 <button 
                                     onClick={takePhoto}
                                     disabled={isSwitching}
-                                    className="w-20 h-20 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.3)] active:scale-90 transition-all disabled:opacity-50 disabled:scale-90"
+                                    className="w-20 h-20 bg-white dark:bg-[#1e293b] rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.3)] active:scale-90 transition-all disabled:opacity-50 disabled:scale-90"
                                 >
                                     <div className="w-16 h-16 border-4 border-slate-900 rounded-full flex items-center justify-center">
                                         <div className="w-12 h-12 bg-slate-900 rounded-full opacity-10"></div>
@@ -199,7 +199,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onClose }) => 
                                 <button 
                                     onClick={toggleFacingMode}
                                     disabled={isSwitching}
-                                    className={`w-12 h-12 flex flex-col items-center justify-center gap-1 transition-all rounded-2xl ${facingMode === 'user' ? 'bg-emerald-500 text-white' : 'bg-white/5 dark:bg-slate-800/5 text-white/40'}`}
+                                    className={`w-12 h-12 flex flex-col items-center justify-center gap-1 transition-all rounded-2xl ${facingMode === 'user' ? 'bg-emerald-500 text-white' : 'bg-white/5 dark:bg-[#1e293b]/5 text-white/40'}`}
                                     title={facingMode === 'user' ? "Using Front Camera" : "Using Back Camera"}
                                 >
                                     <ArrowsClockwise size={20} weight="bold" className={isSwitching ? 'animate-spin' : ''} />
@@ -212,7 +212,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onClose }) => 
                             <div className="flex gap-3">
                                 <button 
                                     onClick={retake}
-                                    className="flex-1 py-4 bg-white/10 dark:bg-slate-800/10 text-white font-black text-[10px] uppercase tracking-widest rounded-2xl hover:bg-white/20 dark:bg-slate-800/20 transition-all border border-white/10"
+                                    className="flex-1 py-4 bg-white/10 dark:bg-[#1e293b]/10 text-white font-black text-[10px] uppercase tracking-widest rounded-2xl hover:bg-white/20 dark:bg-[#1e293b]/20 transition-all border border-white/10"
                                 >
                                     Retake
                                 </button>

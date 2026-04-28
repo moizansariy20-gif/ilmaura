@@ -118,15 +118,16 @@ const ActivityLogPage: React.FC<ActivityLogPageProps> = ({ schoolId, profile, on
   };
 
   const filteredLogs = logs.filter(log => {
+    const term = searchTerm.toLowerCase();
     const matchesSearch = 
-      log.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      log.action.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      log.details.toLowerCase().includes(searchTerm.toLowerCase());
+      (log.userName?.toLowerCase() || '').includes(term) ||
+      (log.action?.toLowerCase() || '').includes(term) ||
+      (log.details?.toLowerCase() || '').includes(term);
     
     const matchesCategory = categoryFilter === 'all' || log.category === categoryFilter;
-    const matchesRole = roleFilter === 'all' || log.userRole.toLowerCase() === roleFilter.toLowerCase();
+    const matchesRole = roleFilter === 'all' || (log.userRole?.toLowerCase() || '') === roleFilter.toLowerCase();
     
-    const matchesDate = !dateFilter || new Date(log.timestamp).toISOString().split('T')[0] === dateFilter;
+    const matchesDate = !dateFilter || (log.timestamp ? new Date(log.timestamp).toISOString().split('T')[0] === dateFilter : true);
     
     return matchesSearch && matchesCategory && matchesRole && matchesDate;
   });
@@ -147,6 +148,7 @@ const ActivityLogPage: React.FC<ActivityLogPageProps> = ({ schoolId, profile, on
   };
 
   const getActionColor = (action: string) => {
+    if (!action) return 'text-slate-600 bg-slate-50 border-slate-200';
     const act = action.toLowerCase();
     if (act.includes('delete') || act.includes('remove')) return 'text-rose-600 bg-rose-50 border-rose-200';
     if (act.includes('add') || act.includes('create') || act.includes('enroll')) return 'text-emerald-600 bg-emerald-50 border-emerald-200';
@@ -156,9 +158,9 @@ const ActivityLogPage: React.FC<ActivityLogPageProps> = ({ schoolId, profile, on
 
   if (isMobile) {
     return (
-      <div className="bg-[#FCFBF8] dark:bg-slate-900 min-h-screen pb-32 font-sans">
+      <div className="bg-[#FCFBF8] dark:bg-[#020617] min-h-screen pb-32 font-sans">
         {/* Premium Mobile Header */}
-        <div className="bg-white dark:bg-slate-800 p-6 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
+        <div className="bg-white dark:bg-[#1e293b] p-6 rounded-none shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] border-b border-[#D4AF37]/30 space-y-6 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#1e3a8a] via-[#D4AF37] to-[#1e3a8a]"></div>
           <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
           
@@ -179,7 +181,7 @@ const ActivityLogPage: React.FC<ActivityLogPageProps> = ({ schoolId, profile, on
             </div>
             <div className="flex p-1.5 bg-gradient-to-br from-[#1e3a8a] to-[#172554] shadow-[0_10px_25px_-5px_rgba(30,58,138,0.4),inset_0_2px_4px_rgba(255,255,255,0.2)] rounded-2xl border-2 border-[#D4AF37]/40 relative group overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-tr from-[#D4AF37]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="w-12 h-12 rounded-xl overflow-hidden border border-[#D4AF37]/30 bg-white/10 dark:bg-slate-800/10 flex items-center justify-center relative z-10">
+              <div className="w-12 h-12 rounded-xl overflow-hidden border border-[#D4AF37]/30 bg-white/10 dark:bg-[#1e293b]/10 flex items-center justify-center relative z-10">
                 {profile?.photoURL ? (
                   <img 
                     src={profile.photoURL} 
@@ -206,7 +208,7 @@ const ActivityLogPage: React.FC<ActivityLogPageProps> = ({ schoolId, profile, on
                 placeholder="SEARCH ACTIVITIES..."
                 value={searchTerm} 
                 onChange={e => setSearchTerm(e.target.value)} 
-                className="w-full p-4 pl-12 bg-[#FCFBF8] dark:bg-slate-900 shadow-[inset_0_2px_8px_rgba(30,58,138,0.04)] border border-[#E5E0D8] dark:border-slate-700 rounded-xl text-sm font-bold text-[#1e3a8a] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all"
+                className="w-full p-4 pl-12 bg-[#FCFBF8] dark:bg-[#020617] shadow-[inset_0_2px_8px_rgba(30,58,138,0.04)] border border-[#E5E0D8] dark:border-[#1e293b] rounded-xl text-sm font-bold text-[#1e3a8a] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all"
               />
               <MagnifyingGlass size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]" />
             </div>
@@ -215,7 +217,7 @@ const ActivityLogPage: React.FC<ActivityLogPageProps> = ({ schoolId, profile, on
                 type="date" 
                 value={dateFilter} 
                 onChange={e => setDateFilter(e.target.value)} 
-                className="w-full p-4 pl-12 bg-[#FCFBF8] dark:bg-slate-900 shadow-[inset_0_2px_8px_rgba(30,58,138,0.04)] border border-[#E5E0D8] dark:border-slate-700 rounded-xl text-sm font-bold text-[#1e3a8a] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all uppercase"
+                className="w-full p-4 pl-12 bg-[#FCFBF8] dark:bg-[#020617] shadow-[inset_0_2px_8px_rgba(30,58,138,0.04)] border border-[#E5E0D8] dark:border-[#1e293b] rounded-xl text-sm font-bold text-[#1e3a8a] dark:text-white focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] outline-none transition-all uppercase"
               />
               <Funnel size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]" />
             </div>
@@ -240,10 +242,10 @@ const ActivityLogPage: React.FC<ActivityLogPageProps> = ({ schoolId, profile, on
                 </div>
               ) : filteredLogs.length > 0 ? (
                 filteredLogs.map(log => (
-                  <div key={log.id} className="bg-white dark:bg-slate-800 p-4 rounded-3xl border border-[#D4AF37]/20 shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] flex items-start gap-4 relative overflow-hidden group">
+                  <div key={log.id} className="bg-white dark:bg-[#1e293b] p-4 rounded-3xl border border-[#D4AF37]/20 shadow-[0_10px_40px_-10px_rgba(30,58,138,0.1)] flex items-start gap-4 relative overflow-hidden group">
                     <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-[#D4AF37] to-[#1e3a8a] opacity-90"></div>
                     
-                    <div className="w-12 h-12 rounded-2xl bg-[#FCFBF8] dark:bg-slate-900 border border-[#E5E0D8] dark:border-slate-700 flex items-center justify-center shrink-0 shadow-sm relative z-10">
+                    <div className="w-12 h-12 rounded-2xl bg-[#FCFBF8] dark:bg-[#020617] border border-[#E5E0D8] dark:border-[#1e293b] flex items-center justify-center shrink-0 shadow-sm relative z-10">
                       {getCategoryIcon(log.category)}
                     </div>
                     
@@ -265,7 +267,7 @@ const ActivityLogPage: React.FC<ActivityLogPageProps> = ({ schoolId, profile, on
                   </div>
                 ))
               ) : (
-                <div className="col-span-full text-center py-16 rounded-3xl bg-white dark:bg-slate-800 shadow-[0_10px_40px_-10px_rgba(30,58,138,0.05)] border-2 border-[#D4AF37]/30 border-dashed">
+                <div className="col-span-full text-center py-16 rounded-3xl bg-white dark:bg-[#1e293b] shadow-[0_10px_40px_-10px_rgba(30,58,138,0.05)] border-2 border-[#D4AF37]/30 border-dashed">
                   <ListChecks size={48} className="text-[#D4AF37] mx-auto mb-4 opacity-50" weight="fill" />
                   <p className="text-xl font-black text-[#1e3a8a] dark:text-white tracking-tight">No Activities Found</p>
                 </div>
@@ -292,7 +294,7 @@ const ActivityLogPage: React.FC<ActivityLogPageProps> = ({ schoolId, profile, on
     <div className="font-sans text-slate-900 dark:text-white animate-in fade-in duration-300 pb-20 bg-slate-100 min-h-screen p-4 md:p-6">
       
       {/* --- MAIN BASE CONTAINER --- */}
-      <div className="w-full max-w-[1920px] mx-auto bg-white dark:bg-slate-800 border-2 border-slate-300 shadow-sm flex flex-col min-h-[90vh]">
+      <div className="w-full max-w-[1920px] mx-auto bg-white dark:bg-[#1e293b] border-2 border-slate-300 shadow-sm flex flex-col min-h-[90vh]">
         
         {/* --- HEADER --- */}
         <div className="bg-[#1e3a8a] text-white p-6 shadow-md flex flex-col md:flex-row md:items-center justify-between border-b-4 border-slate-900">
@@ -302,7 +304,7 @@ const ActivityLogPage: React.FC<ActivityLogPageProps> = ({ schoolId, profile, on
               Activity History
             </h1>
             <div className="flex items-center gap-4 mt-2">
-              <span className="bg-white dark:bg-slate-800 text-[#1e3a8a] px-3 py-1 text-xs font-black uppercase tracking-wider border border-slate-900">
+              <span className="bg-white dark:bg-[#1e293b] text-[#1e3a8a] px-3 py-1 text-xs font-black uppercase tracking-wider border border-slate-900">
                 History Tracking Active
               </span>
               <p className="text-blue-100 text-xs font-bold uppercase tracking-wide">Complete record of all portal activities</p>
@@ -311,20 +313,20 @@ const ActivityLogPage: React.FC<ActivityLogPageProps> = ({ schoolId, profile, on
         </div>
 
         {/* --- FILTERS BAR --- */}
-        <div className="bg-white dark:bg-slate-800 border-b-2 border-slate-200 dark:border-slate-700 p-4 flex flex-col lg:flex-row gap-4 items-center">
+        <div className="bg-white dark:bg-[#1e293b] border-b-2 border-slate-200 dark:border-[#1e293b] p-4 flex flex-col lg:flex-row gap-4 items-center">
           <div className="flex-1 relative w-full">
             <MagnifyingGlass size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 dark:text-slate-300" />
             <input 
               type="text" 
               placeholder="SEARCH BY NAME, ACTION OR DETAILS..."
-              className="w-full pl-10 pr-4 py-3 border-2 border-slate-200 dark:border-slate-700 focus:border-[#1e3a8a] outline-none font-bold text-xs uppercase tracking-widest transition-all placeholder-slate-400"
+              className="w-full pl-10 pr-4 py-3 border-2 border-slate-200 dark:border-[#1e293b] focus:border-[#1e3a8a] outline-none font-bold text-xs uppercase tracking-widest transition-all placeholder-slate-400"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           
           <div className="flex flex-wrap gap-4 w-full lg:w-auto">
-            <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-200 dark:border-slate-700 p-1 px-3">
+            <div className="flex items-center gap-2 bg-slate-50 dark:bg-[#0f172a] border-2 border-slate-200 dark:border-[#1e293b] p-1 px-3">
               <span className="text-[10px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest">Activity Type:</span>
               <select 
                 className="bg-transparent py-2 outline-none font-black text-[10px] uppercase tracking-widest text-[#1e3a8a]"
@@ -344,7 +346,7 @@ const ActivityLogPage: React.FC<ActivityLogPageProps> = ({ schoolId, profile, on
               </select>
             </div>
 
-            <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-200 dark:border-slate-700 p-1 px-3">
+            <div className="flex items-center gap-2 bg-slate-50 dark:bg-[#0f172a] border-2 border-slate-200 dark:border-[#1e293b] p-1 px-3">
               <span className="text-[10px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest">User Role:</span>
               <select 
                 className="bg-transparent py-2 outline-none font-black text-[10px] uppercase tracking-widest text-[#1e3a8a]"
@@ -358,7 +360,7 @@ const ActivityLogPage: React.FC<ActivityLogPageProps> = ({ schoolId, profile, on
               </select>
             </div>
 
-            <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-200 dark:border-slate-700 p-1 px-3">
+            <div className="flex items-center gap-2 bg-slate-50 dark:bg-[#0f172a] border-2 border-slate-200 dark:border-[#1e293b] p-1 px-3">
               <span className="text-[10px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest">Date:</span>
               <input 
                 type="date"
@@ -375,10 +377,10 @@ const ActivityLogPage: React.FC<ActivityLogPageProps> = ({ schoolId, profile, on
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50 dark:bg-slate-800/50 text-[10px] font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest border-b-2 border-slate-200 dark:border-slate-700">
-                  <th className="px-6 py-4 border-r-2 border-slate-100 dark:border-slate-800">Time & Date</th>
-                  <th className="px-6 py-4 border-r-2 border-slate-100 dark:border-slate-800">Performed By</th>
-                  <th className="px-6 py-4 border-r-2 border-slate-100 dark:border-slate-800">Action Taken</th>
+                <tr className="bg-slate-50 dark:bg-[#0f172a] text-[10px] font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest border-b-2 border-slate-200 dark:border-[#1e293b]">
+                  <th className="px-6 py-4 border-r-2 border-slate-100 dark:border-[#334155]">Time & Date</th>
+                  <th className="px-6 py-4 border-r-2 border-slate-100 dark:border-[#334155]">Performed By</th>
+                  <th className="px-6 py-4 border-r-2 border-slate-100 dark:border-[#334155]">Action Taken</th>
                   <th className="px-6 py-4">Details</th>
                 </tr>
               </thead>
@@ -394,8 +396,8 @@ const ActivityLogPage: React.FC<ActivityLogPageProps> = ({ schoolId, profile, on
                   </tr>
                 ) : filteredLogs.length > 0 ? (
                   filteredLogs.map((log) => (
-                    <tr key={log.id} className="group hover:bg-slate-50 dark:bg-slate-800/50 transition-colors">
-                      <td className="px-6 py-4 border-r-2 border-slate-100 dark:border-slate-800 whitespace-nowrap">
+                    <tr key={log.id} className="group hover:bg-slate-50 dark:bg-[#0f172a] transition-colors">
+                      <td className="px-6 py-4 border-r-2 border-slate-100 dark:border-[#334155] whitespace-nowrap">
                         <div className="flex flex-col">
                           <span className="text-xs font-black text-slate-800 dark:text-slate-100">
                             {new Date(log.timestamp).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
@@ -405,9 +407,9 @@ const ActivityLogPage: React.FC<ActivityLogPageProps> = ({ schoolId, profile, on
                           </span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 border-r-2 border-slate-100 dark:border-slate-800 whitespace-nowrap">
+                      <td className="px-6 py-4 border-r-2 border-slate-100 dark:border-[#334155] whitespace-nowrap">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 bg-slate-100 flex items-center justify-center text-slate-600 dark:text-slate-300 border-2 border-slate-200 dark:border-slate-700">
+                          <div className="w-9 h-9 bg-slate-100 flex items-center justify-center text-slate-600 dark:text-slate-300 border-2 border-slate-200 dark:border-[#1e293b]">
                             <User size={18} weight="bold" />
                           </div>
                           <div>
@@ -418,7 +420,7 @@ const ActivityLogPage: React.FC<ActivityLogPageProps> = ({ schoolId, profile, on
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 border-r-2 border-slate-100 dark:border-slate-800 whitespace-nowrap">
+                      <td className="px-6 py-4 border-r-2 border-slate-100 dark:border-[#334155] whitespace-nowrap">
                         <div className="flex flex-col gap-2">
                           <div className="flex items-center gap-2">
                             {getCategoryIcon(log.category)}
@@ -440,7 +442,7 @@ const ActivityLogPage: React.FC<ActivityLogPageProps> = ({ schoolId, profile, on
                   <tr>
                     <td colSpan={4} className="px-6 py-32 text-center">
                       <div className="flex flex-col items-center gap-4">
-                        <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-center text-slate-400 border-4 border-dashed border-slate-200 dark:border-slate-700">
+                        <div className="w-20 h-20 bg-slate-50 dark:bg-[#0f172a] flex items-center justify-center text-slate-400 border-4 border-dashed border-slate-200 dark:border-[#1e293b]">
                           <Clock size={40} />
                         </div>
                         <div>
@@ -457,7 +459,7 @@ const ActivityLogPage: React.FC<ActivityLogPageProps> = ({ schoolId, profile, on
         </div>
 
         {/* --- FOOTER STATS & LOAD MORE --- */}
-        <div className="p-4 bg-slate-50 dark:bg-slate-800/50 border-t-4 border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="p-4 bg-slate-50 dark:bg-[#0f172a] border-t-4 border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-[10px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest">
             Showing <span className="text-slate-900 dark:text-white">{logs.length}</span> Activities | Filtered: <span className="text-[#1e3a8a]">{filteredLogs.length}</span>
           </p>

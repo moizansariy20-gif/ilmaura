@@ -20,7 +20,7 @@ const RevenueControl: React.FC<RevenueControlProps> = ({ schools }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-        <div className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-sm">
+        <div className="bg-white dark:bg-[#1e293b] p-8 rounded-[2.5rem] border border-slate-100 dark:border-[#334155] shadow-sm">
           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Total Monthly Yield</p>
           <div className="flex items-center justify-between">
             <h3 className="text-2xl font-black text-slate-900 dark:text-white">₨ {(totalRev / 1000).toFixed(0)}k</h3>
@@ -28,7 +28,7 @@ const RevenueControl: React.FC<RevenueControlProps> = ({ schools }) => {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-sm">
+        <div className="bg-white dark:bg-[#1e293b] p-8 rounded-[2.5rem] border border-slate-100 dark:border-[#334155] shadow-sm">
           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Pending (In Arrears)</p>
           <div className="flex items-center justify-between">
             <h3 className="text-2xl font-black text-slate-900 dark:text-white">₨ {(totalReceivables / 1000).toFixed(0)}k</h3>
@@ -36,7 +36,7 @@ const RevenueControl: React.FC<RevenueControlProps> = ({ schools }) => {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-sm">
+        <div className="bg-white dark:bg-[#1e293b] p-8 rounded-[2.5rem] border border-slate-100 dark:border-[#334155] shadow-sm">
           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Network MRR Target</p>
           <div className="flex items-center justify-between">
             <h3 className="text-2xl font-black text-slate-900 dark:text-white">₨ 5.0M</h3>
@@ -45,14 +45,14 @@ const RevenueControl: React.FC<RevenueControlProps> = ({ schools }) => {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 overflow-hidden shadow-sm">
-        <div className="p-6 border-b border-slate-50 flex items-center justify-between bg-slate-50 dark:bg-slate-800/50/30">
+      <div className="bg-white dark:bg-[#1e293b] rounded-[2.5rem] border border-slate-100 dark:border-[#334155] overflow-hidden shadow-sm">
+        <div className="p-6 border-b border-slate-50 flex items-center justify-between bg-slate-50 dark:bg-[#0f172a]/30">
           <h3 className="font-black text-slate-900 dark:text-white">Billing Ledger (₨ 500/std)</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left responsive-table">
             <thead>
-              <tr className="bg-white dark:bg-slate-800 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50">
+              <tr className="bg-white dark:bg-[#1e293b] text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50">
                 <th className="px-8 py-5">Institute</th>
                 <th className="px-8 py-5">Student Base</th>
                 <th className="px-8 py-5">Platform Bill</th>
@@ -62,7 +62,7 @@ const RevenueControl: React.FC<RevenueControlProps> = ({ schools }) => {
             </thead>
             <tbody className="divide-y divide-slate-50">
               {schools.map((row, i) => (
-                <tr key={i} className="hover:bg-slate-50 dark:bg-slate-800/50/50 transition-colors">
+                <tr key={i} className="hover:bg-slate-50 dark:bg-[#0f172a]/50 transition-colors">
                   <td className="px-8 py-5 text-sm font-black text-slate-900 dark:text-white">{row.name}</td>
                   <td className="px-8 py-5 text-sm font-bold text-slate-600 dark:text-slate-300">{row.actualStudents}</td>
                   <td className="px-8 py-5 text-sm font-black text-slate-900 dark:text-white">₨ {(row.actualStudents * 500).toLocaleString()}</td>

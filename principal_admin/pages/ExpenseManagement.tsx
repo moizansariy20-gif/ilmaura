@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Plus, MagnifyingGlass, Trash, CalendarBlank, CurrencyDollar, Wallet, 
   TrendUp, Funnel, Spinner, CheckCircle, Receipt, X, Bank,
-  DownloadSimple, ArrowsClockwise, Lightning, CalendarPlus
+  DownloadSimple, ArrowsClockwise, Lightning, CalendarPlus, ChartPieSlice
 } from 'phosphor-react';
 import { addExpense, deleteExpense, subscribeToExpenses, logActivity } from '../../services/api.ts';
 import { Expense, UserProfile } from '../../types.ts';
@@ -37,6 +37,7 @@ const ExpenseManagement: React.FC<ExpenseManagementProps> = ({ profile, schoolId
 
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('All');
+  const [dateFilter, setDateFilter] = useState(new Date().toISOString().split('T')[0]);
   const [isSaving, setIsSaving] = useState(false);
 
   // Form State for One-Time Expense
@@ -78,20 +79,69 @@ const ExpenseManagement: React.FC<ExpenseManagementProps> = ({ profile, schoolId
     return expenses.filter(exp => {
       const matchSearch = exp.title.toLowerCase().includes(searchTerm.toLowerCase());
       const matchCategory = categoryFilter === 'All' || exp.category === categoryFilter;
-      return matchSearch && matchCategory;
+      const matchDate = dateFilter === '' || exp.date === dateFilter;
+      return matchSearch && matchCategory && matchDate;
     });
-  }, [expenses, searchTerm, categoryFilter]);
+  }, [expenses, searchTerm, categoryFilter, dateFilter]);
 
   const stats = useMemo(() => {
-    const today = new Date().toISOString().split('T')[0];
-    const total = expenses.reduce((acc, curr) => acc + curr.amount, 0);
-    const todayTotal = expenses
-      .filter(e => e.date === today)
+    const targetDateStr = dateFilter || (new Date().toISOString().split('T')[0]);
+    const targetMonthStr = targetDateStr.substring(0, 7);
+    
+    // Base expenses for overall metrics (ignores date filter, respects others)
+    const baseExpenses = expenses.filter(exp => {
+        const matchSearch = exp.title.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchCategory = categoryFilter === 'All' || exp.category === categoryFilter;
+        return matchSearch && matchCategory;
+    });
+    
+    const total = baseExpenses.reduce((acc, curr) => acc + curr.amount, 0);
+    
+    const selectedDateTotal = baseExpenses
+      .filter(e => e.date === targetDateStr)
       .reduce((acc, curr) => acc + curr.amount, 0);
+      
+    const thisMonthTotal = baseExpenses
+      .filter(e => e.date.startsWith(targetMonthStr))
+      .reduce((acc, curr) => acc + curr.amount, 0);
+      
+    const categoryTotals = filteredExpenses.reduce((acc: any, curr) => {
+        acc[curr.category] = (acc[curr.category] || 0) + curr.amount;
+        return acc;
+    }, {});
+    
+    let topCategory = 'None';
+    let topCategoryAmount = 0;
+    
+    for (const [cat, amt] of Object.entries(categoryTotals)) {
+        if ((amt as number) > topCategoryAmount) {
+            topCategoryAmount = amt as number;
+            topCategory = cat;
+        }
+    }
+
     const count = filteredExpenses.length;
     
-    return { total, todayTotal, count };
-  }, [expenses, filteredExpenses]);
+    // Format Month String
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const monthInt = parseInt(targetMonthStr.substring(5, 7), 10) - 1;
+    const yearInt = targetMonthStr.substring(0, 4);
+    const monthDisplay = isNaN(monthInt) ? "Month" : `${monthNames[monthInt]} ${yearInt}`;
+    
+    const isToday = targetDateStr === new Date().toISOString().split('T')[0];
+    
+    return { 
+        total, 
+        selectedDateTotal, 
+        thisMonthTotal, 
+        topCategory, 
+        topCategoryAmount, 
+        count,
+        targetDateStr,
+        monthDisplay,
+        isToday
+    };
+  }, [expenses, filteredExpenses, dateFilter, searchTerm, categoryFilter]);
 
   // --- ACTIONS ---
 
@@ -186,9 +236,9 @@ const ExpenseManagement: React.FC<ExpenseManagementProps> = ({ profile, schoolId
     <div className="space-y-6 animate-in fade-in duration-300 pb-20">
       
       {/* Header & KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Total Spent - Navy */}
-          <div className="bg-white dark:bg-slate-800 p-6 border-2 border-blue-900 shadow-sm flex flex-col justify-between h-36 relative transition-all">
+          <div className="bg-white dark:bg-[#1e293b] p-6 border-2 border-blue-900 shadow-sm flex flex-col justify-between h-36 relative transition-all">
               <div className="flex justify-between items-start">
                   <span className="text-xs font-black text-blue-900 uppercase tracking-widest">Total Spend</span>
                   <div className="p-2 bg-blue-900 text-white rounded-none">
@@ -196,7 +246,7 @@ const ExpenseManagement: React.FC<ExpenseManagementProps> = ({ profile, schoolId
                   </div>
               </div>
               <div>
-                <h3 className="text-4xl font-black text-slate-900 dark:text-white">
+                <h3 className="text-4xl font-black text-slate-900 dark:text-white truncate">
                   <span className="text-xl text-slate-400 mr-1">Rs.</span>
                   {stats.total.toLocaleString()}
                 </h3>
@@ -204,25 +254,74 @@ const ExpenseManagement: React.FC<ExpenseManagementProps> = ({ profile, schoolId
               </div>
           </div>
 
-          {/* Today's Expense - Rose */}
-          <div className="bg-white dark:bg-slate-800 p-6 border-2 border-rose-600 shadow-sm flex flex-col justify-between h-36 relative transition-all">
+          {/* Selected Date Expense - Rose */}
+          <div className="bg-white dark:bg-[#1e293b] p-6 border-2 border-rose-600 shadow-sm flex flex-col justify-between h-36 relative transition-all">
               <div className="flex justify-between items-start">
-                  <span className="text-xs font-black text-rose-600 uppercase tracking-widest">Today's Expense</span>
+                  <span className="text-xs font-black text-rose-600 uppercase tracking-widest">{stats.isToday ? "Today's Expense" : "Daily Expense"}</span>
                   <div className="p-2 bg-rose-600 text-white rounded-none">
                       <TrendUp size={20} weight="fill" />
                   </div>
               </div>
               <div>
-                <h3 className="text-4xl font-black text-slate-900 dark:text-white">
+                <h3 className="text-4xl font-black text-slate-900 dark:text-white truncate">
                     <span className="text-xl text-slate-400 mr-1">Rs.</span>
-                    {stats.todayTotal.toLocaleString()}
+                    {stats.selectedDateTotal.toLocaleString()}
                 </h3>
-                <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wider">Daily Report</p>
+                <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wider">{stats.targetDateStr}</p>
+              </div>
+          </div>
+          
+          {/* This Month Expense - Amber */}
+          <div className="bg-white dark:bg-[#1e293b] p-6 border-2 border-amber-500 shadow-sm flex flex-col justify-between h-36 relative transition-all">
+              <div className="flex justify-between items-start">
+                  <span className="text-xs font-black text-amber-600 dark:text-amber-500 uppercase tracking-widest">Monthly Expense</span>
+                  <div className="p-2 bg-amber-500 text-white rounded-none">
+                      <CalendarBlank size={20} weight="fill" />
+                  </div>
+              </div>
+              <div>
+                <h3 className="text-4xl font-black text-slate-900 dark:text-white truncate">
+                    <span className="text-xl text-slate-400 mr-1">Rs.</span>
+                    {stats.thisMonthTotal.toLocaleString()}
+                </h3>
+                <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wider">{stats.monthDisplay} Report</p>
+              </div>
+          </div>
+          
+          {/* Top Category Expense - Indigo */}
+          <div className="bg-white dark:bg-[#1e293b] p-6 border-2 border-indigo-600 shadow-sm flex flex-col justify-between h-36 relative transition-all">
+              <div className="flex justify-between items-start">
+                  <span className="text-xs font-black text-indigo-600 uppercase tracking-widest">Top Category</span>
+                  <div className="p-2 bg-indigo-600 text-white rounded-none">
+                      <ChartPieSlice size={20} weight="fill" />
+                  </div>
+              </div>
+              <div>
+                <h3 className="text-3xl font-black text-slate-900 dark:text-white truncate">
+                    {stats.topCategory}
+                </h3>
+                <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wider">Filtered Spend: Rs. {stats.topCategoryAmount.toLocaleString()}</p>
+              </div>
+          </div>
+          
+          {/* Total Transactions - Cyan */}
+          <div className="bg-white dark:bg-[#1e293b] p-6 border-2 border-cyan-600 shadow-sm flex flex-col justify-between h-36 relative transition-all">
+              <div className="flex justify-between items-start">
+                  <span className="text-xs font-black text-cyan-600 uppercase tracking-widest">Transactions</span>
+                  <div className="p-2 bg-cyan-600 text-white rounded-none">
+                      <Receipt size={20} weight="fill" />
+                  </div>
+              </div>
+              <div>
+                <h3 className="text-4xl font-black text-slate-900 dark:text-white truncate">
+                    {stats.count}
+                </h3>
+                <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wider">Filtered Records</p>
               </div>
           </div>
 
           {/* Recurring Templates - Emerald */}
-          <div className="bg-white dark:bg-slate-800 p-6 border-2 border-emerald-600 shadow-sm flex flex-col justify-between h-36 relative transition-all">
+          <div className="bg-white dark:bg-[#1e293b] p-6 border-2 border-emerald-600 shadow-sm flex flex-col justify-between h-36 relative transition-all">
               <div className="flex justify-between items-start">
                   <span className="text-xs font-black text-emerald-600 uppercase tracking-widest">Recurring Items</span>
                   <div className="p-2 bg-emerald-600 text-white rounded-none">
@@ -237,10 +336,10 @@ const ExpenseManagement: React.FC<ExpenseManagementProps> = ({ profile, schoolId
       </div>
 
       {/* Main Content Area */}
-      <div className="bg-white dark:bg-slate-800 border-2 border-slate-300 shadow-xl flex flex-col min-h-[600px]">
+      <div className="bg-white dark:bg-[#1e293b] border-2 border-slate-300 shadow-xl flex flex-col min-h-[600px]">
           
           {/* Header */}
-          <div className="p-6 border-b-2 border-slate-300 bg-slate-50 dark:bg-slate-800/50 flex flex-col md:flex-row gap-4 items-center justify-between">
+          <div className="p-6 border-b-2 border-slate-300 bg-slate-50 dark:bg-[#0f172a] flex flex-col md:flex-row gap-4 items-center justify-between">
               <div>
                   <h3 className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight">
                       {view === 'log' ? 'Daily Expense Log' : 'Fixed / Recurring Templates'}
@@ -253,11 +352,20 @@ const ExpenseManagement: React.FC<ExpenseManagementProps> = ({ profile, schoolId
               {view === 'log' && (
                   <div className="flex items-center gap-3 w-full md:w-auto">
                     <div className="relative flex-1 group">
+                        <CalendarBlank className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1e3a8a]" size={18} weight="bold" />
+                        <input 
+                            type="date" 
+                            className="w-full pl-10 pr-4 py-3 bg-white dark:bg-[#1e293b] border-2 border-slate-200 dark:border-[#1e293b] focus:border-[#1e3a8a] rounded-none font-bold text-slate-700 dark:text-slate-200 outline-none transition-all text-xs"
+                            value={dateFilter}
+                            onChange={e => setDateFilter(e.target.value)}
+                        />
+                    </div>
+                    <div className="relative flex-1 group">
                         <MagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1e3a8a]" size={18} weight="bold" />
                         <input 
                             type="text" 
                             placeholder="SEARCH..." 
-                            className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 focus:border-[#1e3a8a] rounded-none font-bold text-slate-700 dark:text-slate-200 outline-none transition-all text-xs placeholder:text-slate-400"
+                            className="w-full pl-10 pr-4 py-3 bg-white dark:bg-[#1e293b] border-2 border-slate-200 dark:border-[#1e293b] focus:border-[#1e3a8a] rounded-none font-bold text-slate-700 dark:text-slate-200 outline-none transition-all text-xs placeholder:text-slate-400"
                             value={searchTerm}
                             onChange={e => setSearchTerm(e.target.value)}
                         />
@@ -294,7 +402,7 @@ const ExpenseManagement: React.FC<ExpenseManagementProps> = ({ profile, schoolId
           </div>
 
           {/* Content View */}
-          <div className="flex-1 bg-white dark:bg-slate-800">
+          <div className="flex-1 bg-white dark:bg-[#1e293b]">
               
               {/* VIEW 1: EXPENSE LOG (Sharp Table) */}
               {view === 'log' && (
@@ -311,23 +419,23 @@ const ExpenseManagement: React.FC<ExpenseManagementProps> = ({ profile, schoolId
                           </thead>
                           <tbody className="divide-y-2 divide-slate-100">
                               {filteredExpenses.map((exp, index) => (
-                                  <tr key={exp.id} className={`group hover:bg-slate-50 transition-colors ${index % 2 === 0 ? 'bg-white dark:bg-slate-800' : 'bg-slate-50/30'}`}>
-                                      <td className="p-4 border-r border-slate-200 dark:border-slate-700">
+                                  <tr key={exp.id} className={`group hover:bg-slate-50 transition-colors ${index % 2 === 0 ? 'bg-white dark:bg-[#1e293b]' : 'bg-slate-50/30'}`}>
+                                      <td className="p-4 border-r border-slate-200 dark:border-[#1e293b]">
                                           <p className="font-bold text-slate-800 dark:text-slate-100 text-sm uppercase">{exp.title}</p>
                                           {exp.notes && <p className="text-[10px] text-slate-400 mt-0.5 line-clamp-1 font-bold">{exp.notes}</p>}
                                       </td>
-                                      <td className="p-4 border-r border-slate-200 dark:border-slate-700">
+                                      <td className="p-4 border-r border-slate-200 dark:border-[#1e293b]">
                                           <span className="px-2 py-1 bg-slate-200 text-slate-600 dark:text-slate-300 text-[9px] font-black uppercase tracking-wider border border-slate-300">
                                               {exp.category}
                                           </span>
                                       </td>
-                                      <td className="p-4 border-r border-slate-200 dark:border-slate-700">
+                                      <td className="p-4 border-r border-slate-200 dark:border-[#1e293b]">
                                           <div className="flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 font-mono">
                                               <CalendarBlank size={14} className="text-slate-400" weight="bold" />
                                               {new Date(exp.date).toLocaleDateString()}
                                           </div>
                                       </td>
-                                      <td className="p-4 text-right border-r border-slate-200 dark:border-slate-700">
+                                      <td className="p-4 text-right border-r border-slate-200 dark:border-[#1e293b]">
                                           <span className="font-black text-rose-600 text-sm font-mono">Rs. {exp.amount.toLocaleString()}</span>
                                       </td>
                                       <td className="p-4 text-center">
@@ -342,7 +450,7 @@ const ExpenseManagement: React.FC<ExpenseManagementProps> = ({ profile, schoolId
                           </tbody>
                       </table>
                       {filteredExpenses.length === 0 && (
-                          <div className="p-20 text-center text-slate-400 flex flex-col items-center justify-center border-t-2 border-slate-200 dark:border-slate-700">
+                          <div className="p-20 text-center text-slate-400 flex flex-col items-center justify-center border-t-2 border-slate-200 dark:border-[#1e293b]">
                               <Bank size={48} weight="duotone" className="mb-4 opacity-30" />
                               <p className="font-black text-xs uppercase tracking-widest">No expenses found.</p>
                           </div>
@@ -354,7 +462,7 @@ const ExpenseManagement: React.FC<ExpenseManagementProps> = ({ profile, schoolId
               {view === 'recurring' && (
                   <div className="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {fixedExpenses.length > 0 ? fixedExpenses.map(item => (
-                          <div key={item.id} className="bg-white dark:bg-slate-800 p-6 border-2 border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-lg hover:border-emerald-500 transition-all group relative">
+                          <div key={item.id} className="bg-white dark:bg-[#1e293b] p-6 border-2 border-slate-200 dark:border-[#1e293b] shadow-sm hover:shadow-lg hover:border-emerald-500 transition-all group relative">
                               <div className="flex justify-between items-start mb-4">
                                   <div className="p-2 bg-emerald-100 text-emerald-700 border border-emerald-200">
                                       <ArrowsClockwise size={20} weight="bold"/>
@@ -368,7 +476,7 @@ const ExpenseManagement: React.FC<ExpenseManagementProps> = ({ profile, schoolId
                               <h4 className="font-black text-lg text-slate-900 dark:text-white uppercase tracking-tight">{item.title}</h4>
                               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-6">{item.category}</p>
                               
-                              <div className="flex items-center justify-between mt-auto pt-4 border-t-2 border-slate-100 dark:border-slate-800">
+                              <div className="flex items-center justify-between mt-auto pt-4 border-t-2 border-slate-100 dark:border-[#334155]">
                                   <span className="font-black text-xl text-slate-900 dark:text-white font-mono">Rs. {item.amount.toLocaleString()}</span>
                                   <button 
                                       onClick={() => handlePostFixedExpense(item)}
@@ -380,7 +488,7 @@ const ExpenseManagement: React.FC<ExpenseManagementProps> = ({ profile, schoolId
                           </div>
                       )) : (
                           <div className="col-span-full py-20 text-center flex flex-col items-center justify-center">
-                              <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800/50 border-2 border-dashed border-slate-300 flex items-center justify-center mb-4">
+                              <div className="w-20 h-20 bg-slate-50 dark:bg-[#0f172a] border-2 border-dashed border-slate-300 flex items-center justify-center mb-4">
                                   <CalendarPlus size={32} className="text-slate-300" weight="duotone"/>
                               </div>
                               <h3 className="text-lg font-black text-slate-500 dark:text-slate-400 uppercase">No Recurring Templates</h3>
@@ -402,7 +510,7 @@ const ExpenseManagement: React.FC<ExpenseManagementProps> = ({ profile, schoolId
       {showAddModal && (
           <div className="fixed inset-0 z-[500] flex items-center justify-center p-4">
               <div className="absolute inset-0 bg-slate-900/90 backdrop-blur-sm" onClick={() => setShowAddModal(false)}></div>
-              <div className="bg-white dark:bg-slate-800 w-full max-w-lg rounded-none border-4 border-slate-800 p-0 relative z-10 animate-in zoom-in-95 shadow-2xl flex flex-col">
+              <div className="bg-white dark:bg-[#1e293b] w-full max-w-lg rounded-none border-4 border-slate-800 p-0 relative z-10 animate-in zoom-in-95 shadow-2xl flex flex-col">
                   <div className="bg-slate-800 text-white p-6 flex justify-between items-center border-b-4 border-black">
                       <div>
                         <h3 className="text-xl font-black uppercase tracking-tight">Record Expense</h3>
@@ -444,8 +552,8 @@ const ExpenseManagement: React.FC<ExpenseManagementProps> = ({ profile, schoolId
                       </div>
                   </div>
 
-                  <div className="p-6 border-t-2 border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex gap-3">
-                        <button onClick={() => setShowAddModal(false)} className="flex-1 py-4 bg-white dark:bg-slate-800 border-2 border-slate-300 text-slate-500 dark:text-slate-400 rounded-none font-black text-xs uppercase tracking-widest hover:bg-slate-100 transition-colors">
+                  <div className="p-6 border-t-2 border-slate-100 dark:border-[#334155] bg-slate-50 dark:bg-[#0f172a] flex gap-3">
+                        <button onClick={() => setShowAddModal(false)} className="flex-1 py-4 bg-white dark:bg-[#1e293b] border-2 border-slate-300 text-slate-500 dark:text-slate-400 rounded-none font-black text-xs uppercase tracking-widest hover:bg-slate-100 transition-colors">
                             Cancel
                         </button>
                         <button 
@@ -465,7 +573,7 @@ const ExpenseManagement: React.FC<ExpenseManagementProps> = ({ profile, schoolId
       {showFixedModal && (
           <div className="fixed inset-0 z-[500] flex items-center justify-center p-4">
               <div className="absolute inset-0 bg-slate-900/90 backdrop-blur-sm" onClick={() => setShowFixedModal(false)}></div>
-              <div className="bg-white dark:bg-slate-800 w-full max-w-md rounded-none border-4 border-slate-800 p-0 relative z-10 animate-in zoom-in-95 shadow-2xl flex flex-col">
+              <div className="bg-white dark:bg-[#1e293b] w-full max-w-md rounded-none border-4 border-slate-800 p-0 relative z-10 animate-in zoom-in-95 shadow-2xl flex flex-col">
                   <div className="bg-emerald-800 text-white p-6 flex justify-between items-center border-b-4 border-emerald-950">
                       <div>
                         <h3 className="text-xl font-black uppercase tracking-tight">Recurring Item</h3>
@@ -491,8 +599,8 @@ const ExpenseManagement: React.FC<ExpenseManagementProps> = ({ profile, schoolId
                       </div>
                   </div>
 
-                  <div className="p-6 border-t-2 border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex gap-3">
-                      <button onClick={() => setShowFixedModal(false)} className="flex-1 py-4 bg-white dark:bg-slate-800 border-2 border-slate-300 text-slate-500 dark:text-slate-400 rounded-none font-black text-xs uppercase tracking-widest hover:bg-slate-100 transition-colors">
+                  <div className="p-6 border-t-2 border-slate-100 dark:border-[#334155] bg-slate-50 dark:bg-[#0f172a] flex gap-3">
+                      <button onClick={() => setShowFixedModal(false)} className="flex-1 py-4 bg-white dark:bg-[#1e293b] border-2 border-slate-300 text-slate-500 dark:text-slate-400 rounded-none font-black text-xs uppercase tracking-widest hover:bg-slate-100 transition-colors">
                           Cancel
                       </button>
                       <button 

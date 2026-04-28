@@ -115,7 +115,7 @@ const HelpSupport = ({ profile }: { profile: any }) => {
 
   return (
     <div className="font-sans text-slate-900 dark:text-white animate-in fade-in duration-300 pb-20 bg-slate-100 min-h-screen p-4 md:p-6">
-      <div className="w-full max-w-[1920px] mx-auto bg-white dark:bg-slate-800 border-2 border-slate-300 shadow-sm flex flex-col min-h-[90vh]">
+      <div className="w-full max-w-[1920px] mx-auto bg-white dark:bg-[#1e293b] border-2 border-slate-300 shadow-sm flex flex-col min-h-[90vh]">
         {/* HEADER */}
         <div className="bg-[#1e3a8a] text-white p-6 shadow-md flex flex-col md:flex-row md:items-center justify-between border-b-4 border-slate-900">
             <div>
@@ -129,10 +129,10 @@ const HelpSupport = ({ profile }: { profile: any }) => {
             </div>
         </div>
 
-        <div className="p-8 space-y-8 bg-white dark:bg-slate-800">
+        <div className="p-8 space-y-8 bg-white dark:bg-[#1e293b]">
           {/* SEARCH BAR */}
           <div className="max-w-3xl mx-auto">
-            <div className="flex items-center bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-200 dark:border-slate-700 p-2 group focus-within:border-[#1e3a8a] transition-colors">
+            <div className="flex items-center bg-slate-50 dark:bg-[#0f172a] border-2 border-slate-200 dark:border-[#1e293b] p-2 group focus-within:border-[#1e3a8a] transition-colors">
                 <MagnifyingGlass size={24} weight="bold" className="text-slate-400 ml-2 group-focus-within:text-[#1e3a8a]"/>
                 <input 
                   type="text" 
@@ -149,7 +149,7 @@ const HelpSupport = ({ profile }: { profile: any }) => {
             <div className="lg:col-span-2 space-y-8">
               
               {/* VIDEO TUTORIALS */}
-              <div className="border-2 border-slate-200 dark:border-slate-700 p-6 bg-white dark:bg-slate-800">
+              <div className="border-2 border-slate-200 dark:border-[#1e293b] p-6 bg-white dark:bg-[#1e293b]">
                 <h2 className="text-xl font-black uppercase tracking-tight mb-6 flex items-center gap-2 text-[#1e3a8a]">
                   <PlayCircle size={24} weight="fill" />
                   Video Tutorials
@@ -158,7 +158,7 @@ const HelpSupport = ({ profile }: { profile: any }) => {
                   {filteredVideos.map((video) => {
                     const videoId = getYouTubeId(video.youtubeUrl);
                     return (
-                        <div key={video.id} className="border-2 border-slate-200 dark:border-slate-700 overflow-hidden">
+                        <div key={video.id} className="border-2 border-slate-200 dark:border-[#1e293b] overflow-hidden">
                             {videoId ? (
                                 <iframe 
                                     className="w-full aspect-video" 
@@ -170,7 +170,7 @@ const HelpSupport = ({ profile }: { profile: any }) => {
                             ) : (
                                 <div className="w-full aspect-video bg-slate-100 flex items-center justify-center text-slate-400">Invalid URL</div>
                             )}
-                            <div className="p-3 bg-slate-50 dark:bg-slate-800/50">
+                            <div className="p-3 bg-slate-50 dark:bg-[#0f172a]">
                                 <p className="font-bold text-xs uppercase tracking-widest text-slate-700 dark:text-slate-200">
                                     {video.title}
                                 </p>
@@ -183,23 +183,23 @@ const HelpSupport = ({ profile }: { profile: any }) => {
               </div>
 
               {/* FAQs */}
-              <div className="border-2 border-slate-200 dark:border-slate-700 p-6 bg-slate-50 dark:bg-slate-800/50">
+              <div className="border-2 border-slate-200 dark:border-[#1e293b] p-6 bg-slate-50 dark:bg-[#0f172a]">
                 <h2 className="text-xl font-black uppercase tracking-tight mb-6 flex items-center gap-2 text-[#1e3a8a]">
                   <Question size={24} weight="fill" />
                   Frequently Asked Questions
                 </h2>
                 <div className="space-y-3">
                   {filteredFaqs.map((faq) => (
-                    <div key={faq.id} className="border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                    <div key={faq.id} className="border-2 border-slate-200 dark:border-[#1e293b] bg-white dark:bg-[#1e293b]">
                       <button 
                         onClick={() => toggleFaq(faq.id)}
-                        className="w-full flex items-center justify-between p-4 text-left hover:bg-slate-50 dark:bg-slate-800/50 transition-colors"
+                        className="w-full flex items-center justify-between p-4 text-left hover:bg-slate-50 dark:bg-[#0f172a] transition-colors"
                       >
                         <span className="font-bold text-sm uppercase tracking-wide text-slate-800 dark:text-slate-100">{faq.question}</span>
                         {openFaq === faq.id ? <CaretUp size={16} weight="bold" /> : <CaretDown size={16} weight="bold" />}
                       </button>
                       {openFaq === faq.id && (
-                        <div className="p-4 border-t-2 border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-sm font-medium text-slate-600 dark:text-slate-300 leading-relaxed">
+                        <div className="p-4 border-t-2 border-slate-100 dark:border-[#334155] bg-slate-50 dark:bg-[#0f172a] text-sm font-medium text-slate-600 dark:text-slate-300 leading-relaxed">
                           {faq.answer}
                         </div>
                       )}
@@ -214,8 +214,8 @@ const HelpSupport = ({ profile }: { profile: any }) => {
             {/* RIGHT COLUMN: Support Ticket & Contact */}
             <div className="space-y-8">
               {/* SUPPORT TICKETS */}
-              <div className="border-2 border-[#1e3a8a] flex flex-col h-[600px] bg-white dark:bg-slate-800 shadow-[4px_4px_0px_#1e3a8a]">
-                <div className="p-4 border-b-2 border-[#1e3a8a] bg-slate-50 dark:bg-slate-800/50 flex justify-between items-center">
+              <div className="border-2 border-[#1e3a8a] flex flex-col h-[600px] bg-white dark:bg-[#1e293b] shadow-[4px_4px_0px_#1e3a8a]">
+                <div className="p-4 border-b-2 border-[#1e3a8a] bg-slate-50 dark:bg-[#0f172a] flex justify-between items-center">
                     <h2 className="text-lg font-black uppercase tracking-tight flex items-center gap-2 text-[#1e3a8a]">
                     <Ticket size={20} weight="fill" />
                     My Tickets
@@ -311,7 +311,7 @@ const HelpSupport = ({ profile }: { profile: any }) => {
               </div>
 
               {/* CONTACT INFO */}
-              <div className="border-2 border-slate-200 dark:border-slate-700 p-6 bg-slate-50 dark:bg-slate-800/50">
+              <div className="border-2 border-slate-200 dark:border-[#1e293b] p-6 bg-slate-50 dark:bg-[#0f172a]">
                 <h2 className="text-lg font-black uppercase tracking-tight mb-4 text-slate-800 dark:text-slate-100">
                   Direct Contact
                 </h2>

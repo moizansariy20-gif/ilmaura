@@ -567,14 +567,14 @@ const AppCredentials: React.FC<AppCredentialsProps> = ({ schoolId, students, cla
   return (
     <div className="font-sans text-slate-900 dark:text-white animate-in fade-in duration-300 pb-20 bg-slate-100 min-h-screen p-4 md:p-6">
       
-      <div className="w-full max-w-[1920px] mx-auto bg-white dark:bg-slate-800 border-2 border-slate-300 shadow-sm flex flex-col min-h-[90vh]">
+      <div className="w-full max-w-[1920px] mx-auto bg-white dark:bg-[#1e293b] border-2 border-slate-300 shadow-sm flex flex-col min-h-[90vh]">
         
         {/* --- HEADER --- */}
         <div className="bg-[#1e3a8a] text-white p-6 shadow-md flex flex-col md:flex-row md:items-center justify-between border-b-4 border-slate-900">
             <div>
                 <h1 className="text-3xl font-black tracking-tight uppercase">App Access</h1>
                 <div className="flex items-center gap-4 mt-2">
-                     <span className="bg-white dark:bg-slate-800 text-[#1e3a8a] px-3 py-1 text-xs font-black uppercase tracking-wider border border-slate-900">
+                     <span className="bg-white dark:bg-[#1e293b] text-[#1e3a8a] px-3 py-1 text-xs font-black uppercase tracking-wider border border-slate-900">
                          Student Credentials
                      </span>
                 </div>
@@ -585,7 +585,7 @@ const AppCredentials: React.FC<AppCredentialsProps> = ({ schoolId, students, cla
                   <p className="text-[10px] font-black uppercase tracking-widest opacity-70">System Status</p>
                   <p className="text-sm font-bold">Secure • Encrypted</p>
                </div>
-               <div className="w-10 h-10 border-2 border-white/20 flex items-center justify-center bg-white/10 dark:bg-slate-800/10 text-white rounded-none">
+               <div className="w-10 h-10 border-2 border-white/20 flex items-center justify-center bg-white/10 dark:bg-[#1e293b]/10 text-white rounded-none">
                   <Lock size={20} weight="fill"/>
                </div>
             </div>
@@ -598,7 +598,7 @@ const AppCredentials: React.FC<AppCredentialsProps> = ({ schoolId, students, cla
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
                 {/* Total Students */}
-                <div className="bg-white dark:bg-slate-800 p-6 border-2 border-blue-900 shadow-sm flex flex-col justify-between h-32 relative transition-all">
+                <div className="bg-white dark:bg-[#1e293b] p-6 border-2 border-blue-900 shadow-sm flex flex-col justify-between h-32 relative transition-all">
                     <div className="flex justify-between items-start">
                         <span className="text-xs font-black text-blue-900 uppercase tracking-widest">Total Students</span>
                         <div className="p-2 bg-blue-900 text-white rounded-none">
@@ -614,7 +614,7 @@ const AppCredentials: React.FC<AppCredentialsProps> = ({ schoolId, students, cla
                 </div>
 
                 {/* Active Access */}
-                <div className="bg-white dark:bg-slate-800 p-6 border-2 border-emerald-600 shadow-sm flex flex-col justify-between h-32 relative transition-all">
+                <div className="bg-white dark:bg-[#1e293b] p-6 border-2 border-emerald-600 shadow-sm flex flex-col justify-between h-32 relative transition-all">
                     <div className="flex justify-between items-start">
                         <span className="text-xs font-black text-emerald-700 uppercase tracking-widest">Active Accounts</span>
                         <div className="p-2 bg-emerald-600 text-white rounded-none">
@@ -630,7 +630,7 @@ const AppCredentials: React.FC<AppCredentialsProps> = ({ schoolId, students, cla
                 </div>
 
                 {/* Pending Access */}
-                <div className="bg-white dark:bg-slate-800 p-6 border-2 border-rose-600 shadow-sm flex flex-col justify-between h-32 relative transition-all">
+                <div className="bg-white dark:bg-[#1e293b] p-6 border-2 border-rose-600 shadow-sm flex flex-col justify-between h-32 relative transition-all">
                     <div className="flex justify-between items-start">
                         <span className="text-xs font-black text-rose-700 uppercase tracking-widest">Missing Access</span>
                         <div className="p-2 bg-rose-600 text-white rounded-none">
@@ -647,7 +647,7 @@ const AppCredentials: React.FC<AppCredentialsProps> = ({ schoolId, students, cla
             </div>
 
             {/* --- TABLE CONTAINER --- */}
-            <div className="bg-white dark:bg-slate-800 border-2 border-[#1e3a8a] shadow-sm overflow-hidden flex flex-col">
+            <div className="bg-white dark:bg-[#1e293b] border-2 border-[#1e3a8a] shadow-sm overflow-hidden flex flex-col">
                 
                 {/* TOOLBAR */}
                 <div className="px-6 py-4 bg-[#1e3a8a] border-b-2 border-[#1e3a8a] flex flex-col md:flex-row justify-between items-center gap-4">
@@ -658,7 +658,7 @@ const AppCredentials: React.FC<AppCredentialsProps> = ({ schoolId, students, cla
                     <div className="flex gap-2 w-full md:w-auto">
                         
                         {/* Filters */}
-                        <div className="bg-white dark:bg-slate-800 p-1 flex items-center w-full md:w-auto">
+                        <div className="bg-white dark:bg-[#1e293b] p-1 flex items-center w-full md:w-auto">
                              <select 
                                 value={selectedClassId} 
                                 onChange={e => setSelectedClassId(e.target.value)}
@@ -670,7 +670,7 @@ const AppCredentials: React.FC<AppCredentialsProps> = ({ schoolId, students, cla
                              <Funnel size={14} weight="fill" className="text-slate-400 mr-2"/>
                         </div>
 
-                         <div className="bg-white dark:bg-slate-800 p-1 flex items-center w-full md:w-auto">
+                         <div className="bg-white dark:bg-[#1e293b] p-1 flex items-center w-full md:w-auto">
                              <select 
                                 value={statusFilter} 
                                 onChange={e => setStatusFilter(e.target.value as any)}
@@ -683,7 +683,7 @@ const AppCredentials: React.FC<AppCredentialsProps> = ({ schoolId, students, cla
                         </div>
 
                         {/* Search */}
-                        <div className="bg-white dark:bg-slate-800 p-1 flex items-center w-full md:w-64">
+                        <div className="bg-white dark:bg-[#1e293b] p-1 flex items-center w-full md:w-64">
                             <input 
                                 type="text" 
                                 placeholder="SEARCH..." 
@@ -695,7 +695,7 @@ const AppCredentials: React.FC<AppCredentialsProps> = ({ schoolId, students, cla
                         </div>
 
                         {/* Actions */}
-                        <button onClick={() => setShowExportModal(true)} className="bg-white dark:bg-slate-800 text-[#1e3a8a] px-4 py-2 font-black text-[10px] uppercase tracking-widest hover:bg-blue-50 transition-colors flex items-center gap-2">
+                        <button onClick={() => setShowExportModal(true)} className="bg-white dark:bg-[#1e293b] text-[#1e3a8a] px-4 py-2 font-black text-[10px] uppercase tracking-widest hover:bg-blue-50 transition-colors flex items-center gap-2">
                             <DownloadSimple size={14} weight="fill"/> Export
                         </button>
                     </div>
@@ -705,7 +705,7 @@ const AppCredentials: React.FC<AppCredentialsProps> = ({ schoolId, students, cla
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
                         <thead>
-                            <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">
+                            <tr className="bg-slate-50 dark:bg-[#0f172a] border-b border-slate-200 dark:border-[#1e293b] text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">
                                 <th className="px-6 py-3">Student Name</th>
                                 <th className="px-6 py-3">School ID</th>
                                 <th className="px-6 py-3">Login ID</th>
@@ -721,7 +721,7 @@ const AppCredentials: React.FC<AppCredentialsProps> = ({ schoolId, students, cla
                                 const isActive = !!password;
 
                                 return (
-                                    <tr key={student.id} className="hover:bg-slate-50 dark:bg-slate-800/50 transition-colors group">
+                                    <tr key={student.id} className="hover:bg-slate-50 dark:bg-[#0f172a] transition-colors group">
                                         <td className="px-6 py-3">
                                             <div className="flex items-center gap-3">
                                                 <div className={`w-8 h-8 flex items-center justify-center text-xs font-black border-2 border-slate-200 ${isActive ? 'bg-[#1e3a8a] text-white border-[#1e3a8a]' : 'bg-slate-100 text-slate-400'}`}>
@@ -729,12 +729,12 @@ const AppCredentials: React.FC<AppCredentialsProps> = ({ schoolId, students, cla
                                                 </div>
                                                 <div>
                                                     <p className="font-bold text-sm text-slate-800 dark:text-slate-100">{student.name}</p>
-                                                    <p className="text-[10px] font-mono font-bold text-slate-400">Roll: {student.rollNo}</p>
+                                                    <p className="text-[10px] font-mono font-bold text-slate-400"></p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="px-6 py-3">
-                                            <span className="text-[10px] font-black text-slate-600 dark:text-slate-300 bg-slate-100 px-2 py-1 border border-slate-200 dark:border-slate-700 uppercase tracking-tighter">
+                                            <span className="text-[10px] font-black text-slate-600 dark:text-slate-300 bg-slate-100 px-2 py-1 border border-slate-200 dark:border-[#1e293b] uppercase tracking-tighter">
                                                 {school.schoolCode || schoolId.slice(0, 8)}
                                             </span>
                                         </td>
@@ -744,7 +744,7 @@ const AppCredentials: React.FC<AppCredentialsProps> = ({ schoolId, students, cla
                                             </span>
                                         </td>
                                         <td className="px-6 py-3">
-                                            <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300 bg-slate-100 px-2 py-1 border border-slate-200 dark:border-slate-700 uppercase">
+                                            <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300 bg-slate-100 px-2 py-1 border border-slate-200 dark:border-[#1e293b] uppercase">
                                                 {getClassName(student.classId)}
                                             </span>
                                         </td>
@@ -778,7 +778,7 @@ const AppCredentials: React.FC<AppCredentialsProps> = ({ schoolId, students, cla
                     </div>
                 )}
                 
-                <div className="p-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700 text-center">
+                <div className="p-3 bg-slate-50 dark:bg-[#0f172a] border-t border-slate-200 dark:border-[#1e293b] text-center">
                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                         Showing {filteredStudents.length} Records
                     </p>
@@ -791,7 +791,7 @@ const AppCredentials: React.FC<AppCredentialsProps> = ({ schoolId, students, cla
       {showExportModal && (
           <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
               <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" onClick={() => setShowExportModal(false)}></div>
-              <div className="bg-white dark:bg-slate-800 w-full max-w-md border-4 border-slate-800 p-0 relative z-10 shadow-2xl animate-in zoom-in-95">
+              <div className="bg-white dark:bg-[#1e293b] w-full max-w-md border-4 border-slate-800 p-0 relative z-10 shadow-2xl animate-in zoom-in-95">
                   <div className="bg-[#1e3a8a] text-white p-6 flex justify-between items-center border-b-4 border-black">
                       <div>
                           <h3 className="text-xl font-black uppercase tracking-tight">Export Records</h3>
@@ -838,7 +838,7 @@ const AppCredentials: React.FC<AppCredentialsProps> = ({ schoolId, students, cla
                       </div>
                   </div>
 
-                  <div className="p-6 border-t-2 border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-center">
+                  <div className="p-6 border-t-2 border-slate-100 dark:border-[#334155] bg-slate-50 dark:bg-[#0f172a] text-center">
                       <p className="text-[10px] text-slate-400 font-bold uppercase">Exporting {filteredStudents.length} Records</p>
                   </div>
               </div>

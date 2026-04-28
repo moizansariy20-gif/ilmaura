@@ -3,7 +3,11 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { WifiOff, RefreshCw, AlertCircle } from 'lucide-react';
 
-const OfflineScreen: React.FC = () => {
+interface OfflineScreenProps {
+  schoolName?: string;
+}
+
+const OfflineScreen: React.FC<OfflineScreenProps> = ({ schoolName }) => {
   const [checking, setChecking] = React.useState(false);
   const [showToast, setShowToast] = React.useState(false);
 
@@ -51,10 +55,10 @@ const OfflineScreen: React.FC = () => {
 
         <h1 className="text-2xl font-bold text-slate-900 mb-2">Connection Lost</h1>
         <p className="text-slate-500 mb-8 leading-relaxed">
-          Opps! It seems you are not connected to the internet. <strong>ilmaura</strong> needs an active connection to sync your school data.
+          Opps! It seems you are not connected to the internet. <strong>{schoolName || 'ilmaura'}</strong> needs an active connection to sync your school data.
         </p>
 
-        <div className="relative">
+        <div className="w-full flex flex-col items-center gap-4">
           <button
             onClick={handleRetry}
             disabled={checking}
@@ -68,16 +72,16 @@ const OfflineScreen: React.FC = () => {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="absolute top-16 left-1/2 -translate-x-1/2 whitespace-nowrap flex items-center gap-2 text-rose-600 font-bold text-sm bg-rose-50 px-4 py-2 rounded-lg border border-rose-100"
+              className="flex items-center gap-2 text-rose-600 font-bold text-xs bg-rose-50 px-4 py-2 rounded-lg border border-rose-100 max-w-[200px]"
             >
               <AlertCircle size={14} />
-              Still offline. Check your Wi-Fi!
+              Still offline. Check Wi-Fi!
             </motion.div>
           )}
         </div>
 
-        <p className="mt-8 text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">
-          Powered by ilmaura ecosystem
+        <p className="mt-8 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] max-w-[250px]">
+          {schoolName ? `Powered by ${schoolName}` : "Powered by ilmaura ecosystem"}
         </p>
       </motion.div>
     </div>

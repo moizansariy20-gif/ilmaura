@@ -83,6 +83,14 @@ export const useAuth = () => {
     // 3. Check active Supabase session
     const checkSession = async () => {
       try {
+        if (localStorage.getItem('block_auto_login') === 'true') {
+            await supabase.auth.signOut();
+            localStorage.removeItem('block_auto_login');
+            setUser(null);
+            setLoading(false);
+            return;
+        }
+
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         
         if (sessionError) {
@@ -112,6 +120,10 @@ export const useAuth = () => {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
+        if (localStorage.getItem('block_auto_login') === 'true') {
+            console.log("EduControl: Auto-login blocked. Ignoring SIGNED_IN event.");
+            return;
+        }
         if (currentUserIdRef.current !== session.user.id) {
             handleUserSession(session.user);
         }
@@ -146,27 +158,30 @@ export const useAuth = () => {
       if (error) {
         console.error("useAuth: Profile fetch error:", error);
           // 0. CRITICAL: Handle JWT Expired (PGRST303)
-          if (error.code === 'PGRST303' || (error.message && error.message.includes('JWT expired'))) {
+          if (error.code === 'PGRST303' || (error.message && (error.message.includes('JWT expired') || error.message.includes('invalid_grant')))) {
               if (profileFetchRetries.current < MAX_RETRIES) {
-                  console.warn("EduControl: JWT expired detected. Attempting silent refresh...");
+                  console.warn("EduControl: JWT expired or invalid detected. Attempting session refresh...");
                   profileFetchRetries.current += 1;
                   
                   try {
+                      // Force a refresh even if Supabase thinks it's okay
                       const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
                       if (!refreshError && refreshData.session) {
                           console.log("EduControl: Token refreshed successfully. Retrying profile fetch...");
-                          // Retry the session handling with the new session user
+                          // Ensure we update our internal refs if needed
                           return handleUserSession(refreshData.session.user);
+                      } else if (refreshError) {
+                          console.error("EduControl: Session refresh failed:", refreshError);
                       }
                   } catch (refreshEx) {
                       console.error("EduControl: Silent refresh exception:", refreshEx);
                   }
               }
 
-              console.error("EduControl: Session expired (JWT) and refresh failed or max retries reached. Forcing logout.");
-              setError("Your session has expired. Please log in again.");
+              console.error("EduControl: Session expired (JWT) and refresh failed. Forcing logout.");
+              setError("Your session has expired. Please log in again to continue.");
               setLoading(false);
-              await logout(false); // Use the logout function but keep the error message
+              await logout(false); 
               return;
           }
 

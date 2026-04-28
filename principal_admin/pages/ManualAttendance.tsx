@@ -98,7 +98,7 @@ const ManualAttendance: React.FC<ManualAttendanceProps> = ({ schoolId, students,
       case 'Leave':
         return <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-amber-500 text-white text-[9px] font-black uppercase tracking-wider rounded-none shadow-sm"><Coffee size={12} weight="bold" /> Leave</span>;
       default:
-        return <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-slate-100 text-slate-400 text-[9px] font-black uppercase tracking-wider rounded-none border border-slate-200 dark:border-slate-700"><MinusCircle size={12} weight="bold" /> Pending</span>;
+        return <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-slate-100 text-slate-400 text-[9px] font-black uppercase tracking-wider rounded-none border border-slate-200 dark:border-[#1e293b]"><MinusCircle size={12} weight="bold" /> Pending</span>;
     }
   };
 
@@ -107,10 +107,10 @@ const ManualAttendance: React.FC<ManualAttendanceProps> = ({ schoolId, students,
       <div className="w-full max-w-[1920px] mx-auto flex flex-col lg:flex-row gap-6 min-h-[90vh]">
         
         {/* --- LEFT: REGISTRY AREA --- */}
-        <div className="flex-1 bg-white dark:bg-slate-800 border-2 border-slate-300 shadow-sm flex flex-col">
+        <div className="flex-1 bg-white dark:bg-[#1e293b] border-2 border-slate-300 shadow-sm flex flex-col">
             <div className="bg-[#1e3a8a] text-white p-6 border-b-4 border-slate-900 flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-white dark:bg-slate-800 text-[#1e3a8a] flex items-center justify-center border-2 border-slate-900">
+                    <div className="w-12 h-12 bg-white dark:bg-[#1e293b] text-[#1e3a8a] flex items-center justify-center border-2 border-slate-900">
                         <HandPointing size={28} weight="fill" />
                     </div>
                     <div>
@@ -124,7 +124,7 @@ const ManualAttendance: React.FC<ManualAttendanceProps> = ({ schoolId, students,
                         <select 
                             value={selectedClass} 
                             onChange={e => setSelectedClass(e.target.value)} 
-                            className="bg-white/10 dark:bg-slate-800/10 border-2 border-white/20 text-white px-4 py-2 text-xs font-black uppercase tracking-widest outline-none focus:border-white transition-all cursor-pointer appearance-none pr-10"
+                            className="bg-white/10 dark:bg-[#1e293b]/10 border-2 border-white/20 text-white px-4 py-2 text-xs font-black uppercase tracking-widest outline-none focus:border-white transition-all cursor-pointer appearance-none pr-10"
                         >
                             {classes.map(c => <option key={c.id} value={c.id} className="text-slate-900 dark:text-white">{c.name}</option>)}
                         </select>
@@ -134,12 +134,12 @@ const ManualAttendance: React.FC<ManualAttendanceProps> = ({ schoolId, students,
                         type="date" 
                         value={selectedDate} 
                         onChange={e => setSelectedDate(e.target.value)} 
-                        className="bg-white/10 dark:bg-slate-800/10 border-2 border-white/20 text-white px-4 py-2 text-xs font-black uppercase tracking-widest outline-none focus:border-white transition-all"
+                        className="bg-white/10 dark:bg-[#1e293b]/10 border-2 border-white/20 text-white px-4 py-2 text-xs font-black uppercase tracking-widest outline-none focus:border-white transition-all"
                     />
                 </div>
             </div>
 
-            <div className="p-4 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
+            <div className="p-4 bg-slate-50 dark:bg-[#0f172a] border-b border-slate-200 dark:border-[#1e293b]">
                 <div className="relative">
                     <MagnifyingGlass size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input 
@@ -147,7 +147,7 @@ const ManualAttendance: React.FC<ManualAttendanceProps> = ({ schoolId, students,
                         placeholder="SEARCH BY NAME OR ROLL NO..." 
                         value={searchTerm} 
                         onChange={e => setSearchTerm(e.target.value)} 
-                        className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-xs font-black uppercase tracking-widest outline-none focus:border-[#1e3a8a] transition-all"
+                        className="w-full pl-12 pr-4 py-3 bg-white dark:bg-[#1e293b] border-2 border-slate-200 dark:border-[#1e293b] text-xs font-black uppercase tracking-widest outline-none focus:border-[#1e3a8a] transition-all"
                     />
                 </div>
             </div>
@@ -157,9 +157,9 @@ const ManualAttendance: React.FC<ManualAttendanceProps> = ({ schoolId, students,
                     {studentsInClass.slice(0, visibleCount).map(student => {
                         const status = getStudentStatus(student.id);
                         return (
-                            <div key={student.id} className="p-4 border-2 border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-800 hover:border-[#1e3a8a] transition-all group">
+                            <div key={student.id} className="p-4 border-2 border-slate-100 dark:border-[#334155] bg-white dark:bg-[#1e293b] hover:border-[#1e3a8a] transition-all group">
                                 <div className="flex items-center gap-3 mb-4">
-                                    <div className="w-12 h-12 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 flex items-center justify-center text-slate-400 font-black text-lg shrink-0 overflow-hidden">
+                                    <div className="w-12 h-12 bg-slate-50 dark:bg-[#0f172a] border border-slate-100 dark:border-[#334155] flex items-center justify-center text-slate-400 font-black text-lg shrink-0 overflow-hidden">
                                         {student.photoURL ? (
                                             <img src={student.photoURL} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                                         ) : (
@@ -168,7 +168,6 @@ const ManualAttendance: React.FC<ManualAttendanceProps> = ({ schoolId, students,
                                     </div>
                                     <div className="overflow-hidden">
                                         <p className="font-black text-slate-900 dark:text-white text-xs uppercase truncate">{student.name}</p>
-                                        <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">{student.rollNo}</p>
                                     </div>
                                 </div>
                                 
@@ -180,19 +179,19 @@ const ManualAttendance: React.FC<ManualAttendanceProps> = ({ schoolId, students,
                                     <div className="flex gap-1">
                                         <button 
                                             onClick={() => handleMarkAttendance(student, 'Present')} 
-                                            className={`flex-1 py-1.5 text-[9px] font-black uppercase tracking-widest border-2 transition-all ${status === 'Present' ? 'bg-emerald-600 text-white border-slate-900 shadow-[2px_2px_0px_#1e3a8a]' : 'bg-white dark:bg-slate-800 text-emerald-600 border-slate-200 hover:border-emerald-600'}`}
+                                            className={`flex-1 py-1.5 text-[9px] font-black uppercase tracking-widest border-2 transition-all ${status === 'Present' ? 'bg-emerald-600 text-white border-slate-900 shadow-[2px_2px_0px_#1e3a8a]' : 'bg-white dark:bg-[#1e293b] text-emerald-600 border-slate-200 hover:border-emerald-600'}`}
                                         >
                                             P
                                         </button>
                                         <button 
                                             onClick={() => handleMarkAttendance(student, 'Absent')} 
-                                            className={`flex-1 py-1.5 text-[9px] font-black uppercase tracking-widest border-2 transition-all ${status === 'Absent' ? 'bg-rose-600 text-white border-slate-900 shadow-[2px_2px_0px_#1e3a8a]' : 'bg-white dark:bg-slate-800 text-rose-600 border-slate-200 hover:border-rose-600'}`}
+                                            className={`flex-1 py-1.5 text-[9px] font-black uppercase tracking-widest border-2 transition-all ${status === 'Absent' ? 'bg-rose-600 text-white border-slate-900 shadow-[2px_2px_0px_#1e3a8a]' : 'bg-white dark:bg-[#1e293b] text-rose-600 border-slate-200 hover:border-rose-600'}`}
                                         >
                                             A
                                         </button>
                                         <button 
                                             onClick={() => handleMarkAttendance(student, 'Leave')} 
-                                            className={`flex-1 py-1.5 text-[9px] font-black uppercase tracking-widest border-2 transition-all ${status === 'Leave' ? 'bg-amber-500 text-white border-slate-900 shadow-[2px_2px_0px_#1e3a8a]' : 'bg-white dark:bg-slate-800 text-amber-500 border-slate-200 hover:border-amber-500'}`}
+                                            className={`flex-1 py-1.5 text-[9px] font-black uppercase tracking-widest border-2 transition-all ${status === 'Leave' ? 'bg-amber-500 text-white border-slate-900 shadow-[2px_2px_0px_#1e3a8a]' : 'bg-white dark:bg-[#1e293b] text-amber-500 border-slate-200 hover:border-amber-500'}`}
                                         >
                                             L
                                         </button>
@@ -214,7 +213,7 @@ const ManualAttendance: React.FC<ManualAttendanceProps> = ({ schoolId, students,
                     <div className="mt-8 flex justify-center">
                         <button 
                             onClick={() => setVisibleCount(prev => prev + 30)}
-                            className="px-8 py-2 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-black uppercase tracking-widest text-[10px] hover:border-[#1e3a8a] transition-all"
+                            className="px-8 py-2 bg-white dark:bg-[#1e293b] border-2 border-slate-200 dark:border-[#1e293b] text-slate-900 dark:text-white font-black uppercase tracking-widest text-[10px] hover:border-[#1e3a8a] transition-all"
                         >
                             Load More
                         </button>
@@ -226,14 +225,14 @@ const ManualAttendance: React.FC<ManualAttendanceProps> = ({ schoolId, students,
         {/* --- RIGHT: STATS & ACTIVITY --- */}
         <div className="w-full lg:w-96 flex flex-col gap-6">
             {/* Stats Overview */}
-            <div className="bg-white dark:bg-slate-800 border-2 border-slate-300 p-6 shadow-sm">
-                <div className="flex items-center gap-2 mb-6 border-b-2 border-slate-100 dark:border-slate-800 pb-4">
+            <div className="bg-white dark:bg-[#1e293b] border-2 border-slate-300 p-6 shadow-sm">
+                <div className="flex items-center gap-2 mb-6 border-b-2 border-slate-100 dark:border-[#334155] pb-4">
                     <TrendUp size={20} weight="bold" className="text-[#1e3a8a]" />
                     <h2 className="text-sm font-black uppercase tracking-widest text-slate-900 dark:text-white">Class Stats</h2>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-slate-50 dark:bg-slate-800/50 p-4 border-2 border-slate-100 dark:border-slate-800">
+                    <div className="bg-slate-50 dark:bg-[#0f172a] p-4 border-2 border-slate-100 dark:border-[#334155]">
                         <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Total</p>
                         <p className="text-2xl font-black text-slate-900 dark:text-white">{stats.total}</p>
                     </div>
@@ -251,20 +250,20 @@ const ManualAttendance: React.FC<ManualAttendanceProps> = ({ schoolId, students,
                     </div>
                 </div>
 
-                <div className="mt-6 pt-6 border-t-2 border-slate-100 dark:border-slate-800">
+                <div className="mt-6 pt-6 border-t-2 border-slate-100 dark:border-[#334155]">
                     <div className="flex justify-between items-center mb-2">
                         <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Attendance Rate</span>
                         <span className="text-sm font-black text-[#1e3a8a]">{stats.rate}%</span>
                     </div>
-                    <div className="w-full h-3 bg-slate-100 border border-slate-200 dark:border-slate-700 overflow-hidden">
+                    <div className="w-full h-3 bg-slate-100 border border-slate-200 dark:border-[#1e293b] overflow-hidden">
                         <div className="h-full bg-[#1e3a8a] transition-all duration-500" style={{ width: `${stats.rate}%` }} />
                     </div>
                 </div>
             </div>
 
             {/* Recent Activity */}
-            <div className="bg-white dark:bg-slate-800 border-2 border-slate-300 p-6 shadow-sm flex-1">
-                <div className="flex items-center gap-2 mb-6 border-b-2 border-slate-100 dark:border-slate-800 pb-4">
+            <div className="bg-white dark:bg-[#1e293b] border-2 border-slate-300 p-6 shadow-sm flex-1">
+                <div className="flex items-center gap-2 mb-6 border-b-2 border-slate-100 dark:border-[#334155] pb-4">
                     <ClockCounterClockwise size={20} weight="bold" className="text-[#1e3a8a]" />
                     <h2 className="text-sm font-black uppercase tracking-widest text-slate-900 dark:text-white">Recent Activity</h2>
                 </div>
@@ -272,7 +271,7 @@ const ManualAttendance: React.FC<ManualAttendanceProps> = ({ schoolId, students,
                 <div className="space-y-4">
                     {markHistory.map((s, i) => (
                         <div key={i} className="flex items-center gap-3 p-2 border-b border-slate-50 last:border-0">
-                            <div className="w-8 h-8 bg-slate-100 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 font-black text-[10px] shrink-0 overflow-hidden">
+                            <div className="w-8 h-8 bg-slate-100 border border-slate-200 dark:border-[#1e293b] flex items-center justify-center text-slate-500 dark:text-slate-400 font-black text-[10px] shrink-0 overflow-hidden">
                                 {s.photoURL ? <img src={s.photoURL} className="w-full h-full object-cover"/> : s.name[0]}
                             </div>
                             <div className="flex-1 overflow-hidden">

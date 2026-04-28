@@ -111,7 +111,7 @@ const CCTVCameras: React.FC<CCTVCamerasProps> = ({ schoolId, profile }) => {
 
   return (
     <div className="font-sans text-slate-900 dark:text-white animate-in fade-in duration-300 pb-20 bg-slate-100 min-h-screen p-4 md:p-6">
-      <div className="w-full max-w-[1920px] mx-auto bg-white dark:bg-slate-800 border-2 border-slate-300 shadow-sm flex flex-col min-h-[90vh]">
+      <div className="w-full max-w-[1920px] mx-auto bg-white dark:bg-[#1e293b] border-2 border-slate-300 shadow-sm flex flex-col min-h-[90vh]">
         
         {/* --- HEADER --- */}
         <div className="bg-[#1e3a8a] text-white p-6 shadow-md flex flex-col md:flex-row md:items-center justify-between border-b-4 border-slate-900">
@@ -121,7 +121,7 @@ const CCTVCameras: React.FC<CCTVCamerasProps> = ({ schoolId, profile }) => {
               Live Surveillance
             </h1>
             <div className="flex items-center gap-4 mt-2">
-              <span className="bg-white dark:bg-slate-800 text-[#1e3a8a] px-3 py-1 text-xs font-black uppercase tracking-wider border border-slate-900">
+              <span className="bg-white dark:bg-[#1e293b] text-[#1e3a8a] px-3 py-1 text-xs font-black uppercase tracking-wider border border-slate-900">
                 School CCTV Network
               </span>
             </div>
@@ -140,7 +140,7 @@ const CCTVCameras: React.FC<CCTVCamerasProps> = ({ schoolId, profile }) => {
         </div>
 
         {/* --- GRID --- */}
-        <div className="p-6 md:p-8 bg-slate-50 dark:bg-slate-800/50 flex-1">
+        <div className="p-6 md:p-8 bg-slate-50 dark:bg-[#0f172a] flex-1">
           {loading ? (
             <div className="flex items-center justify-center h-64">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1e3a8a]"></div>
@@ -154,18 +154,18 @@ const CCTVCameras: React.FC<CCTVCamerasProps> = ({ schoolId, profile }) => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {cameras.map(cam => (
-              <div key={cam.id} className="bg-white dark:bg-slate-800 border-2 border-slate-300 flex flex-col overflow-hidden relative group hover:border-[#1e3a8a] hover:shadow-[4px_4px_0px_#1e3a8a] transition-all">
-                <div className="p-3 bg-slate-100 flex justify-between items-center border-b-2 border-slate-200 dark:border-slate-700">
+              <div key={cam.id} className="bg-white dark:bg-[#1e293b] border-2 border-slate-300 flex flex-col overflow-hidden relative group hover:border-[#1e3a8a] hover:shadow-[4px_4px_0px_#1e3a8a] transition-all">
+                <div className="p-3 bg-slate-100 flex justify-between items-center border-b-2 border-slate-200 dark:border-[#1e293b]">
                   <div className="flex items-center gap-2">
                     <div className={`w-2.5 h-2.5 rounded-full ${cam.status === 'online' ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`}></div>
                     <span className="text-slate-900 dark:text-white font-black text-xs uppercase tracking-widest">{cam.name}</span>
                   </div>
                   <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => setActiveCamera(cam)} className="text-slate-500 dark:text-slate-400 hover:text-[#1e3a8a] transition-colors bg-white dark:bg-slate-800 border-2 border-slate-300 p-1">
+                    <button onClick={() => setActiveCamera(cam)} className="text-slate-500 dark:text-slate-400 hover:text-[#1e3a8a] transition-colors bg-white dark:bg-[#1e293b] border-2 border-slate-300 p-1">
                       <MonitorPlay size={16} weight="fill" />
                     </button>
                     {canDelete('cctv') && (
-                      <button onClick={() => handleDelete(cam.id)} className="text-slate-500 dark:text-slate-400 hover:text-rose-600 transition-colors bg-white dark:bg-slate-800 border-2 border-slate-300 p-1">
+                      <button onClick={() => handleDelete(cam.id)} className="text-slate-500 dark:text-slate-400 hover:text-rose-600 transition-colors bg-white dark:bg-[#1e293b] border-2 border-slate-300 p-1">
                         <Trash size={16} weight="fill" />
                       </button>
                     )}
@@ -214,7 +214,7 @@ const CCTVCameras: React.FC<CCTVCamerasProps> = ({ schoolId, profile }) => {
       {/* Add Camera Modal */}
       {isAdding && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-800 border-4 border-slate-900 shadow-[8px_8px_0px_#1e3a8a] w-full max-w-md animate-in zoom-in-95 duration-200">
+          <div className="bg-white dark:bg-[#1e293b] border-4 border-slate-900 shadow-[8px_8px_0px_#1e3a8a] w-full max-w-md animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center p-6 bg-[#1e3a8a] text-white border-b-4 border-slate-900">
               <h3 className="text-xl font-black uppercase tracking-tight">Add New Camera</h3>
               <button onClick={() => setIsAdding(false)} className="text-white/70 hover:text-white transition-colors">
@@ -230,7 +230,7 @@ const CCTVCameras: React.FC<CCTVCamerasProps> = ({ schoolId, profile }) => {
                   value={newCam.name}
                   onChange={e => setNewCam({...newCam, name: e.target.value})}
                   placeholder="e.g. Main Gate"
-                  className="w-full bg-slate-50 border-2 border-slate-300 px-4 py-3 text-sm font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1e3a8a] focus:bg-white dark:bg-slate-800 transition-colors uppercase tracking-wide"
+                  className="w-full bg-slate-50 border-2 border-slate-300 px-4 py-3 text-sm font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1e3a8a] focus:bg-white dark:bg-[#1e293b] transition-colors uppercase tracking-wide"
                 />
               </div>
               <div>
@@ -241,11 +241,11 @@ const CCTVCameras: React.FC<CCTVCamerasProps> = ({ schoolId, profile }) => {
                   value={newCam.url}
                   onChange={e => setNewCam({...newCam, url: e.target.value})}
                   placeholder="rtsp://..."
-                  className="w-full bg-slate-50 border-2 border-slate-300 px-4 py-3 text-sm font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1e3a8a] focus:bg-white dark:bg-slate-800 transition-colors"
+                  className="w-full bg-slate-50 border-2 border-slate-300 px-4 py-3 text-sm font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1e3a8a] focus:bg-white dark:bg-[#1e293b] transition-colors"
                 />
               </div>
               <div className="pt-2 flex gap-4">
-                <button type="button" onClick={() => setIsAdding(false)} className="flex-1 bg-white dark:bg-slate-800 border-2 border-slate-300 text-slate-600 dark:text-slate-300 font-black uppercase tracking-widest text-xs py-3 hover:bg-slate-50 transition-colors">
+                <button type="button" onClick={() => setIsAdding(false)} className="flex-1 bg-white dark:bg-[#1e293b] border-2 border-slate-300 text-slate-600 dark:text-slate-300 font-black uppercase tracking-widest text-xs py-3 hover:bg-slate-50 transition-colors">
                   Cancel
                 </button>
                 <button type="submit" className="flex-1 bg-[#1e3a8a] border-2 border-slate-900 text-white font-black uppercase tracking-widest text-xs py-3 hover:bg-blue-900 transition-colors shadow-[4px_4px_0px_#0f172a]">

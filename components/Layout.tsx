@@ -55,9 +55,9 @@ const Layout: React.FC<LayoutProps> = ({ navItems, profile, school, activeTab, s
         />
       )}
 
-      <aside className={`fixed lg:static inset-y-0 left-0 z-[150] flex flex-col bg-white dark:bg-slate-800 text-slate-900 dark:text-white border-r border-slate-100 transition-all duration-300 ease-in-out ${isSidebarOpen ? 'w-80 translate-x-0 shadow-2xl lg:shadow-none' : 'w-20 -translate-x-full lg:translate-x-0'}`}>
-        <div className="p-6 flex flex-col items-center justify-center border-b border-slate-100 dark:border-slate-800 min-h-[180px] shrink-0 bg-white dark:bg-slate-800 space-y-4">
-          <div className="w-28 h-28 rounded-full flex items-center justify-center font-black text-white shrink-0 shadow-2xl overflow-hidden bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 p-3">
+      <aside className={`fixed lg:static inset-y-0 left-0 z-[150] flex flex-col bg-white dark:bg-[#1e293b] text-slate-900 dark:text-white border-r border-slate-100 transition-all duration-300 ease-in-out ${isSidebarOpen ? 'w-80 translate-x-0 shadow-2xl lg:shadow-none' : 'w-20 -translate-x-full lg:translate-x-0'}`}>
+        <div className="p-6 flex flex-col items-center justify-center border-b border-slate-100 dark:border-[#334155] min-h-[180px] shrink-0 bg-white dark:bg-[#1e293b] space-y-4">
+          <div className="w-28 h-28 rounded-full flex items-center justify-center font-black text-white shrink-0 shadow-2xl overflow-hidden bg-slate-50 dark:bg-[#0f172a] border border-slate-100 dark:border-[#334155] p-3">
               {school.logoURL ? (
                 <img src={school.logoURL} className="w-full h-full object-contain rounded-full" alt="Logo" />
               ) : (
@@ -72,7 +72,7 @@ const Layout: React.FC<LayoutProps> = ({ navItems, profile, school, activeTab, s
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 block">Platform Node</span>
             </div>
           )}
-          <button onClick={() => setSidebarOpen(false)} className="lg:hidden absolute top-4 right-4 p-2 text-slate-400 hover:bg-slate-50 dark:bg-slate-800/50 rounded-xl transition-all"><X size={20}/></button>
+          <button onClick={() => setSidebarOpen(false)} className="lg:hidden absolute top-4 right-4 p-2 text-slate-400 hover:bg-slate-50 dark:bg-[#0f172a] rounded-xl transition-all"><X size={20}/></button>
         </div>
         
         <nav className="flex-1 p-5 space-y-1.5 overflow-y-auto custom-scrollbar">
@@ -97,9 +97,9 @@ const Layout: React.FC<LayoutProps> = ({ navItems, profile, school, activeTab, s
       </aside>
 
       <main className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
-        <header className="h-20 bg-white/80 dark:bg-slate-800/80 backdrop-blur-2xl border-b border-slate-100 dark:border-slate-800 flex items-center justify-between px-4 md:px-8 shrink-0 print:hidden sticky top-0 z-[100]">
+        <header className="h-20 bg-white/80 dark:bg-[#1e293b]/80 backdrop-blur-2xl border-b border-slate-100 dark:border-[#334155] flex items-center justify-between px-4 md:px-8 shrink-0 print:hidden sticky top-0 z-[100]">
           <div className="flex items-center gap-3 md:gap-5 min-w-0">
-            <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-2.5 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 rounded-xl text-slate-600 dark:text-slate-300 transition-colors">
+            <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-2.5 bg-slate-50 dark:bg-[#0f172a] hover:bg-slate-100 rounded-xl text-slate-600 dark:text-slate-300 transition-colors">
                 <Menu size={22} />
             </button>
             <h2 className="text-sm md:text-xl font-black capitalize truncate text-slate-900 dark:text-white tracking-tight leading-none">{activeTab.replace(/_/g, ' ')}</h2>
@@ -107,16 +107,16 @@ const Layout: React.FC<LayoutProps> = ({ navItems, profile, school, activeTab, s
           
           <div className="flex items-center gap-2 md:gap-6 shrink-0">
             {isTestMode && (
-              <button onClick={() => logout()} className="hidden sm:flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800 px-4 py-3 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+              <button onClick={() => logout()} className="hidden sm:flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-800 dark:text-slate-100 bg-white dark:bg-[#1e293b] px-4 py-3 rounded-xl shadow-sm border border-slate-200 dark:border-[#1e293b]">
                 <ArrowLeft size={14} /> Back to Admin
               </button>
             )}
-            <button className="p-3 text-slate-400 hover:bg-slate-50 dark:bg-slate-800/50 rounded-xl transition-colors relative">
+            <button className="p-3 text-slate-400 hover:bg-slate-50 dark:bg-[#0f172a] rounded-xl transition-colors relative">
                 <Bell size={20} />
                 <span className="absolute top-3 right-3 w-2.5 h-2.5 bg-indigo-500 rounded-full border-2 border-white"></span>
             </button>
             <div className="flex items-center gap-3 p-1 rounded-xl">
-              <div className="w-12 h-12 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center text-[10px] font-black uppercase text-slate-600 dark:text-slate-300 shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden p-1">
+              <div className="w-12 h-12 rounded-full bg-white dark:bg-[#1e293b] flex items-center justify-center text-[10px] font-black uppercase text-slate-600 dark:text-slate-300 shadow-xl border border-slate-100 dark:border-[#334155] overflow-hidden p-1">
                 {school.logoURL ? (
                   <img src={school.logoURL} className="w-full h-full object-contain rounded-full" alt="Avatar" />
                 ) : (

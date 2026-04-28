@@ -114,14 +114,14 @@ const SearchableTeacherSelect = ({
   return (
     <div className="relative w-full" ref={containerRef}>
       <div 
-        className={`w-full bg-white dark:bg-slate-800 border-2 p-3 text-sm font-bold text-slate-700 dark:text-slate-200 outline-none rounded-none cursor-pointer flex justify-between items-center transition-colors ${isOpen ? 'border-[#1e3a8a] ring-2 ring-blue-100' : 'border-slate-200 hover:border-slate-300'}`}
+        className={`w-full bg-white dark:bg-[#1e293b] border-2 p-3 text-sm font-bold text-slate-700 dark:text-slate-200 outline-none rounded-none cursor-pointer flex justify-between items-center transition-colors ${isOpen ? 'border-[#1e3a8a] ring-2 ring-blue-100' : 'border-slate-200 hover:border-slate-300'}`}
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="flex items-center gap-2 truncate">
           {selectedTeacher && selectedTeacher.photoURL ? (
-            <img src={selectedTeacher.photoURL} alt={selectedTeacher.name} className="w-6 h-6 rounded-full object-cover border border-slate-200 dark:border-slate-700" />
+            <img src={selectedTeacher.photoURL} alt={selectedTeacher.name} className="w-6 h-6 rounded-full object-cover border border-slate-200 dark:border-[#1e293b]" />
           ) : selectedTeacher ? (
-            <div className="w-6 h-6 rounded-full bg-slate-100 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-[10px] font-black text-slate-500 dark:text-slate-400">
+            <div className="w-6 h-6 rounded-full bg-slate-100 border border-slate-200 dark:border-[#1e293b] flex items-center justify-center text-[10px] font-black text-slate-500 dark:text-slate-400">
               {selectedTeacher.name.charAt(0)}
             </div>
           ) : null}
@@ -152,11 +152,11 @@ const SearchableTeacherSelect = ({
       {isOpen && createPortal(
         <div 
           ref={dropdownRef}
-          className={`fixed bg-white dark:bg-slate-800 border-2 border-[#1e3a8a] shadow-2xl flex flex-col animate-in fade-in zoom-in-95 duration-100 ${openUpwards ? 'rounded-t-md' : 'rounded-b-md'}`}
+          className={`fixed bg-white dark:bg-[#1e293b] border-2 border-[#1e3a8a] shadow-2xl flex flex-col animate-in fade-in zoom-in-95 duration-100 ${openUpwards ? 'rounded-t-md' : 'rounded-b-md'}`}
           style={{ ...dropdownStyle, maxHeight: '300px' }}
           onClick={e => e.stopPropagation()}
         >
-          <div className="p-3 border-b-2 border-slate-100 dark:border-slate-800 flex items-center gap-2 bg-slate-50 dark:bg-slate-800/50 shrink-0">
+          <div className="p-3 border-b-2 border-slate-100 dark:border-[#334155] flex items-center gap-2 bg-slate-50 dark:bg-[#0f172a] shrink-0">
             <MagnifyingGlass size={18} className="text-[#1e3a8a]" weight="bold" />
             <input 
               ref={inputRef}
@@ -195,9 +195,9 @@ const SearchableTeacherSelect = ({
                   onClick={(e) => { e.stopPropagation(); onChange(t.id); setIsOpen(false); setSearch(''); }}
                 >
                   {t.photoURL ? (
-                    <img src={t.photoURL} alt={t.name} className="w-8 h-8 rounded-full object-cover border border-slate-200 dark:border-slate-700" />
+                    <img src={t.photoURL} alt={t.name} className="w-8 h-8 rounded-full object-cover border border-slate-200 dark:border-[#1e293b]" />
                   ) : (
-                    <div className="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-xs font-black text-slate-500 dark:text-slate-400">
+                    <div className="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 dark:border-[#1e293b] flex items-center justify-center text-xs font-black text-slate-500 dark:text-slate-400">
                       {t.name.charAt(0)}
                     </div>
                   )}
@@ -225,6 +225,7 @@ const AddClass: React.FC<AddClassProps> = ({ schoolId, classes, teachers, subjec
   const [currentStep, setCurrentStep] = useState(1);
   const [form, setForm] = useState(INITIAL_FORM_STATE);
   const [selectedSubjectIds, setSelectedSubjectIds] = useState<string[]>([]);
+  const [sessionCreatedSubjectIds, setSessionCreatedSubjectIds] = useState<string[]>([]);
   const [modalSubjectAssignments, setModalSubjectAssignments] = useState<{ [subjectId: string]: TeacherReference | null }>({});
   
   const [isSaving, setIsSaving] = useState(false);
@@ -297,11 +298,23 @@ const AddClass: React.FC<AddClassProps> = ({ schoolId, classes, teachers, subjec
     if (!quickSubjectName.trim()) return;
     setIsAddingQuick(true);
     try {
+      let finalName = quickSubjectName.trim();
+      const currentClassName = form.name.trim();
+
+      if (currentClassName) {
+        // Automatic naming convention: Subject Name - Class Name
+        if (!finalName.toUpperCase().includes(currentClassName.toUpperCase())) {
+          finalName = `${finalName} - ${currentClassName}`;
+        }
+      }
+
       const newSub = await addSubject(schoolId, {
-        name: quickSubjectName.trim(),
-        coverImageURL: quickSubjectCoverImage || undefined
+        name: finalName.toUpperCase(),
+        coverImageURL: quickSubjectCoverImage || undefined,
+        classId: isEditing ? editClassId : undefined // Link it to the current class if editing
       });
       setSelectedSubjectIds(prev => [...prev, newSub.id]);
+      setSessionCreatedSubjectIds(prev => [...prev, newSub.id]);
       setQuickSubjectName('');
       setQuickSubjectCoverImage(null);
       setShowQuickSubject(false);
@@ -396,7 +409,7 @@ const AddClass: React.FC<AddClassProps> = ({ schoolId, classes, teachers, subjec
   const labelStyle = "text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block";
 
   const renderStepIndicator = () => (
-    <div className="flex items-center justify-between px-8 py-6 bg-white dark:bg-slate-800 border-b-2 border-slate-200 dark:border-slate-700 shrink-0">
+    <div className="flex items-center justify-between px-8 py-6 bg-white dark:bg-[#1e293b] border-b-2 border-slate-200 dark:border-[#1e293b] shrink-0">
         {[1, 2, 3, 4].map(step => (
             <div key={step} className="flex items-center gap-3">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black border-2 transition-colors ${currentStep >= step ? 'bg-[#1e3a8a] text-white border-[#1e3a8a]' : 'bg-slate-50 text-slate-400 border-slate-200'}`}>
@@ -419,7 +432,7 @@ const AddClass: React.FC<AddClassProps> = ({ schoolId, classes, teachers, subjec
             <div className="flex items-center gap-4">
                 <button 
                     onClick={() => navigate('/classes')}
-                    className="w-10 h-10 bg-white dark:bg-slate-800 border-2 border-white flex items-center justify-center text-[#1e3a8a] hover:bg-slate-200 transition-all"
+                    className="w-10 h-10 bg-white dark:bg-[#1e293b] border-2 border-white flex items-center justify-center text-[#1e3a8a] hover:bg-slate-200 transition-all"
                 >
                     <ArrowLeft size={20} weight="bold" />
                 </button>
@@ -435,7 +448,7 @@ const AddClass: React.FC<AddClassProps> = ({ schoolId, classes, teachers, subjec
         </div>
 
         {/* Main Form Container */}
-        <div className="w-full max-w-5xl mx-auto bg-white dark:bg-slate-800 border-2 border-slate-300 shadow-sm flex flex-col min-h-[60vh]">
+        <div className="w-full max-w-5xl mx-auto bg-white dark:bg-[#1e293b] border-2 border-slate-300 shadow-sm flex flex-col min-h-[60vh]">
             {renderStepIndicator()}
 
             <div className="p-8 md:p-12 flex-1">
@@ -454,8 +467,8 @@ const AddClass: React.FC<AddClassProps> = ({ schoolId, classes, teachers, subjec
                         </div>
                         
                         {/* Basic Info Group */}
-                        <div className="bg-slate-50 dark:bg-slate-800/50 p-6 border border-slate-200 dark:border-slate-700 mb-8">
-                            <h5 className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-6 border-b border-slate-200 dark:border-slate-700 pb-2">Basic Information</h5>
+                        <div className="bg-slate-50 dark:bg-[#0f172a] p-6 border border-slate-200 dark:border-[#1e293b] mb-8">
+                            <h5 className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-6 border-b border-slate-200 dark:border-[#1e293b] pb-2">Basic Information</h5>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div>
                                     <label className={labelStyle}>Class Name</label>
@@ -469,8 +482,8 @@ const AddClass: React.FC<AddClassProps> = ({ schoolId, classes, teachers, subjec
                         </div>
 
                         {/* Operational Info Group */}
-                        <div className="bg-slate-50 dark:bg-slate-800/50 p-6 border border-slate-200 dark:border-slate-700">
-                            <h5 className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-6 border-b border-slate-200 dark:border-slate-700 pb-2">Operational Details (Optional)</h5>
+                        <div className="bg-slate-50 dark:bg-[#0f172a] p-6 border border-slate-200 dark:border-[#1e293b]">
+                            <h5 className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-6 border-b border-slate-200 dark:border-[#1e293b] pb-2">Operational Details (Optional)</h5>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div>
                                     <label className={labelStyle}>Class Monitor</label>
@@ -488,7 +501,7 @@ const AddClass: React.FC<AddClassProps> = ({ schoolId, classes, teachers, subjec
                                             ))}
                                         </select>
                                     ) : (
-                                        <div className="w-full bg-slate-100 border-2 border-slate-200 dark:border-slate-700 p-4 text-sm font-bold text-slate-400 cursor-not-allowed">
+                                        <div className="w-full bg-slate-100 border-2 border-slate-200 dark:border-[#1e293b] p-4 text-sm font-bold text-slate-400 cursor-not-allowed">
                                             Save class first to add students
                                         </div>
                                     )}
@@ -532,25 +545,25 @@ const AddClass: React.FC<AddClassProps> = ({ schoolId, classes, teachers, subjec
                         </div>
 
                         {showQuickSubject && (
-                            <div className="mb-8 p-6 bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-200 dark:border-slate-700 animate-in slide-in-from-top-2">
+                            <div className="mb-8 p-6 bg-slate-50 dark:bg-[#0f172a] border-2 border-slate-200 dark:border-[#1e293b] animate-in slide-in-from-top-2">
                                 <h5 className="text-[10px] font-black text-slate-800 dark:text-slate-100 uppercase tracking-widest mb-4">Quick Add Subject</h5>
                                 <div className="flex flex-col md:flex-row gap-4 items-start">
                                     <div className="flex-1 w-full">
                                         <input 
                                             type="text" 
                                             placeholder="Subject Name" 
-                                            className="w-full bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 p-3 text-sm font-bold text-slate-700 dark:text-slate-200 outline-none focus:border-[#1e3a8a]"
+                                            className="w-full bg-white dark:bg-[#1e293b] border-2 border-slate-200 dark:border-[#1e293b] p-3 text-sm font-bold text-slate-700 dark:text-slate-200 outline-none focus:border-[#1e3a8a]"
                                             value={quickSubjectName}
                                             onChange={e => setQuickSubjectName(e.target.value)}
                                         />
                                     </div>
                                     <div className="flex-1 w-full flex items-center gap-4">
-                                        <label className="cursor-pointer bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 p-3 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 flex-1 text-center">
+                                        <label className="cursor-pointer bg-white dark:bg-[#1e293b] border-2 border-slate-200 dark:border-[#1e293b] p-3 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 flex-1 text-center">
                                             {quickSubjectCoverImage ? 'Change Image' : 'Upload Cover (Opt)'}
                                             <input type="file" accept="image/*" className="hidden" onChange={handleQuickSubjectImageUpload} />
                                         </label>
                                         {quickSubjectCoverImage && (
-                                            <img src={quickSubjectCoverImage} alt="Preview" className="w-12 h-12 object-cover border-2 border-slate-200 dark:border-slate-700" />
+                                            <img src={quickSubjectCoverImage} alt="Preview" className="w-12 h-12 object-cover border-2 border-slate-200 dark:border-[#1e293b]" />
                                         )}
                                     </div>
                                     <button 
@@ -564,33 +577,50 @@ const AddClass: React.FC<AddClassProps> = ({ schoolId, classes, teachers, subjec
                             </div>
                         )}
 
-                        {subjects.length > 0 ? (
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                                {subjects.map(sub => {
-                                    const isSelected = selectedSubjectIds.includes(sub.id);
-                                    return (
-                                        <div 
-                                            key={sub.id} 
-                                            onClick={() => handleSubjectToggle(sub.id)}
-                                            className={`cursor-pointer border-2 p-4 flex flex-col items-center justify-center text-center gap-3 transition-all ${isSelected ? 'border-[#1e3a8a] bg-blue-50' : 'border-slate-200 bg-white dark:bg-slate-800 hover:border-slate-300'}`}
-                                        >
-                                            <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 overflow-hidden ${isSelected ? 'border-[#1e3a8a] bg-white dark:bg-slate-800' : 'border-slate-200 bg-slate-50'}`}>
-                                                {sub.coverImageURL ? (
-                                                    <img src={sub.coverImageURL} alt={sub.name} className="w-full h-full object-cover" />
-                                                ) : (
-                                                    <BookOpen size={20} className={isSelected ? 'text-[#1e3a8a]' : 'text-slate-400'} weight="bold"/>
-                                                )}
+                        {(() => {
+                            const filteredSubjects = subjects.filter(sub => {
+                                // 1. ALWAYS show subjects explicitly added during this current creation session
+                                if (sessionCreatedSubjectIds.includes(sub.id)) return true;
+
+                                // 2. If editing, show subjects linked to this class ID
+                                if (isEditing && editClassId && sub.classId === editClassId) return true;
+
+                                // 3. If editing, also show subjects that contain the class name
+                                const currentClassName = form.name.trim().toUpperCase();
+                                if (isEditing && currentClassName && sub.name.toUpperCase().includes(currentClassName)) return true;
+
+                                // 4. In ALL other cases (especially when creating a NEW class), DO NOT show existing subjects
+                                return false; 
+                            });
+
+                            return filteredSubjects.length > 0 ? (
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                                    {filteredSubjects.map(sub => {
+                                        const isSelected = selectedSubjectIds.includes(sub.id);
+                                        return (
+                                            <div 
+                                                key={sub.id} 
+                                                onClick={() => handleSubjectToggle(sub.id)}
+                                                className={`cursor-pointer border-2 p-4 flex flex-col items-center justify-center text-center gap-3 transition-all ${isSelected ? 'border-[#1e3a8a] bg-blue-50' : 'border-slate-200 bg-white dark:bg-[#020617] border-slate-100 dark:border-[#1e293b] hover:border-slate-300'}`}
+                                            >
+                                                <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 overflow-hidden ${isSelected ? 'border-[#1e3a8a] bg-white dark:bg-[#1e293b]' : 'border-slate-200 bg-slate-50'}`}>
+                                                    {sub.coverImageURL ? (
+                                                        <img src={sub.coverImageURL} alt={sub.name} className="w-full h-full object-cover" />
+                                                    ) : (
+                                                        <BookOpen size={20} className={isSelected ? 'text-[#1e3a8a]' : 'text-slate-400'} weight="bold"/>
+                                                    )}
+                                                </div>
+                                                <span className={`text-xs font-bold ${isSelected ? 'text-[#1e3a8a]' : 'text-slate-600 dark:text-slate-300'}`}>{sub.name}</span>
                                             </div>
-                                            <span className={`text-xs font-bold ${isSelected ? 'text-[#1e3a8a]' : 'text-slate-600 dark:text-slate-300'}`}>{sub.name}</span>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        ) : (
-                            <div className="p-12 text-center border-2 border-dashed border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
-                                <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">No global subjects found.</p>
-                            </div>
-                        )}
+                                        );
+                                    })}
+                                </div>
+                            ) : (
+                                <div className="p-12 text-center border-2 border-dashed border-slate-200 dark:border-[#1e293b] bg-slate-50 dark:bg-[#0f172a]">
+                                    <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">No subjects linked to this class yet. Click "Quick Add Subject" to create one.</p>
+                                </div>
+                            );
+                        })()}
                     </div>
                 )}
 
@@ -628,9 +658,9 @@ const AddClass: React.FC<AddClassProps> = ({ schoolId, classes, teachers, subjec
                                     const subject = subjects.find(s => s.id === sid);
                                     const assignedTeacherId = modalSubjectAssignments[sid]?.id || '';
                                     return (
-                                        <div key={sid} className="p-6 bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-200 dark:border-slate-700 flex flex-col gap-4">
+                                        <div key={sid} className="p-6 bg-slate-50 dark:bg-[#0f172a] border-2 border-slate-200 dark:border-[#1e293b] flex flex-col gap-4">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-full bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 flex items-center justify-center overflow-hidden shrink-0">
+                                                <div className="w-10 h-10 rounded-full bg-white dark:bg-[#1e293b] border-2 border-slate-200 dark:border-[#1e293b] flex items-center justify-center overflow-hidden shrink-0">
                                                     {subject?.coverImageURL ? (
                                                         <img src={subject.coverImageURL} alt={subject.name} className="w-full h-full object-cover" />
                                                     ) : (
@@ -650,7 +680,7 @@ const AddClass: React.FC<AddClassProps> = ({ schoolId, classes, teachers, subjec
                                 })}
                             </div>
                         ) : (
-                            <div className="p-12 text-center border-2 border-dashed border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+                            <div className="p-12 text-center border-2 border-dashed border-slate-200 dark:border-[#1e293b] bg-slate-50 dark:bg-[#0f172a]">
                                 <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">No subjects selected in Step 2.</p>
                             </div>
                         )}
@@ -659,7 +689,7 @@ const AddClass: React.FC<AddClassProps> = ({ schoolId, classes, teachers, subjec
             </div>
 
             {/* Footer Actions */}
-            <div className="p-6 bg-slate-50 dark:bg-slate-800/50 border-t-2 border-slate-200 dark:border-slate-700 flex justify-between items-center shrink-0">
+            <div className="p-6 bg-slate-50 dark:bg-[#0f172a] border-t-2 border-slate-200 dark:border-[#1e293b] flex justify-between items-center shrink-0">
                 <button 
                     onClick={() => currentStep > 1 ? setCurrentStep(currentStep - 1) : navigate('/classes')}
                     className="px-6 py-3 text-xs font-black text-slate-500 hover:text-slate-800 dark:text-slate-100 uppercase tracking-widest transition-colors"

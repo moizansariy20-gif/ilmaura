@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ArrowLeft, User, IdentificationCard, Envelope, Lock, CheckCircle, Spinner, WarningCircle, ChalkboardTeacher, Student, ShieldCheck } from 'phosphor-react';
 import { verifyLoginId, completeUserAccess, signInWithGoogle } from '../services/api.ts';
@@ -22,8 +22,17 @@ const SpotlightButton: React.FC<{
   const containerRef = useRef<HTMLButtonElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 768);
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDesktop) return;
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
       setMousePos({
@@ -40,7 +49,7 @@ const SpotlightButton: React.FC<{
       onClick={onClick}
       disabled={disabled || loading}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovering(true)}
+      onMouseEnter={() => isDesktop && setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       className={`w-full font-semibold py-3.5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed shadow-lg mt-2 relative overflow-hidden group ${className || 'bg-[#007bff] hover:bg-blue-700 text-white shadow-blue-500/30'}`}
     >
@@ -50,31 +59,33 @@ const SpotlightButton: React.FC<{
       </div>
 
       {/* Reveal Overlay */}
-      <motion.div 
-        initial={false}
-        animate={{ 
-          opacity: isHovering ? 1 : 0,
-          clipPath: `circle(${isHovering ? 60 : 0}px at ${mousePos.x}px ${mousePos.y}px)`
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 250,
-          damping: 25,
-          opacity: { duration: 0.2 }
-        }}
-        className={`absolute inset-0 flex items-center justify-center z-20 pointer-events-none overflow-hidden ${overlayClassName || 'bg-white text-[#007bff]'}`}
-      >
-        <div className="flex items-center justify-center gap-2 font-bold">
-          {loading ? <Spinner size={20} className="animate-spin" weight="bold" /> : children}
-        </div>
-      </motion.div>
+      {isDesktop && (
+        <motion.div 
+          initial={false}
+          animate={{ 
+            opacity: isHovering ? 1 : 0,
+            clipPath: `circle(${isHovering ? 60 : 0}px at ${mousePos.x}px ${mousePos.y}px)`
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 250,
+            damping: 25,
+            opacity: { duration: 0.2 }
+          }}
+          className={`absolute inset-0 flex items-center justify-center z-20 pointer-events-none overflow-hidden ${overlayClassName || 'bg-white text-[#007bff]'}`}
+        >
+          <div className="flex items-center justify-center gap-2 font-bold">
+            {loading ? <Spinner size={20} className="animate-spin" weight="bold" /> : children}
+          </div>
+        </motion.div>
+      )}
     </button>
   );
 };
 
 const CreateAccess: React.FC<CreateAccessProps> = ({ schoolId, onBack, onSuccess }) => {
   const [step, setStep] = useState(1);
-  const [role, setRole] = useState<'teacher' | 'student' | 'principal'>('student');
+  const [role, setRole] = useState<'teacher' | 'student' | 'principal' | 'staff'>('student');
   const [loginId, setLoginId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -95,11 +106,15 @@ const CreateAccess: React.FC<CreateAccessProps> = ({ schoolId, onBack, onSuccess
         if (details.uid) {
           setError("Access has already been created for this ID. Please login.");
         } else {
+          // If we are in the Admin tab and it detected a staff member, update the role
+          if (role === 'principal' && (details as any).detectedRole === 'staff') {
+             setRole('staff');
+          }
           setUserDetails(details);
           setStep(2);
         }
       } else {
-        setError(`Invalid ${role === 'teacher' ? 'Faculty' : role === 'principal' ? 'Admin' : 'Student'} ID for this school.`);
+        setError(`Invalid ${role === 'teacher' ? 'Faculty' : role === 'principal' ? 'Admin/Staff' : 'Student'} ID for this school.`);
       }
     } catch (err: any) {
       setError(err.message || "Verification failed");
@@ -199,14 +214,14 @@ const CreateAccess: React.FC<CreateAccessProps> = ({ schoolId, onBack, onSuccess
                     onClick={() => setRole('principal')}
                     className={`flex-1 py-2.5 rounded-lg text-xs font-bold transition-all duration-300 flex items-center justify-center gap-2 ${role === 'principal' ? 'bg-white shadow-sm text-[#007bff]' : 'text-slate-500 hover:text-slate-700'}`}
                   >
-                      <ShieldCheck size={18} weight={role === 'principal' ? 'fill' : 'regular'} /> Admin
+                      <ShieldCheck size={18} weight={role === 'principal' ? 'fill' : 'regular'} /> Admin / Staff
                   </button>
               </div>
           </div>
 
           <div className="space-y-2">
             <label className="text-sm font-semibold text-slate-700 block">
-              {role === 'teacher' ? 'Teacher ID' : role === 'principal' ? 'Admin ID' : 'Student ID'}
+              {role === 'teacher' ? 'Teacher ID' : role === 'principal' ? 'Admin / Staff ID' : 'Student ID'}
             </label>
             <div className="relative">
               <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
@@ -216,7 +231,7 @@ const CreateAccess: React.FC<CreateAccessProps> = ({ schoolId, onBack, onSuccess
                 type="text"
                 value={loginId}
                 onChange={(e) => setLoginId(e.target.value.toUpperCase())}
-                placeholder={`Enter your ${role === 'teacher' ? 'Teacher' : role === 'principal' ? 'Admin' : 'Student'} ID`}
+                placeholder={`Enter your ${role === 'teacher' ? 'Teacher' : role === 'principal' ? 'Admin / Staff' : 'Student'} ID`}
                 className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#007bff]/20 focus:border-[#007bff] transition-all text-slate-700 font-bold uppercase tracking-widest"
                 required
               />

@@ -16,8 +16,17 @@ const SpotlightButton: React.FC<{
   type?: "button" | "submit";
 }> = ({ children, onClick, disabled, loading, type = "button" }) => {
   const containerRef = useRef<HTMLButtonElement>(null);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 768);
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDesktop) return;
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -34,7 +43,7 @@ const SpotlightButton: React.FC<{
       onClick={onClick}
       disabled={disabled || loading}
       onMouseMove={handleMouseMove}
-      onMouseEnter={(e) => e.currentTarget.style.setProperty('--opacity', '1')}
+      onMouseEnter={(e) => isDesktop && e.currentTarget.style.setProperty('--opacity', '1')}
       onMouseLeave={(e) => e.currentTarget.style.setProperty('--opacity', '0')}
       className="w-full bg-[#007bff] hover:bg-blue-700 text-white font-semibold py-3.5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed shadow-lg shadow-blue-500/30 mt-2 relative overflow-hidden group"
     >
@@ -44,17 +53,19 @@ const SpotlightButton: React.FC<{
       </div>
 
       {/* Reveal Overlay */}
-      <div 
-        className="absolute inset-0 bg-white text-[#007bff] flex items-center justify-center z-20 pointer-events-none transition-opacity duration-200"
-        style={{ 
-          opacity: 'var(--opacity, 0)',
-          clipPath: 'circle(60px at var(--x, 50%) var(--y, 50%))'
-        }}
-      >
-        <div className="flex items-center justify-center gap-2 font-bold">
-          {loading ? <Spinner size={20} className="animate-spin" weight="bold" /> : children}
+      {isDesktop && (
+        <div 
+          className="absolute inset-0 bg-white text-[#007bff] flex items-center justify-center z-20 pointer-events-none transition-opacity duration-200"
+          style={{ 
+            opacity: 'var(--opacity, 0)',
+            clipPath: 'circle(60px at var(--x, 50%) var(--y, 50%))'
+          }}
+        >
+          <div className="flex items-center justify-center gap-2 font-bold">
+            {loading ? <Spinner size={20} className="animate-spin" weight="bold" /> : children}
+          </div>
         </div>
-      </div>
+      )}
     </button>
   );
 };

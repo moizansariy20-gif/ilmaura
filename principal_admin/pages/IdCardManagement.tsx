@@ -336,10 +336,10 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
       
       return (
         <>
-          <div id="print-area" className="fixed inset-0 bg-white dark:bg-slate-800 z-[9999] overflow-y-auto">
+          <div id="print-area" className="fixed inset-0 bg-white dark:bg-[#1e293b] z-[9999] overflow-y-auto">
             <div className="print-header fixed top-0 left-0 right-0 bg-slate-900 text-white p-6 shadow-xl flex flex-col md:flex-row justify-between items-center z-50 print:hidden border-b border-white/10 backdrop-blur-md bg-slate-900/90 gap-4">
               <div className="flex items-center gap-5">
-                <button onClick={() => setIsPrintMode(false)} className="w-10 h-10 flex items-center justify-center bg-white/10 dark:bg-slate-800/10 hover:bg-white/20 dark:bg-slate-800/20 rounded-xl transition-all"><X weight="bold" size={20}/></button>
+                <button onClick={() => setIsPrintMode(false)} className="w-10 h-10 flex items-center justify-center bg-white/10 dark:bg-[#1e293b]/10 hover:bg-white/20 dark:bg-[#1e293b]/20 rounded-xl transition-all"><X weight="bold" size={20}/></button>
                 <div>
                   <h2 className="text-xl font-bold tracking-tight">Print Preview</h2>
                   <p className="text-xs font-medium text-slate-400 uppercase tracking-widest">{studentsToPrint.length} Cards Selected</p>
@@ -362,7 +362,7 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
               </div>
 
               <div className="flex gap-3">
-                <button onClick={handleDownloadPDF} disabled={isDownloadingPdf} className="px-6 py-2.5 bg-white/10 dark:bg-slate-800/10 hover:bg-white/20 dark:bg-slate-800/20 text-white rounded-xl font-bold text-sm transition-all flex items-center gap-2 border border-white/20 disabled:opacity-50">
+                <button onClick={handleDownloadPDF} disabled={isDownloadingPdf} className="px-6 py-2.5 bg-white/10 dark:bg-[#1e293b]/10 hover:bg-white/20 dark:bg-[#1e293b]/20 text-white rounded-xl font-bold text-sm transition-all flex items-center gap-2 border border-white/20 disabled:opacity-50">
                   {isDownloadingPdf ? <CircleNotch size={18} className="animate-spin"/> : <DownloadSimple size={18} weight="bold"/>} 
                   {isDownloadingPdf ? 'Generating...' : 'Download PDF'}
                 </button>
@@ -376,7 +376,7 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
               <div className="print-content-area">
                 <div className="flex flex-wrap gap-8 justify-center print:block">
                   {studentsToPrint.map((student) => (
-                    <div id={`card-${student.id}`} key={student.id} className="print:inline-block print:m-2 print:break-inside-avoid relative mb-8 print:mb-4 bg-white dark:bg-slate-800 p-2">
+                    <div id={`card-${student.id}`} key={student.id} className="print:inline-block print:m-2 print:break-inside-avoid relative mb-8 print:mb-4 bg-white dark:bg-[#1e293b] p-2">
                       <div className="flex gap-5 print:gap-0 items-center">
                         <div className="print-card-wrapper print:border-none print:m-1" style={{ width: `${printWidth}mm`, height: `${printHeight}mm`, overflow: 'hidden', position: 'relative', border: '1px solid #e2e8f0' }}>
                           <div className="print-card-inner" style={{ transform: `scale(${scaleX}, ${scaleY})`, transformOrigin: 'top left' }}>
@@ -401,7 +401,7 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
     }
 
   return (
-    <div className="font-sans text-slate-900 dark:text-white animate-in fade-in duration-300 pb-20 bg-slate-50 dark:bg-slate-800/50 min-h-screen">
+    <div className="font-sans text-slate-900 dark:text-white animate-in fade-in duration-300 pb-20 bg-slate-50 dark:bg-[#0f172a] min-h-screen">
         
         {/* --- HEADER --- */}
         <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white relative overflow-hidden">
@@ -412,7 +412,7 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
             <div className="max-w-[1600px] mx-auto px-6 py-10 relative z-10">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div className="flex items-center gap-5">
-                        <div className="w-16 h-16 bg-white/10 dark:bg-slate-800/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/20 shadow-xl">
+                        <div className="w-16 h-16 bg-white/10 dark:bg-[#1e293b]/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/20 shadow-xl">
                             <IdentificationCard size={32} className="text-indigo-300" weight="duotone" />
                         </div>
                         <div>
@@ -422,7 +422,7 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
                     </div>
                     
                     <div className="flex items-center gap-3">
-                        <div className="px-4 py-2 bg-white/10 dark:bg-slate-800/10 backdrop-blur-md border border-white/20 rounded-xl flex items-center gap-3">
+                        <div className="px-4 py-2 bg-white/10 dark:bg-[#1e293b]/10 backdrop-blur-md border border-white/20 rounded-xl flex items-center gap-3">
                             <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
                             <span className="text-xs font-semibold uppercase tracking-wider text-emerald-100">Production Ready</span>
                         </div>
@@ -445,7 +445,7 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
             {/* --- KPI CARDS --- */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Issued Card */}
-                <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all group overflow-hidden relative">
+                <div className="bg-white dark:bg-[#1e293b] p-6 rounded-3xl border border-slate-200 dark:border-[#1e293b] shadow-sm hover:shadow-md transition-all group overflow-hidden relative">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
                     <div className="relative z-10 flex justify-between items-start">
                         <div>
@@ -463,7 +463,7 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
                 </div>
 
                 {/* Pending Card */}
-                <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all group overflow-hidden relative">
+                <div className="bg-white dark:bg-[#1e293b] p-6 rounded-3xl border border-slate-200 dark:border-[#1e293b] shadow-sm hover:shadow-md transition-all group overflow-hidden relative">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-rose-50 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
                     <div className="relative z-10 flex justify-between items-start">
                         <div>
@@ -482,9 +482,9 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
             </div>
 
             {/* --- MAIN REGISTRY SECTION --- */}
-            <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-[#1e293b] rounded-3xl border border-slate-200 dark:border-[#1e293b] shadow-sm overflow-hidden">
                 {/* TOOLBAR */}
-                <div className="px-8 py-6 border-b border-slate-100 dark:border-slate-800 flex flex-col lg:flex-row justify-between items-center gap-6">
+                <div className="px-8 py-6 border-b border-slate-100 dark:border-[#334155] flex flex-col lg:flex-row justify-between items-center gap-6">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600">
                             <List size={20} weight="bold"/>
@@ -502,7 +502,7 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
                             <select 
                                 value={selectedClassId} 
                                 onChange={(e) => setSelectedClassId(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 transition-all appearance-none"
+                                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-[#1e293b] rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 transition-all appearance-none"
                             >
                                 <option value="all">All Classes</option>
                                 {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -515,7 +515,7 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
                             <select 
                                 value={filterStatus} 
                                 onChange={(e) => setFilterStatus(e.target.value as any)}
-                                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 transition-all appearance-none"
+                                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-[#1e293b] rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 transition-all appearance-none"
                             >
                                 <option value="all">All Status</option>
                                 <option value="pending">Pending</option>
@@ -529,7 +529,7 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
                             <input 
                                 type="text" 
                                 placeholder="Search by name or roll number..." 
-                                className="w-full pl-12 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 transition-all"
+                                className="w-full pl-12 pr-4 py-2.5 bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-[#1e293b] rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 transition-all"
                                 value={searchTerm}
                                 onChange={e => setSearchTerm(e.target.value)}
                             />
@@ -546,7 +546,7 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
                 </div>
 
                 {/* --- STUDENT GRID --- */}
-                <div className="p-8 bg-slate-50 dark:bg-slate-800/50/50">
+                <div className="p-8 bg-slate-50 dark:bg-[#0f172a]/50">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         {filteredStudents.map(student => {
                             const isIssued = !!student.issuedIdCard;
@@ -568,12 +568,12 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
                                                 <CheckCircle size={16} weight="fill"/>
                                             </div>
                                         ) : (
-                                            <div className="w-6 h-6 border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-full group-hover:border-indigo-300 transition-colors"></div>
+                                            <div className="w-6 h-6 border-2 border-slate-200 dark:border-[#1e293b] bg-white dark:bg-[#1e293b] rounded-full group-hover:border-indigo-300 transition-colors"></div>
                                         )}
                                     </div>
 
                                     <div className="flex items-center gap-4 mb-5">
-                                        <div className="w-16 h-16 rounded-2xl bg-slate-100 border border-slate-200 dark:border-slate-700 flex items-center justify-center shrink-0 overflow-hidden shadow-inner">
+                                        <div className="w-16 h-16 rounded-2xl bg-slate-100 border border-slate-200 dark:border-[#1e293b] flex items-center justify-center shrink-0 overflow-hidden shadow-inner">
                                             {student.photoURL ? (
                                                 <img src={student.photoURL} alt="" className="w-full h-full object-cover" />
                                             ) : (
@@ -582,7 +582,7 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <h3 className="font-bold text-slate-800 dark:text-slate-100 text-base truncate leading-tight">{student.name}</h3>
-                                            <p className="text-xs font-semibold text-slate-400 mt-0.5">Roll: {student.rollNo}</p>
+                                            <p className="text-xs font-semibold text-slate-400 mt-0.5"></p>
                                             <div className="flex items-center gap-1.5 mt-2">
                                                 <div className={`w-1.5 h-1.5 rounded-full ${isIssued ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
                                                 <span className={`text-[10px] font-bold uppercase tracking-wider ${isIssued ? 'text-emerald-600' : 'text-rose-600'}`}>
@@ -624,18 +624,18 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
         {showIssueModal && currentStudent && (
             <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
                 <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-md" onClick={() => setShowIssueModal(false)}></div>
-                <div className="bg-white dark:bg-slate-800 w-full max-w-3xl h-[90vh] md:h-[85vh] rounded-[2.5rem] border border-slate-200 dark:border-slate-700 relative z-10 flex flex-col overflow-hidden animate-in zoom-in-95 duration-300 shadow-2xl">
+                <div className="bg-white dark:bg-[#1e293b] w-full max-w-3xl h-[90vh] md:h-[85vh] rounded-[2.5rem] border border-slate-200 dark:border-[#1e293b] relative z-10 flex flex-col overflow-hidden animate-in zoom-in-95 duration-300 shadow-2xl">
                     
                     {/* Configuration */}
-                    <div className="w-full flex flex-col bg-white dark:bg-slate-800 h-full">
-                        <div className="p-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center shrink-0">
+                    <div className="w-full flex flex-col bg-white dark:bg-[#1e293b] h-full">
+                        <div className="p-8 border-b border-slate-100 dark:border-[#334155] flex justify-between items-center shrink-0">
                             <div>
                                 <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Issue ID Card</h3>
                                 <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">Configure student details for {currentStudent.name}</p>
                             </div>
                             <button 
                                 onClick={() => setShowIssueModal(false)} 
-                                className="w-10 h-10 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 text-slate-400 hover:text-slate-600 dark:text-slate-300 rounded-xl transition-all flex items-center justify-center"
+                                className="w-10 h-10 bg-slate-50 dark:bg-[#0f172a] hover:bg-slate-100 text-slate-400 hover:text-slate-600 dark:text-slate-300 rounded-xl transition-all flex items-center justify-center"
                             >
                                 <X weight="bold" size={20}/>
                             </button>
@@ -643,11 +643,11 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
 
                         <div className="p-8 overflow-y-auto custom-scrollbar space-y-8 flex-1">
                             {/* Photo Section */}
-                            <div className="bg-slate-50 dark:bg-slate-800/50/50 p-6 rounded-3xl border border-slate-100 dark:border-slate-800">
+                            <div className="bg-slate-50 dark:bg-[#0f172a]/50 p-6 rounded-3xl border border-slate-100 dark:border-[#334155]">
                                 <div className="flex flex-col sm:flex-row items-center gap-6">
                                     <div 
                                         onClick={() => fileInputRef.current?.click()}
-                                        className="w-28 h-36 bg-white dark:bg-slate-800 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-center cursor-pointer hover:border-indigo-400 hover:bg-indigo-50/30 overflow-hidden relative group transition-all shrink-0"
+                                        className="w-28 h-36 bg-white dark:bg-[#1e293b] rounded-2xl border-2 border-dashed border-slate-200 dark:border-[#1e293b] flex items-center justify-center cursor-pointer hover:border-indigo-400 hover:bg-indigo-50/30 overflow-hidden relative group transition-all shrink-0"
                                     >
                                         {issuePhoto ? (
                                             <img src={issuePhoto} className="w-full h-full object-cover" />
@@ -667,7 +667,7 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
                                         <div className="flex flex-wrap justify-center sm:justify-start gap-2">
                                             <button 
                                                 onClick={() => fileInputRef.current?.click()} 
-                                                className="px-5 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 rounded-xl hover:bg-slate-50 transition-all shadow-sm"
+                                                className="px-5 py-2.5 bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#1e293b] text-xs font-bold text-slate-700 dark:text-slate-200 rounded-xl hover:bg-slate-50 transition-all shadow-sm"
                                             >
                                                 Browse Files
                                             </button>
@@ -683,7 +683,7 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
                                 </div>
 
                                 {/* Sliders */}
-                                <div className="mt-8 space-y-6 pt-6 border-t border-slate-200 dark:border-slate-700/60">
+                                <div className="mt-8 space-y-6 pt-6 border-t border-slate-200 dark:border-[#1e293b]/60">
                                     <div className="flex items-center gap-2 text-indigo-600">
                                         <Sliders size={18} weight="bold"/>
                                         <span className="text-sm font-bold">Photo Dimensions</span>
@@ -719,7 +719,7 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
 
                             {/* Text Fields */}
                             <div className="space-y-6">
-                                <div className="flex items-center gap-3 pb-2 border-b border-slate-100 dark:border-slate-800">
+                                <div className="flex items-center gap-3 pb-2 border-b border-slate-100 dark:border-[#334155]">
                                     <div className="w-8 h-8 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600">
                                         <CreditCard size={18} weight="bold"/>
                                     </div>
@@ -768,7 +768,7 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
                         </div>
 
                         {/* Action Footer */}
-                        <div className="p-6 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between shrink-0 gap-4">
+                        <div className="p-6 bg-slate-50 dark:bg-[#0f172a] border-t border-slate-100 dark:border-[#334155] flex flex-col sm:flex-row items-center justify-between shrink-0 gap-4">
                             <div className="flex items-center gap-3 w-full sm:w-auto">
                                 <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 shrink-0">
                                     <WarningCircle size={20} weight="bold" />
@@ -778,7 +778,7 @@ const IdCardManagement: React.FC<IdCardManagementProps> = ({ schoolId, students,
                             <div className="flex gap-3 w-full sm:w-auto">
                                 <button 
                                     onClick={() => setShowIssueModal(false)} 
-                                    className="flex-1 sm:flex-none px-6 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 text-slate-700 dark:text-slate-200 rounded-xl font-bold text-sm transition-all"
+                                    className="flex-1 sm:flex-none px-6 py-3 bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#1e293b] hover:bg-slate-50 text-slate-700 dark:text-slate-200 rounded-xl font-bold text-sm transition-all"
                                 >
                                     Cancel
                                 </button>

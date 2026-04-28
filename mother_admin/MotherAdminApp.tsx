@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 // Replace Lucide icons with Phosphor Icons for a premium look
 import { 
   SquaresFour, Buildings, UsersThree, ChartBar, Gear, ShieldWarning, CurrencyDollar, 
-  Scroll, Bell, List, SignOut, CloudCheck, X, ChatCircleText
+  Scroll, Bell, List, SignOut, CloudCheck, X, ChatCircleText, ArrowsClockwise
 } from 'phosphor-react';
 import { 
   subscribeToSchools, 
@@ -36,6 +36,7 @@ const MotherAdminApp: React.FC<{ profile: UserProfile, onLogout: () => void }> =
   const [principals, setPrincipals] = useState<any[]>([]);
   const [studentCounts, setStudentCounts] = useState<Record<string, number>>({});
   const [dataError, setDataError] = useState<string | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const logAction = async (action: string, details: string, schoolId: string = 'PLATFORM') => {
     await logAudit({
@@ -88,7 +89,7 @@ const MotherAdminApp: React.FC<{ profile: UserProfile, onLogout: () => void }> =
     getStudentCounts().then(setStudentCounts);
 
     return () => { unsubSchools(); unsubPrincipals(); };
-  }, []);
+  }, [refreshKey]);
 
   // Merge student counts into schools data
   const schoolsWithCounts = useMemo(() => {
@@ -104,7 +105,7 @@ const MotherAdminApp: React.FC<{ profile: UserProfile, onLogout: () => void }> =
         <ShieldWarning size={64} weight="duotone" className="text-rose-500 mb-6" />
         <h2 className="text-3xl font-black text-white mb-2">Central Authorization Error</h2>
         <p className="text-slate-400 max-w-md mb-8">{dataError}</p>
-        <button onClick={onLogout} className="px-10 py-4 bg-white dark:bg-slate-800 text-slate-950 rounded-2xl font-black shadow-2xl">Re-authenticate</button>
+        <button onClick={onLogout} className="px-10 py-4 bg-white dark:bg-[#1e293b] text-slate-950 rounded-2xl font-black shadow-2xl">Re-authenticate</button>
       </div>
     );
   }
@@ -129,7 +130,7 @@ const MotherAdminApp: React.FC<{ profile: UserProfile, onLogout: () => void }> =
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard': return <Dashboard schools={schoolsWithCounts} principals={principals} />;
-      case 'requests': return <RegistrationRequests />;
+      case 'requests': return <RegistrationRequests refreshKey={refreshKey} />;
       case 'schools': return <SchoolsList schools={schoolsWithCounts} onAddSchool={handleAddSchool} onDeleteSchool={handleDeleteSchool} onUpdateSchool={handleUpdateSchool} />;
       case 'access': return <AccessControl schools={schoolsWithCounts} onUpdateStatus={async (id, status, isAccessLocked) => {
         await updateSchoolFirestore(id, { status, isAccessLocked });
@@ -193,7 +194,7 @@ const MotherAdminApp: React.FC<{ profile: UserProfile, onLogout: () => void }> =
       </aside>
 
       <main className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden bg-[#fcfcfc]">
-        <header className="h-16 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between px-6 shrink-0 sticky top-0 z-[100]">
+        <header className="h-16 bg-white dark:bg-[#1e293b] border-b border-slate-200 dark:border-[#1e293b] flex items-center justify-between px-6 shrink-0 sticky top-0 z-[100]">
           <div className="flex items-center gap-4">
              <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-1.5 text-slate-500 dark:text-slate-400 hover:bg-slate-100 rounded-none transition-colors flex items-center justify-center">
                 <List size={20} weight="regular" />
@@ -211,6 +212,14 @@ const MotherAdminApp: React.FC<{ profile: UserProfile, onLogout: () => void }> =
                <span className="text-[9px] font-black uppercase tracking-widest leading-none">Cloud Live</span>
             </div>
             
+            <button 
+              onClick={() => setRefreshKey(prev => prev + 1)}
+              className="p-1.5 text-slate-400 hover:text-slate-600 dark:text-slate-300 hover:bg-slate-100 rounded-none transition-colors"
+              title="Reload Data"
+            >
+                <ArrowsClockwise size={20} weight="regular" />
+            </button>
+
             <button className="p-1.5 text-slate-400 hover:text-slate-600 dark:text-slate-300 hover:bg-slate-100 rounded-none relative transition-colors">
                 <Bell size={20} weight="regular" />
                 <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#D4AF37] rounded-full border-2 border-white"></span>
